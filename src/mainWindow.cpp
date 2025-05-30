@@ -1,4 +1,7 @@
+#include <iostream>
+
 #include "../include/mainWindow.h"
+#include "../include/tiff.h"
 
 MainWindow::MainWindow():QMainWindow()
 {
@@ -26,13 +29,16 @@ void MainWindow::callError(std::string errorText)
 {
 	QMessageBox errorWindow;
 	errorWindow.setText(QString::fromStdString(errorText));
-	errorWindow.setWindowTitle("BMPEditor - ERROR");
+	errorWindow.setWindowTitle("TiffAnalyzer - ERROR");
 	errorWindow.exec();
 }
 
 void MainWindow::openImage()
 {
-	openImagePath = QFileDialog::getOpenFileName(this, "Открыть файл", "./", "TIFF (*.tiff)");
+	openImagePath = QFileDialog::getOpenFileName(this, "Открыть файл", "./", "TIFF (*.tif *.tiff)");
+	
+	TIFF tiff;
+	tiff.loadTiffMetadata(openImagePath.toStdString());
 }
 void MainWindow::saveImage()
 {
