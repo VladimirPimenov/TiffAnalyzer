@@ -8,6 +8,7 @@ void ImageLabel::loadTIFF(std::string loadPath, int channelNumber)
 {
 	tiffImage.loadTiffMetadata(loadPath);
 	tiffImage.loadChannel(loadPath, 0);
+	
 	updateImage();
 }
 
@@ -22,8 +23,8 @@ void ImageLabel::updateImage()
 			(*image).setPixel(x, y, qRgb(tiffImage.imageData[y][x].red, tiffImage.imageData[y][x].green, tiffImage.imageData[y][x].blue));
 		}
 	}
+	
 	setPixmap(QPixmap::fromImage(*image));
-
 }
 
 void ImageLabel::clearImageLabel()

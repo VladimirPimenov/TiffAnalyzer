@@ -54,13 +54,13 @@ void TIFF::readEntry(std::ifstream & tiff)
     }
     else if(entry.tag == 273)
     {
+        stripOffsets = new uint32_t[height];
+        
         uint32_t offsetToStripOffsets = entry.value;
         
         std::ios::pos_type stripOffsetsPosition = tiff.tellg();
         
         tiff.seekg(offsetToStripOffsets, std::ios::beg);
-        
-        stripOffsets = new uint32_t[height];
         tiff.read((char *)stripOffsets, height * sizeof(uint32_t));  
         
         tiff.seekg(stripOffsetsPosition, std::ios::beg);

@@ -28,9 +28,10 @@ void MainWindow::createMenuBar()
 void MainWindow::createImagePanel()
 {
 	imageViewer = new ImageLabel();
+	scrollArea = new QScrollArea();
+	
 	imageViewer->setAlignment(Qt::AlignCenter);
     
-	scrollArea = new QScrollArea();
 	scrollArea->setWidgetResizable(true);
 	scrollArea->setWidget(imageViewer);
 	
