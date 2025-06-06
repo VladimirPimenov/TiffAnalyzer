@@ -9,8 +9,11 @@ Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
 #include <QAction>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QScrollArea>
 
 #include <string>
+
+#include "../include/imageLabel.h"
 
 class MainWindow: public QMainWindow
 {
@@ -25,6 +28,10 @@ private:
 	QAction * closeImageAction;
 	QAction * exitAction;
 	
+	QScrollArea * scrollArea;
+	
+	ImageLabel * imageViewer;
+	
 	QString openImagePath;
 	QString saveImagePath;
 	
@@ -33,6 +40,7 @@ private:
 	void closeImage();
 	
 	void createMenuBar();
+	void createImagePanel();
 	
 	void callError(std::string errorText);
 };

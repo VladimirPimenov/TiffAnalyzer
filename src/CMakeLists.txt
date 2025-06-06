@@ -1,1 +1,1 @@
-add_executable(TiffAnalyzer main.cpp mainWindow.cpp tiff.cpp)
+add_executable(TiffAnalyzer main.cpp mainWindow.cpp imageLabel.cpp tiff.cpp)

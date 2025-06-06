@@ -1,11 +1,11 @@
 #include <iostream>
 
 #include "../include/mainWindow.h"
-#include "../include/tiff.h"
 
 MainWindow::MainWindow():QMainWindow()
 {
 	createMenuBar();
+	createImagePanel();
 }
 
 void MainWindow::createMenuBar()
@@ -25,6 +25,18 @@ void MainWindow::createMenuBar()
 	
 }
 
+void MainWindow::createImagePanel()
+{
+	imageViewer = new ImageLabel();
+	imageViewer->setAlignment(Qt::AlignCenter);
+    
+	scrollArea = new QScrollArea();
+	scrollArea->setWidgetResizable(true);
+	scrollArea->setWidget(imageViewer);
+	
+	this->setCentralWidget(scrollArea);
+}
+
 void MainWindow::callError(std::string errorText)
 {
 	QMessageBox errorWindow;
@@ -37,8 +49,7 @@ void MainWindow::openImage()
 {
 	openImagePath = QFileDialog::getOpenFileName(this, "Открыть файл", "./", "TIFF (*.tif *.tiff)");
 	
-	TIFF tiff;
-	tiff.loadTiffMetadata(openImagePath.toStdString());
+	imageViewer->loadTIFF(openImagePath.toStdString(), 0);
 }
 void MainWindow::saveImage()
 {
