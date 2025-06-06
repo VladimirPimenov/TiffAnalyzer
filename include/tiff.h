@@ -5,9 +5,9 @@
 
 struct Pixel
 {
-	unsigned char blue;
-	unsigned char green;
-	unsigned char red;
+    uint16_t red;
+    uint16_t green;
+    uint16_t blue;
 };
 
 struct TIFFFILEHEADER
@@ -29,21 +29,32 @@ struct IFD
 {
     uint16_t entriesCount;
     std::vector<Entry> entries;
-    uint32_t nextIFDoffset;
 };
 
 #pragma pack(pop)
 
 class TIFF
-{
-public:
-    TIFFFILEHEADER tiffHeader;
-    IFD * ifd;
-    
+{   
 public:   
     int width;
     int height;
-    int channelsCount = 0;
+    int channelsCount = 124;
+    
+    Pixel ** imageData;
     
     void loadTiffMetadata(std::string loadFilePath);
+    void loadChannel(std::string loadFilePath, int channelNumber);
+    
+    ~TIFF();
+    
+private:
+    TIFFFILEHEADER tiffHeader;
+    IFD * ifd;
+    
+    uint32_t * stripOffsets;
+    uint32_t rowsPerStrip;
+    uint16_t bitsPerSample;
+    
+    void readIFD(std::ifstream & tiff);
+    void readEntry(std::ifstream & tiff);
 };
