@@ -2,9 +2,10 @@
 
 #include <QLabel>
 #include <QImage>
-#include <QMouseEvent>
-#include <QMenu>
-#include <QPoint>
+#include <QComboBox>
+#include <QDialog>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 #include <string>
 
@@ -16,6 +17,13 @@ public:
 	ImageLabel();
 	
 	QImage * image = nullptr;
+	
+	QDialog * channelSelectionWindow;
+	QVBoxLayout * widgetsBox;
+	QComboBox * channelsList;
+	QPushButton * okButton;
+
+	std::string tiffLoadPath;
 
 	void loadTIFF(std::string loadPath, int channelNumber);
 	void saveTIFF(std::string loadPath);
@@ -26,4 +34,8 @@ public:
 	
 private:
 	TIFF tiffImage;	
+	
+	void openChannelSelectionWindow(int channelsCount);
+	
+	void channelSelectedEventHandler();
 };
