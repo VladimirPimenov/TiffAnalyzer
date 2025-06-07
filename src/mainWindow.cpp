@@ -41,6 +41,7 @@ void MainWindow::createImagePanel()
 void MainWindow::callError(std::string errorText)
 {
 	QMessageBox errorWindow;
+	
 	errorWindow.setText(QString::fromStdString(errorText));
 	errorWindow.setWindowTitle("TiffAnalyzer - ERROR");
 	errorWindow.exec();

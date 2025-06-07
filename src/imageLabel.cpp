@@ -20,7 +20,7 @@ void ImageLabel::updateImage()
 	{
 		for(int x = 0; x < tiffImage.width; x++)
 		{
-			(*image).setPixel(x, y, qRgb(tiffImage.imageData[y][x].red, tiffImage.imageData[y][x].green, tiffImage.imageData[y][x].blue));
+			(*image).setPixel(x, y, qRgb(tiffImage.pixels[y][x], tiffImage.pixels[y][x], tiffImage.pixels[y][x]));
 		}
 	}
 	

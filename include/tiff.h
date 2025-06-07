@@ -3,13 +3,6 @@
 
 #pragma pack(push, 2)
 
-struct Pixel
-{
-    uint16_t red;
-    uint16_t green;
-    uint16_t blue;
-};
-
 struct TIFFFILEHEADER
 {
     uint16_t byteOrder;
@@ -40,7 +33,7 @@ public:
     int height;
     int channelsCount = 124;
     
-    Pixel ** imageData;
+    uint16_t ** pixels;
     
     void loadTiffMetadata(std::string loadFilePath);
     void loadChannel(std::string loadFilePath, int channelNumber);

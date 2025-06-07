@@ -86,20 +86,20 @@ void TIFF::loadChannel(std::string loadFilePath, int channelNumber)
     
     if(tiff.is_open())
     {
-        imageData = new Pixel *[height];
+        pixels = new uint16_t *[height];
 
         for(int y = 0; y < height; y++)
         {
-            imageData[y] = new Pixel[width];
+            pixels[y] = new uint16_t[width];
             
-            Pixel * rowWithAllChannels = new Pixel[width * channelsCount];
+            uint16_t * rowWithAllChannels = new uint16_t[width * channelsCount];
             
             tiff.seekg(stripOffsets[y], std::ios::beg);
             tiff.read((char *)rowWithAllChannels, width * channelsCount * (bitsPerSample / 8)); 
             
             for(int x = 0; x < width; x++)
             {
-                imageData[y][x] = rowWithAllChannels[x + offsetToChannelPixels];
+                pixels[y][x] = rowWithAllChannels[x + offsetToChannelPixels];
             }
         }
        
@@ -111,7 +111,7 @@ TIFF::~TIFF()
 {
     for(int y = 0; y < height; y++)
     {
-        delete[] imageData[y];
+        delete[] pixels[y];
     }
-    delete[] imageData;
+    delete[] pixels;
 }
