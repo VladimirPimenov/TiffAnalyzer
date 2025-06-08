@@ -79,8 +79,6 @@ void TIFF::readEntry(std::ifstream & tiff)
 
 void TIFF::loadChannel(std::string loadFilePath, int channelNumber)
 {
-    int offsetToChannelPixels = width * channelNumber;
-
     std::ifstream tiff;
     tiff.open(loadFilePath, std::ios::binary);
     
@@ -98,7 +96,7 @@ void TIFF::loadChannel(std::string loadFilePath, int channelNumber)
             
             for(int x = 0; x < width; x++)
             {
-                pixels[y][x] = rowWithAllChannels[x + offsetToChannelPixels];
+                pixels[y][x] = rowWithAllChannels[x * channelsCount + channelNumber];
             }
         }
         
