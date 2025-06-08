@@ -87,12 +87,11 @@ void TIFF::loadChannel(std::string loadFilePath, int channelNumber)
     if(tiff.is_open())
     {
         pixels = new uint16_t *[height];
-
+        uint16_t * rowWithAllChannels = new uint16_t[width * channelsCount];
+        
         for(int y = 0; y < height; y++)
         {
             pixels[y] = new uint16_t[width];
-            
-            uint16_t * rowWithAllChannels = new uint16_t[width * channelsCount];
             
             tiff.seekg(stripOffsets[y], std::ios::beg);
             tiff.read((char *)rowWithAllChannels, width * channelsCount * (bitsPerSample / 8)); 
@@ -102,8 +101,47 @@ void TIFF::loadChannel(std::string loadFilePath, int channelNumber)
                 pixels[y][x] = rowWithAllChannels[x + offsetToChannelPixels];
             }
         }
+        
+        delete[] rowWithAllChannels;
        
         tiff.close();
+        
+        normalizePixelValues();
+    }
+}
+
+uint16_t minMaxNormalization(uint16_t x, uint16_t minX, uint16_t maxX)
+{
+    /* 
+    Формула minMax-нормализации в диапазоне [a; b]:
+    x' = (x - min(x)) * (b - a) / (max(x) - min(x)) + a
+    */
+    return ((x - minX) * 255) / (maxX - minX);
+}
+
+void TIFF::normalizePixelValues()
+{
+    uint16_t minPixelValue = 0;
+    uint16_t maxPixelValue = 0;
+    
+    for(int y = 0; y < height; y++)
+    {
+        for(int x = 0; x < width; x++)
+        {
+            if(pixels[y][x] > maxPixelValue)
+                maxPixelValue = pixels[y][x];
+                
+            if(pixels[y][x] < minPixelValue)
+                minPixelValue = pixels[y][x];
+        }
+    }
+    
+    for(int y = 0; y < height; y++)
+    {
+        for(int x = 0; x < width; x++)
+        {
+            pixels[y][x] = minMaxNormalization(pixels[y][x], minPixelValue, maxPixelValue);
+        }
     }
 }
 
