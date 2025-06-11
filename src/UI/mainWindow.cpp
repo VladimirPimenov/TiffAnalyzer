@@ -11,17 +11,24 @@ MainWindow::MainWindow():QMainWindow()
 void MainWindow::createMenuBar()
 {
 	fileMenu = new QMenu("Файл");
-	
 	openImageAction = fileMenu->addAction("Открыть");
-	saveImageAction = fileMenu->addAction("Сохранить");
 	closeImageAction = fileMenu->addAction("Закрыть");
 	exitAction = fileMenu->addAction("Выход",this, SLOT(close()));
 	
+	displayModeMenu = new QMenu("Режим отображения");
+	grayscaleModeAction = displayModeMenu->addAction("Grayscale");
+	rgbModeAction = displayModeMenu->addAction("RGB");
+	
+	displayModeMenu->setEnabled(false);
+	
 	connect(openImageAction, &QAction::triggered, this, &MainWindow::openImage);
-	connect(saveImageAction, &QAction::triggered, this, &MainWindow::saveImage);
 	connect(closeImageAction, &QAction::triggered, this, &MainWindow::closeImage);
 	
+	connect(grayscaleModeAction, &QAction::triggered, this, &MainWindow::openGrayscale);
+	connect(rgbModeAction, &QAction::triggered, this, &MainWindow::openRgb);
+	
 	menuBar()->addMenu(fileMenu);
+	menuBar()->addMenu(displayModeMenu);
 	
 }
 
@@ -50,11 +57,25 @@ void MainWindow::callError(std::string errorText)
 void MainWindow::openImage()
 {
 	openImagePath = QFileDialog::getOpenFileName(this, "Открыть файл", "./", "TIFF (*.tif *.tiff)");
-	
-	imageViewer->loadTIFF(openImagePath.toStdString(), 0);
+
+	imageViewer->loadGrayscaleTIFF(openImagePath.toStdString());
+
+    displayModeMenu->setEnabled(true);
 }
-void MainWindow::saveImage()
+
+void MainWindow::openGrayscale()
 {
-	saveImagePath = QFileDialog::getSaveFileName(this, "Сохранить файл", "./output.tiff", "TIFF (*.tiff)");
+	imageViewer->loadGrayscaleTIFF(openImagePath.toStdString());
 }
-void MainWindow::closeImage(){}
+
+void MainWindow::openRgb()
+{
+	imageViewer->loadRgbTIFF(openImagePath.toStdString());
+}
+
+void MainWindow::closeImage()
+{
+    imageViewer->clearImageLabel();
+    
+    displayModeMenu->setEnabled(false);
+}

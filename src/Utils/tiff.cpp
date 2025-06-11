@@ -1,5 +1,4 @@
 #include <fstream>
-#include <iostream>
 
 #include "../../include/tiff.h"
 
@@ -77,26 +76,61 @@ void TIFF::readEntry(std::ifstream & tiff)
     ifd->entries.push_back(entry);
 }
 
-void TIFF::loadChannel(std::string loadFilePath, int channelNumber)
+void TIFF::loadGrayscale(std::string loadFilePath, int channelNumber)
 {
     std::ifstream tiff;
     tiff.open(loadFilePath, std::ios::binary);
     
     if(tiff.is_open())
     {
-        pixels = new uint16_t *[height];
+        pixels = new Pixel16bit *[height];
         uint16_t * rowWithAllChannels = new uint16_t[width * channelsCount];
         
         for(int y = 0; y < height; y++)
         {
-            pixels[y] = new uint16_t[width];
+            pixels[y] = new Pixel16bit[width];
             
             tiff.seekg(stripOffsets[y], std::ios::beg);
             tiff.read((char *)rowWithAllChannels, width * channelsCount * (bitsPerSample / 8)); 
             
             for(int x = 0; x < width; x++)
             {
-                pixels[y][x] = rowWithAllChannels[x * channelsCount + channelNumber];
+                pixels[y][x].red = rowWithAllChannels[x * channelsCount + channelNumber];
+                pixels[y][x].green = rowWithAllChannels[x * channelsCount + channelNumber];
+                pixels[y][x].blue = rowWithAllChannels[x * channelsCount + channelNumber];
+            }
+        }
+        
+        delete[] rowWithAllChannels;
+       
+        tiff.close();
+        
+        normalizePixelValues();
+    }
+}
+
+void TIFF::loadRgb(std::string loadFilePath, RgbChannels channels)
+{
+    std::ifstream tiff;
+    tiff.open(loadFilePath, std::ios::binary);
+    
+    if(tiff.is_open())
+    {
+        pixels = new Pixel16bit *[height];
+        uint16_t * rowWithAllChannels = new uint16_t[width * channelsCount];
+        
+        for(int y = 0; y < height; y++)
+        {
+            pixels[y] = new Pixel16bit[width];
+            
+            tiff.seekg(stripOffsets[y], std::ios::beg);
+            tiff.read((char *)rowWithAllChannels, width * channelsCount * (bitsPerSample / 8)); 
+            
+            for(int x = 0; x < width; x++)
+            {
+                pixels[y][x].red = rowWithAllChannels[x * channelsCount + channels.red];
+                pixels[y][x].green = rowWithAllChannels[x * channelsCount + channels.green];
+                pixels[y][x].blue = rowWithAllChannels[x * channelsCount + channels.blue];
             }
         }
         
@@ -126,11 +160,19 @@ void TIFF::normalizePixelValues()
     {
         for(int x = 0; x < width; x++)
         {
-            if(pixels[y][x] > maxPixelValue)
-                maxPixelValue = pixels[y][x];
+            if(pixels[y][x].red > maxPixelValue)
+                maxPixelValue = pixels[y][x].red;
+            if(pixels[y][x].green > maxPixelValue)
+                maxPixelValue = pixels[y][x].green;
+            if(pixels[y][x].blue > maxPixelValue)
+                maxPixelValue = pixels[y][x].blue;
                 
-            if(pixels[y][x] < minPixelValue)
-                minPixelValue = pixels[y][x];
+            if(pixels[y][x].red < minPixelValue)
+                minPixelValue = pixels[y][x].red;
+            if(pixels[y][x].green < minPixelValue)
+                minPixelValue = pixels[y][x].green;
+            if(pixels[y][x].blue < minPixelValue)
+                minPixelValue = pixels[y][x].blue;
         }
     }
     
@@ -138,7 +180,9 @@ void TIFF::normalizePixelValues()
     {
         for(int x = 0; x < width; x++)
         {
-            pixels[y][x] = minMaxNormalization(pixels[y][x], minPixelValue, maxPixelValue);
+            pixels[y][x].red = minMaxNormalization(pixels[y][x].red, minPixelValue, maxPixelValue);
+            pixels[y][x].green = minMaxNormalization(pixels[y][x].green, minPixelValue, maxPixelValue);
+            pixels[y][x].blue = minMaxNormalization(pixels[y][x].blue, minPixelValue, maxPixelValue);
         }
     }
 }

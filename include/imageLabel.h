@@ -6,6 +6,7 @@
 #include <QDialog>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 
 #include <string>
 
@@ -19,14 +20,20 @@ public:
 	QImage * image = nullptr;
 	
 	QDialog * channelSelectionWindow;
-	QVBoxLayout * widgetsBox;
-	QComboBox * channelsList;
+	QVBoxLayout * vWidgetsBox;
+	QComboBox * grayscaleChannelsList;
+	
+	QHBoxLayout * hWidgetBox;
+	QComboBox * redChannelsList;
+	QComboBox * greenChannelsList;
+	QComboBox * blueChannelsList;
+	
 	QPushButton * okButton;
 
 	std::string tiffLoadPath;
 
-	void loadTIFF(std::string loadPath, int channelNumber);
-	void saveTIFF(std::string loadPath);
+	void loadGrayscaleTIFF(std::string loadPath);
+	void loadRgbTIFF(std::string loadPath);
 	
 	void updateImage();
 
@@ -35,7 +42,9 @@ public:
 private:
 	TIFF tiffImage;	
 	
-	void openChannelSelectionWindow(int channelsCount);
+	void openGrayscaleSelectionWindow(int channelsCount);
+	void openRgbSelectionWindow(int channelsCount);
 	
-	void channelSelectedEventHandler();
+	void channelSelectedEvent();
+	void rgbSelectedEvent();
 };

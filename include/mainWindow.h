@@ -24,19 +24,22 @@ private:
 	QMenuBar * optionsMenu;
 	QMenu * fileMenu;
 	QAction * openImageAction; 
-	QAction * saveImageAction;
 	QAction * closeImageAction;
 	QAction * exitAction;
+	
+	QMenu * displayModeMenu;
+	QAction * grayscaleModeAction;
+	QAction * rgbModeAction;
 	
 	QScrollArea * scrollArea;
 	
 	ImageLabel * imageViewer;
 	
 	QString openImagePath;
-	QString saveImagePath;
 	
 	void openImage();
-	void saveImage();
+	void openGrayscale();
+	void openRgb();
 	void closeImage();
 	
 	void createMenuBar();

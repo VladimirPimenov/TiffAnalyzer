@@ -24,6 +24,20 @@ struct IFD
     std::vector<Entry> entries;
 };
 
+struct RgbChannels 
+{
+    int red; 
+    int green; 
+    int blue;
+};
+
+struct Pixel16bit
+{
+    uint16_t red; 
+    uint16_t green; 
+    uint16_t blue;
+};
+
 #pragma pack(pop)
 
 class TIFF
@@ -33,10 +47,11 @@ public:
     int height;
     int channelsCount = 124;
     
-    uint16_t ** pixels;
+    Pixel16bit ** pixels;
     
     void loadTiffMetadata(std::string loadFilePath);
-    void loadChannel(std::string loadFilePath, int channelNumber);
+    void loadGrayscale(std::string loadFilePath, int channelNumber);
+    void loadRgb(std::string loadFilePath, RgbChannels channels);
     
     ~TIFF();
     
