@@ -4,4 +4,5 @@ add_executable(TiffAnalyzer
     UI/imageLabel.cpp 
 
     Utils/tiff.cpp
+    Utils/pixelsNormalizer.cpp
 )

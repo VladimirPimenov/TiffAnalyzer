@@ -1,3 +1,5 @@
+#pragma once
+
 #include <string>
 #include <vector>
 
@@ -65,6 +67,4 @@ private:
     
     void readIFD(std::ifstream & tiff);
     void readEntry(std::ifstream & tiff);
-    
-    void normalizePixelValues();
 };

@@ -104,8 +104,6 @@ void TIFF::loadGrayscale(std::string loadFilePath, int channelNumber)
         delete[] rowWithAllChannels;
        
         tiff.close();
-        
-        normalizePixelValues();
     }
 }
 
@@ -137,53 +135,6 @@ void TIFF::loadRgb(std::string loadFilePath, RgbChannels channels)
         delete[] rowWithAllChannels;
        
         tiff.close();
-        
-        normalizePixelValues();
-    }
-}
-
-uint16_t minMaxNormalization(uint16_t x, uint16_t minX, uint16_t maxX)
-{
-    /* 
-    Формула minMax-нормализации в диапазоне [a; b]:
-    x' = (x - min(x)) * (b - a) / (max(x) - min(x)) + a
-    */
-    return ((x - minX) * 255) / (maxX - minX);
-}
-
-void TIFF::normalizePixelValues()
-{
-    uint16_t minPixelValue = 0;
-    uint16_t maxPixelValue = 0;
-    
-    for(int y = 0; y < height; y++)
-    {
-        for(int x = 0; x < width; x++)
-        {
-            if(pixels[y][x].red > maxPixelValue)
-                maxPixelValue = pixels[y][x].red;
-            if(pixels[y][x].green > maxPixelValue)
-                maxPixelValue = pixels[y][x].green;
-            if(pixels[y][x].blue > maxPixelValue)
-                maxPixelValue = pixels[y][x].blue;
-                
-            if(pixels[y][x].red < minPixelValue)
-                minPixelValue = pixels[y][x].red;
-            if(pixels[y][x].green < minPixelValue)
-                minPixelValue = pixels[y][x].green;
-            if(pixels[y][x].blue < minPixelValue)
-                minPixelValue = pixels[y][x].blue;
-        }
-    }
-    
-    for(int y = 0; y < height; y++)
-    {
-        for(int x = 0; x < width; x++)
-        {
-            pixels[y][x].red = minMaxNormalization(pixels[y][x].red, minPixelValue, maxPixelValue);
-            pixels[y][x].green = minMaxNormalization(pixels[y][x].green, minPixelValue, maxPixelValue);
-            pixels[y][x].blue = minMaxNormalization(pixels[y][x].blue, minPixelValue, maxPixelValue);
-        }
     }
 }
 

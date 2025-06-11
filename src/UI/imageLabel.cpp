@@ -1,6 +1,4 @@
 #include "../../include/imageLabel.h"
-#include <iostream>
-#include <fstream>
 
 ImageLabel::ImageLabel(): QLabel(){}
 
@@ -8,18 +6,20 @@ void ImageLabel::loadGrayscaleTIFF(std::string loadPath)
 {
 	tiffLoadPath = loadPath;
 	
-	tiffImage.loadTiffMetadata(tiffLoadPath);
+	tiffImage = new TIFF();
 	
-	openGrayscaleSelectionWindow(tiffImage.channelsCount);
+	tiffImage->loadTiffMetadata(tiffLoadPath);
+	
+	openGrayscaleSelectionWindow(tiffImage->channelsCount);
 }
 
 void ImageLabel::loadRgbTIFF(std::string loadPath)
 {
 	tiffLoadPath = loadPath;
 	
-	tiffImage.loadTiffMetadata(tiffLoadPath);
+	tiffImage->loadTiffMetadata(tiffLoadPath);
 	
-    openRgbSelectionWindow(tiffImage.channelsCount);
+    openRgbSelectionWindow(tiffImage->channelsCount);
 }
 
 void ImageLabel::openGrayscaleSelectionWindow(int channelsCount)
@@ -91,15 +91,18 @@ void ImageLabel::openRgbSelectionWindow(int channelsCount)
 
 void ImageLabel::updateImage()
 {
-	image = new QImage(tiffImage.width, tiffImage.height, QImage::Format_RGB888);
+	PixelsNormalizer::normalizePixelValues(tiffImage);
+
+	image = new QImage(tiffImage->width, tiffImage->height, QImage::Format_RGB888);
 	
-	for(int y = 0; y < tiffImage.height; y++)
+	for(int y = 0; y < tiffImage->height; y++)
 	{
-		for(int x = 0; x < tiffImage.width; x++)
+		for(int x = 0; x < tiffImage->width; x++)
 		{
-			(*image).setPixel(x, y, qRgb(tiffImage.pixels[y][x].red, tiffImage.pixels[y][x].green, tiffImage.pixels[y][x].blue));
+			(*image).setPixel(x, y, qRgb(tiffImage->pixels[y][x].red, tiffImage->pixels[y][x].green, tiffImage->pixels[y][x].blue));
 		}
 	}
+	
 	
 	setPixmap(QPixmap::fromImage(*image));
 }
@@ -110,7 +113,7 @@ void ImageLabel::channelSelectedEvent()
     
     channelSelectionWindow->close();
     
-	tiffImage.loadGrayscale(tiffLoadPath, channel);
+	tiffImage->loadGrayscale(tiffLoadPath, channel);
 	updateImage();
 }
 
@@ -124,7 +127,7 @@ void ImageLabel::rgbSelectedEvent()
     
     channelSelectionWindow->close();
     
-    tiffImage.loadRgb(tiffLoadPath, channels);
+    tiffImage->loadRgb(tiffLoadPath, channels);
     updateImage();
 }
 
@@ -133,5 +136,5 @@ void ImageLabel::clearImageLabel()
 {
 	this->clear();
     image = nullptr;
-    tiffImage.~TIFF();
+    tiffImage->~TIFF();
 }

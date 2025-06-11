@@ -9,8 +9,10 @@
 #include <QHBoxLayout>
 
 #include <string>
+#include <fstream>
 
 #include "tiff.h"
+#include "pixelsNormalizer.h"
 
 class ImageLabel: public QLabel
 {
@@ -40,7 +42,7 @@ public:
 	void clearImageLabel();
 	
 private:
-	TIFF tiffImage;	
+	TIFF * tiffImage;	
 	
 	void openGrayscaleSelectionWindow(int channelsCount);
 	void openRgbSelectionWindow(int channelsCount);
