@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "../include/mainWindow.h"
+#include "../../include/mainWindow.h"
 
 MainWindow::MainWindow():QMainWindow()
 {

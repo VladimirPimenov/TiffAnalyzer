@@ -1,7 +1,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "../include/tiff.h"
+#include "../../include/tiff.h"
 
 void TIFF::loadTiffMetadata(std::string loadFilePath)
 {

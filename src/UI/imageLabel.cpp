@@ -1,4 +1,4 @@
-#include "../include/imageLabel.h"
+#include "../../include/imageLabel.h"
 #include <iostream>
 #include <fstream>
 
