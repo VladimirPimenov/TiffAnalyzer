@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 
+#include "rgb.h"
+
 #pragma pack(push, 2)
 
 struct TIFFFILEHEADER
@@ -24,20 +26,6 @@ struct IFD
 {
     uint16_t entriesCount;
     std::vector<Entry> entries;
-};
-
-struct RgbChannels 
-{
-    int red; 
-    int green; 
-    int blue;
-};
-
-struct Pixel16bit
-{
-    uint16_t red; 
-    uint16_t green; 
-    uint16_t blue;
 };
 
 #pragma pack(pop)
