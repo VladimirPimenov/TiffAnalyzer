@@ -12,6 +12,7 @@
 #include <fstream>
 
 #include "tiff.h"
+#include "channelSelectionWindow.h"
 #include "pixelsNormalizer.h"
 
 class ImageLabel: public QLabel
@@ -21,16 +22,7 @@ public:
 	
 	QImage * image = nullptr;
 	
-	QDialog * channelSelectionWindow;
-	QVBoxLayout * vWidgetsBox;
-	QComboBox * grayscaleChannelsList;
-	
-	QHBoxLayout * hWidgetBox;
-	QComboBox * redChannelsList;
-	QComboBox * greenChannelsList;
-	QComboBox * blueChannelsList;
-	
-	QPushButton * okButton;
+	ChannelSelectionWindow * channelSelector;
 
 	std::string tiffLoadPath;
 
@@ -46,7 +38,7 @@ private:
 	
 	void openGrayscaleSelectionWindow(int channelsCount);
 	void openRgbSelectionWindow(int channelsCount);
-	
-	void channelSelectedEvent();
+
+	void grayscaleSelectedEvent();
 	void rgbSelectedEvent();
 };

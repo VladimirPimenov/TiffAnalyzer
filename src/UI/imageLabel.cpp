@@ -7,7 +7,6 @@ void ImageLabel::loadGrayscaleTIFF(std::string loadPath)
 	tiffLoadPath = loadPath;
 	
 	tiffImage = new TIFF();
-	
 	tiffImage->loadTiffMetadata(tiffLoadPath);
 	
 	openGrayscaleSelectionWindow(tiffImage->channelsCount);
@@ -24,69 +23,22 @@ void ImageLabel::loadRgbTIFF(std::string loadPath)
 
 void ImageLabel::openGrayscaleSelectionWindow(int channelsCount)
 {
-	channelSelectionWindow = new QDialog(this);
+	channelSelector = new ChannelSelectionWindow(this);
+	channelSelector->createGrayscaleChannelSelector(channelsCount);
 	
-	channelSelectionWindow->setWindowTitle("Grayscale");
-	channelSelectionWindow->resize(500, channelSelectionWindow->width());	
-	channelSelectionWindow->resize(50, channelSelectionWindow->height());	
-	channelSelectionWindow->setWindowModality(Qt::WindowModality::WindowModal);
+	channelSelector->setChannelSelectedEvent([this](){grayscaleSelectedEvent(); });
 	
-	okButton = new QPushButton();
-	
-	okButton->setText("Загрузить канал");
-	connect(okButton, &QPushButton::clicked, this, &ImageLabel::channelSelectedEvent);
-	
-    grayscaleChannelsList = new QComboBox();
-    
-	for(int channelNumber = 1; channelNumber < channelsCount; channelNumber++)
-	{
-	    grayscaleChannelsList->addItem(QString::fromStdString(std::to_string(channelNumber)));
-	}
-	
-	vWidgetsBox = new QVBoxLayout(channelSelectionWindow);
-	
-	vWidgetsBox->addWidget(grayscaleChannelsList);
-	vWidgetsBox->addWidget(okButton);
-	
-	channelSelectionWindow->show();
+	channelSelector->show();
 }
 
 void ImageLabel::openRgbSelectionWindow(int channelsCount)
 {
-    channelSelectionWindow = new QDialog(this);
+    channelSelector = new ChannelSelectionWindow(this);
+    channelSelector->createRgbChannelSelector(channelsCount);
 	
-	channelSelectionWindow->setWindowTitle("Grayscale");
-	channelSelectionWindow->resize(500, channelSelectionWindow->width());	
-	channelSelectionWindow->resize(50, channelSelectionWindow->height());	
-	channelSelectionWindow->setWindowModality(Qt::WindowModality::WindowModal);
+	channelSelector->setChannelSelectedEvent([this](){rgbSelectedEvent(); });
 	
-	okButton = new QPushButton();
-	
-	okButton->setText("Загрузить каналы");
-	connect(okButton, &QPushButton::clicked, this, &ImageLabel::rgbSelectedEvent);
-	
-    redChannelsList = new QComboBox();
-    greenChannelsList = new QComboBox();
-    blueChannelsList = new QComboBox();
-    
-	for(int channelNumber = 1; channelNumber < channelsCount; channelNumber++)
-	{
-	    redChannelsList->addItem(QString::fromStdString(std::to_string(channelNumber)));
-	    greenChannelsList->addItem(QString::fromStdString(std::to_string(channelNumber)));
-	    blueChannelsList->addItem(QString::fromStdString(std::to_string(channelNumber)));
-	}
-	
-	vWidgetsBox = new QVBoxLayout(channelSelectionWindow);
-	hWidgetBox = new QHBoxLayout();
-	
-	hWidgetBox->addWidget(redChannelsList);
-	hWidgetBox->addWidget(greenChannelsList);
-	hWidgetBox->addWidget(blueChannelsList);
-	
-	vWidgetsBox->addLayout(hWidgetBox);
-	vWidgetsBox->addWidget(okButton);
-	
-	channelSelectionWindow->show();
+	channelSelector->show();
 }
 
 void ImageLabel::updateImage()
@@ -103,29 +55,24 @@ void ImageLabel::updateImage()
 		}
 	}
 	
-	
 	setPixmap(QPixmap::fromImage(*image));
 }
 
-void ImageLabel::channelSelectedEvent()
+void ImageLabel::grayscaleSelectedEvent()
 {
-    int channel = grayscaleChannelsList->currentText().toInt() - 1;
+    int channel = channelSelector->getSelectedChannels().red;
     
-    channelSelectionWindow->close();
+    channelSelector->close();
     
 	tiffImage->loadGrayscale(tiffLoadPath, channel);
 	updateImage();
 }
 
 void ImageLabel::rgbSelectedEvent()
-{
-    int redChannel = redChannelsList->currentText().toInt() - 1;
-    int greenChannel = greenChannelsList->currentText().toInt() - 1;
-    int blueChannel = blueChannelsList->currentText().toInt() - 1;
+{   
+    RgbChannels channels = channelSelector->getSelectedChannels();
     
-    RgbChannels channels = {redChannel, greenChannel, blueChannel};
-    
-    channelSelectionWindow->close();
+    channelSelector->close();
     
     tiffImage->loadRgb(tiffLoadPath, channels);
     updateImage();
@@ -136,5 +83,6 @@ void ImageLabel::clearImageLabel()
 {
 	this->clear();
     image = nullptr;
+    
     tiffImage->~TIFF();
 }
