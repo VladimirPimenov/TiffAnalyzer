@@ -5,7 +5,13 @@
 MainWindow::MainWindow():QMainWindow()
 {
 	createMenuBar();
+	
+	statusBar = new PixelStatusBar();
+	this->setStatusBar(statusBar);
+	
 	createImagePanel();
+	
+	
 }
 
 void MainWindow::createMenuBar()
@@ -38,11 +44,13 @@ void MainWindow::createImagePanel()
 	scrollArea = new QScrollArea();
 	
 	imageViewer->setAlignment(Qt::AlignCenter);
-    
+	
 	scrollArea->setWidgetResizable(true);
 	scrollArea->setWidget(imageViewer);
 	
 	this->setCentralWidget(scrollArea);
+	
+	imageViewer->statusBar = statusBar;
 }
 
 void MainWindow::callError(std::string errorText)

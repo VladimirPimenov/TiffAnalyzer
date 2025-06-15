@@ -1,6 +1,10 @@
 #include "../../include/imageLabel.h"
+#include <iostream>
 
-ImageLabel::ImageLabel(): QLabel(){}
+ImageLabel::ImageLabel(): QLabel()
+{
+    this->setMouseTracking(true);
+}
 
 void ImageLabel::loadGrayscaleTIFF(std::string loadPath)
 {
@@ -78,6 +82,25 @@ void ImageLabel::rgbSelectedEvent()
     updateImage();
 }
 
+void ImageLabel::mouseMoveEvent(QMouseEvent * event)
+{
+	if(image != nullptr )
+	{
+		int x = event->pos().rx() - (this->width() - image->width()) / 2;
+		int y = event->pos().ry() - (this->height() - image->height()) / 2;
+		
+		if(x >= 0 && y >= 0 && x < image->width() && y < image->height())
+		{
+			Pixel16bit pixel = tiffImage->pixels[y][x];
+			
+			statusBar->updateInfo(x, y, pixel);
+		}
+	}
+	else
+	{
+		statusBar->clearInfo();
+	}
+}
 
 void ImageLabel::clearImageLabel()
 {

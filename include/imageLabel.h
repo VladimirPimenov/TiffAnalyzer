@@ -7,12 +7,14 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QMouseEvent>
 
 #include <string>
 #include <fstream>
 
 #include "tiff.h"
 #include "channelSelectionWindow.h"
+#include "pixelStatusBar.h"
 #include "pixelsNormalizer.h"
 
 class ImageLabel: public QLabel
@@ -23,6 +25,7 @@ public:
 	QImage * image = nullptr;
 	
 	ChannelSelectionWindow * channelSelector;
+	PixelStatusBar * statusBar;
 
 	std::string tiffLoadPath;
 
@@ -41,4 +44,6 @@ private:
 
 	void grayscaleSelectedEvent();
 	void rgbSelectedEvent();
+	
+	void mouseMoveEvent(QMouseEvent * event) override;
 };

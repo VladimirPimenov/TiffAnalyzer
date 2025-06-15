@@ -13,12 +13,15 @@ Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
 
 #include <string>
 
-#include "../include/imageLabel.h"
+#include "imageLabel.h"
+#include "pixelStatusBar.h"
 
 class MainWindow: public QMainWindow
 {
 public:
 	MainWindow();
+	
+	PixelStatusBar * statusBar;
 	
 private:
 	QMenuBar * optionsMenu;
