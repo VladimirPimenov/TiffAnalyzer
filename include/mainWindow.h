@@ -10,10 +10,12 @@ Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QScrollArea>
+#include <QHBoxLayout>
 
 #include <string>
 
 #include "imageLabel.h"
+#include "histogramPanel.h"
 #include "pixelStatusBar.h"
 
 class MainWindow: public QMainWindow
@@ -34,9 +36,13 @@ private:
 	QAction * grayscaleModeAction;
 	QAction * rgbModeAction;
 	
-	QScrollArea * scrollArea;
+	QWidget * centralWidget;
+	QHBoxLayout * centralBox;
 	
+	QScrollArea * scrollArea;
 	ImageLabel * imageViewer;
+	
+	HistogramPanel * histogramPanel;
 	
 	QString openImagePath;
 	
@@ -45,8 +51,10 @@ private:
 	void openRgb();
 	void closeImage();
 	
+	void createCentralPanel();
 	void createMenuBar();
 	void createImagePanel();
+	void createHistogramPanel();
 	
 	void callError(std::string errorText);
 };

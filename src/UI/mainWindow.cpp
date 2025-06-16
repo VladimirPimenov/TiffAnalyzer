@@ -9,9 +9,10 @@ MainWindow::MainWindow():QMainWindow()
 	statusBar = new PixelStatusBar();
 	this->setStatusBar(statusBar);
 	
+	createCentralPanel();
+	
+	createHistogramPanel();
 	createImagePanel();
-	
-	
 }
 
 void MainWindow::createMenuBar()
@@ -38,6 +39,13 @@ void MainWindow::createMenuBar()
 	
 }
 
+void MainWindow::createCentralPanel()
+{
+    centralWidget = new QWidget();
+	this->setCentralWidget(centralWidget);
+	centralBox = new QHBoxLayout(centralWidget);
+}
+
 void MainWindow::createImagePanel()
 {
 	imageViewer = new ImageLabel();
@@ -48,9 +56,17 @@ void MainWindow::createImagePanel()
 	scrollArea->setWidgetResizable(true);
 	scrollArea->setWidget(imageViewer);
 	
-	this->setCentralWidget(scrollArea);
-	
 	imageViewer->statusBar = statusBar;
+	imageViewer->histrogram = histogramPanel;
+	
+	centralBox->addWidget(scrollArea);
+}
+
+void MainWindow::createHistogramPanel()
+{
+    histogramPanel = new HistogramPanel();
+    
+    centralBox->addWidget(histogramPanel);
 }
 
 void MainWindow::callError(std::string errorText)
@@ -84,6 +100,7 @@ void MainWindow::openRgb()
 void MainWindow::closeImage()
 {
     imageViewer->clearImageLabel();
+    histogramPanel->clearHistogram();
     
     displayModeMenu->setEnabled(false);
 }

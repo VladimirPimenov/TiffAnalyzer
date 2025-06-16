@@ -16,16 +16,16 @@
 #include "channelSelectionWindow.h"
 #include "pixelStatusBar.h"
 #include "pixelsNormalizer.h"
+#include "histogramPanel.h"
 
 class ImageLabel: public QLabel
 {
 public:
 	ImageLabel();
 	
-	QImage * image = nullptr;
-	
 	ChannelSelectionWindow * channelSelector;
 	PixelStatusBar * statusBar;
+	HistogramPanel * histrogram;
 
 	std::string tiffLoadPath;
 
@@ -38,6 +38,7 @@ public:
 	
 private:
 	TIFF * tiffImage;	
+	QImage * image = nullptr;
 	
 	void openGrayscaleSelectionWindow(int channelsCount);
 	void openRgbSelectionWindow(int channelsCount);

@@ -4,7 +4,9 @@ add_executable(TiffAnalyzer
     UI/imageLabel.cpp 
     UI/channelSelectionWindow.cpp
     UI/pixelStatusBar.cpp
+    UI/histogramPanel.cpp
 
     Utils/tiff.cpp
     Utils/pixelsNormalizer.cpp
+    Utils/histogramPainter.cpp
 )

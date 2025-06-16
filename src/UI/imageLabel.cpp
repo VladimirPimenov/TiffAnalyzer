@@ -58,8 +58,9 @@ void ImageLabel::updateImage()
 			(*image).setPixel(x, y, qRgb(tiffImage->pixels[y][x].red, tiffImage->pixels[y][x].green, tiffImage->pixels[y][x].blue));
 		}
 	}
-	
 	setPixmap(QPixmap::fromImage(*image));
+	
+	histrogram->updateHistogram(image);
 }
 
 void ImageLabel::grayscaleSelectedEvent()
