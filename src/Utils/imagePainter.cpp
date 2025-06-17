@@ -1,4 +1,5 @@
-#include "../../include/pixelsNormalizer.h"
+#include "../../include/imagePainter.h"
+#include <iostream>
 
 uint16_t minMaxNormalization(uint16_t x, uint16_t minX, uint16_t maxX)
 {
@@ -9,10 +10,27 @@ uint16_t minMaxNormalization(uint16_t x, uint16_t minX, uint16_t maxX)
     return ((x - minX) * 255) / (maxX - minX);
 }
 
-void PixelsNormalizer::normalizePixelValues(TIFF * tiff)
+void ImagePainter::paintImage(TIFF * sourceTiff, QImage * image)
 {
-    uint16_t minPixelValue = 0;
-    uint16_t maxPixelValue = 0;
+    findMinMaxPixelValues(sourceTiff);
+    
+    for(int y = 0; y < image->height(); y++)
+    {
+        for(int x = 0; x < image->width(); x++)
+        {
+            uint normalizedRed = minMaxNormalization(sourceTiff->pixels[y][x].red, minPixelValue, maxPixelValue);
+            uint normalizedGreen = minMaxNormalization(sourceTiff->pixels[y][x].green, minPixelValue, maxPixelValue);
+            uint normalizedBlue = minMaxNormalization(sourceTiff->pixels[y][x].blue, minPixelValue, maxPixelValue);
+            
+			image->setPixel(x, y, qRgb(normalizedRed, normalizedGreen, normalizedBlue));
+        }
+    }
+}
+
+void ImagePainter::findMinMaxPixelValues(TIFF * tiff)
+{
+    minPixelValue = 0;
+    maxPixelValue = 0;
     
     for(int y = 0; y < tiff->height; y++)
     {
@@ -31,16 +49,6 @@ void PixelsNormalizer::normalizePixelValues(TIFF * tiff)
                 minPixelValue = tiff->pixels[y][x].green;
             if(tiff->pixels[y][x].blue < minPixelValue)
                 minPixelValue = tiff->pixels[y][x].blue;
-        }
-    }
-    
-    for(int y = 0; y < tiff->height; y++)
-    {
-        for(int x = 0; x < tiff->width; x++)
-        {
-            tiff->pixels[y][x].red = minMaxNormalization(tiff->pixels[y][x].red, minPixelValue, maxPixelValue);
-            tiff->pixels[y][x].green = minMaxNormalization(tiff->pixels[y][x].green, minPixelValue, maxPixelValue);
-            tiff->pixels[y][x].blue = minMaxNormalization(tiff->pixels[y][x].blue, minPixelValue, maxPixelValue);
         }
     }
 }

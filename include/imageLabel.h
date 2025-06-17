@@ -13,9 +13,9 @@
 #include <fstream>
 
 #include "tiff.h"
+#include "imagePainter.h"
 #include "channelSelectionWindow.h"
 #include "pixelStatusBar.h"
-#include "pixelsNormalizer.h"
 #include "histogramPanel.h"
 
 class ImageLabel: public QLabel
@@ -40,11 +40,12 @@ private:
 	TIFF * tiffImage;	
 	QImage * image = nullptr;
 	
+	ImagePainter * painter;
+	
 	void openGrayscaleSelectionWindow(int channelsCount);
 	void openRgbSelectionWindow(int channelsCount);
 
-	void grayscaleSelectedEvent();
-	void rgbSelectedEvent();
+	void channelsSelectedEvent();
 	
 	void mouseMoveEvent(QMouseEvent * event) override;
 };

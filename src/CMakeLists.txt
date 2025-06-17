@@ -7,6 +7,6 @@ add_executable(TiffAnalyzer
     UI/histogramPanel.cpp
 
     Utils/tiff.cpp
-    Utils/pixelsNormalizer.cpp
+    Utils/imagePainter.cpp
     Utils/histogramPainter.cpp
 )

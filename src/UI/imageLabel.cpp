@@ -4,6 +4,8 @@
 ImageLabel::ImageLabel(): QLabel()
 {
     this->setMouseTracking(true);
+    
+    painter = new ImagePainter();
 }
 
 void ImageLabel::loadGrayscaleTIFF(std::string loadPath)
@@ -30,7 +32,7 @@ void ImageLabel::openGrayscaleSelectionWindow(int channelsCount)
 	channelSelector = new ChannelSelectionWindow(this);
 	channelSelector->createGrayscaleChannelSelector(channelsCount);
 	
-	channelSelector->setChannelSelectedEvent([this](){grayscaleSelectedEvent(); });
+	channelSelector->setChannelSelectedEvent([this](){channelsSelectedEvent(); });
 	
 	channelSelector->show();
 }
@@ -40,40 +42,31 @@ void ImageLabel::openRgbSelectionWindow(int channelsCount)
     channelSelector = new ChannelSelectionWindow(this);
     channelSelector->createRgbChannelSelector(channelsCount);
 	
-	channelSelector->setChannelSelectedEvent([this](){rgbSelectedEvent(); });
+	channelSelector->setChannelSelectedEvent([this](){channelsSelectedEvent(); });
 	
 	channelSelector->show();
 }
 
 void ImageLabel::updateImage()
 {
-	PixelsNormalizer::normalizePixelValues(tiffImage);
-
 	image = new QImage(tiffImage->width, tiffImage->height, QImage::Format_RGB888);
 	
-	for(int y = 0; y < tiffImage->height; y++)
-	{
-		for(int x = 0; x < tiffImage->width; x++)
-		{
-			(*image).setPixel(x, y, qRgb(tiffImage->pixels[y][x].red, tiffImage->pixels[y][x].green, tiffImage->pixels[y][x].blue));
-		}
-	}
+	painter->paintImage(tiffImage, image);
+	
 	setPixmap(QPixmap::fromImage(*image));
 	
 	histrogram->updateHistogram(image);
 }
 
-void ImageLabel::grayscaleSelectedEvent()
+void ImageLabel::clearImageLabel()
 {
-    int channel = channelSelector->getSelectedChannels().red;
+	this->clear();
+    image = nullptr;
     
-    channelSelector->close();
-    
-	tiffImage->loadGrayscale(tiffLoadPath, channel);
-	updateImage();
+    tiffImage->~TIFF();
 }
 
-void ImageLabel::rgbSelectedEvent()
+void ImageLabel::channelsSelectedEvent()
 {   
     RgbChannels channels = channelSelector->getSelectedChannels();
     
@@ -94,19 +87,13 @@ void ImageLabel::mouseMoveEvent(QMouseEvent * event)
 		{
 			Pixel16bit pixel = tiffImage->pixels[y][x];
 			
-			statusBar->updateInfo(x, y, pixel);
+			Pixel16bit normalizedPixel = {qRed(image->pixel(x, y)), qGreen(image->pixel(x, y)), qBlue(image->pixel(x, y))};
+			
+			statusBar->updateInfo(x, y, pixel, normalizedPixel);
 		}
 	}
 	else
 	{
 		statusBar->clearInfo();
 	}
-}
-
-void ImageLabel::clearImageLabel()
-{
-	this->clear();
-    image = nullptr;
-    
-    tiffImage->~TIFF();
 }
