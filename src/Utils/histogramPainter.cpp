@@ -81,12 +81,11 @@ void HistogramPainter::paintAxisY()
 
 void HistogramPainter::paintHistogram(QImage * image, QPen usingPen)
 {
+	calculateColorsFrequency(image, usingPen);
+	
     Yscale = findScale(maxPixelCount);
-
 	paintAxisX();
 	paintAxisY();
-	
-	calculateColorsFrequency(image, usingPen);
 	
 	int x, y;
     for (auto it = colorsFrequency.begin(); it != colorsFrequency.end(); it++)
