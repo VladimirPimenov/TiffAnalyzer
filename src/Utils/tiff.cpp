@@ -76,37 +76,6 @@ void TIFF::readEntry(std::ifstream & tiff)
     ifd->entries.push_back(entry);
 }
 
-void TIFF::loadGrayscale(std::string loadFilePath, int channelNumber)
-{
-    std::ifstream tiff;
-    tiff.open(loadFilePath, std::ios::binary);
-    
-    if(tiff.is_open())
-    {
-        pixels = new Pixel16bit *[height];
-        uint16_t * rowWithAllChannels = new uint16_t[width * channelsCount];
-        
-        for(int y = 0; y < height; y++)
-        {
-            pixels[y] = new Pixel16bit[width];
-            
-            tiff.seekg(stripOffsets[y], std::ios::beg);
-            tiff.read((char *)rowWithAllChannels, width * channelsCount * (bitsPerSample / 8)); 
-            
-            for(int x = 0; x < width; x++)
-            {
-                pixels[y][x].red = rowWithAllChannels[x * channelsCount + channelNumber];
-                pixels[y][x].green = rowWithAllChannels[x * channelsCount + channelNumber];
-                pixels[y][x].blue = rowWithAllChannels[x * channelsCount + channelNumber];
-            }
-        }
-        
-        delete[] rowWithAllChannels;
-       
-        tiff.close();
-    }
-}
-
 void TIFF::loadRgb(std::string loadFilePath, RgbChannels channels)
 {
     std::ifstream tiff;

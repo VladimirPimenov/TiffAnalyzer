@@ -59,14 +59,14 @@ void MainWindow::createImagePanel()
 	imageViewer->statusBar = statusBar;
 	imageViewer->histrogram = histogramPanel;
 	
-	centralBox->addWidget(scrollArea);
+	centralBox->insertWidget(0, scrollArea);
 }
 
 void MainWindow::createHistogramPanel()
 {
     histogramPanel = new HistogramPanel();
     
-    centralBox->addWidget(histogramPanel);
+    centralBox->insertWidget(1, histogramPanel);
 }
 
 void MainWindow::callError(std::string errorText)

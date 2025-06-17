@@ -5,8 +5,6 @@
 
 #include "rgb.h"
 
-#pragma pack(push, 2)
-
 struct TIFFFILEHEADER
 {
     uint16_t byteOrder;
@@ -28,8 +26,6 @@ struct IFD
     std::vector<Entry> entries;
 };
 
-#pragma pack(pop)
-
 class TIFF
 {   
 public:   
@@ -40,7 +36,7 @@ public:
     Pixel16bit ** pixels;
     
     void loadTiffMetadata(std::string loadFilePath);
-    void loadGrayscale(std::string loadFilePath, int channelNumber);
+    
     void loadRgb(std::string loadFilePath, RgbChannels channels);
     
     ~TIFF();

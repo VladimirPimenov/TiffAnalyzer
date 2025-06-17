@@ -15,8 +15,6 @@ ChannelSelectionWindow::ChannelSelectionWindow(QWidget * parent = nullptr) : QDi
     connect(okButton, &QPushButton::clicked, this, &ChannelSelectionWindow::channelSelectedEvent);
 			
 	vWidgetsBox = new QVBoxLayout(this);
-	
-	
 }
 
 void ChannelSelectionWindow::createGrayscaleChannelSelector(int channelsCount)
