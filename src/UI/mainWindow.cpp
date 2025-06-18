@@ -28,15 +28,22 @@ void MainWindow::createMenuBar()
 	
 	displayModeMenu->setEnabled(false);
 	
+	viewMenu = new QMenu("Вид");
+	showHistogramAction = viewMenu->addAction("Гистограмма");
+	showHistogramAction->setCheckable(true);
+	showHistogramAction->setChecked(true);
+	
 	connect(openImageAction, &QAction::triggered, this, &MainWindow::openImage);
 	connect(closeImageAction, &QAction::triggered, this, &MainWindow::closeImage);
 	
 	connect(grayscaleModeAction, &QAction::triggered, this, &MainWindow::openGrayscale);
 	connect(rgbModeAction, &QAction::triggered, this, &MainWindow::openRgb);
 	
+	connect(showHistogramAction, &QAction::triggered, this, &MainWindow::showHistogram);
+	
 	menuBar()->addMenu(fileMenu);
 	menuBar()->addMenu(displayModeMenu);
-	
+	menuBar()->addMenu(viewMenu);
 }
 
 void MainWindow::createCentralPanel()
@@ -95,6 +102,14 @@ void MainWindow::openGrayscale()
 void MainWindow::openRgb()
 {
 	imageViewer->loadRgbTIFF(openImagePath.toStdString());
+}
+
+void MainWindow::showHistogram()
+{
+    if(showHistogramAction->isChecked())
+		histogramPanel->setVisible(true);
+	else
+		histogramPanel->setVisible(false);
 }
 
 void MainWindow::closeImage()

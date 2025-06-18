@@ -27,6 +27,7 @@ public:
 	
 private:
 	QMenuBar * optionsMenu;
+	
 	QMenu * fileMenu;
 	QAction * openImageAction; 
 	QAction * closeImageAction;
@@ -35,6 +36,9 @@ private:
 	QMenu * displayModeMenu;
 	QAction * grayscaleModeAction;
 	QAction * rgbModeAction;
+	
+	QMenu * viewMenu;
+	QAction * showHistogramAction;
 	
 	QWidget * centralWidget;
 	QHBoxLayout * centralBox;
@@ -50,6 +54,8 @@ private:
 	void openGrayscale();
 	void openRgb();
 	void closeImage();
+	
+	void showHistogram();
 	
 	void createCentralPanel();
 	void createMenuBar();
