@@ -55,7 +55,7 @@ void ImageLabel::updateImage()
 	
 	setPixmap(QPixmap::fromImage(*image));
 	
-	histrogram->updateHistogram(image);
+	histrogram->updateHistogram(tiffImage);
 }
 
 void ImageLabel::clearImageLabel()

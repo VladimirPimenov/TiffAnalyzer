@@ -11,22 +11,28 @@
 #include <map>
 #include <string>
 
+#include "tiff.h"
+#include "rgb.h"
+
 class HistogramPainter
 {
 public:
 	HistogramPainter();
 	
-	void paintHistogram(QGraphicsScene * histogram, QImage * image, QPen usingPen);
+	void paintHistogram(QGraphicsScene * histogram, TIFF * image, QPen usingPen);
 	
 private:
 	int axisOffset;
-    int maxPixelCount;
+	float XScale;
 	float Yscale;
 	
-	std::map<int, int> colorsFrequency;
+    int maxPixelCount;
+    int maxPixelValue;
+    
+	std::map<uint16_t, int> colorsFrequency;
 	
 	void paintAxisX(QGraphicsScene * histogram);
 	void paintAxisY(QGraphicsScene * histogram);
 	
-	void calculateColorsFrequency(QImage * image, QPen usingPen);
+	void calculateColorsFrequency(TIFF * image, QPen usingPen);
 };

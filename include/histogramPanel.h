@@ -15,19 +15,20 @@
 #include <string>
 
 #include "histogramPainter.h"
+#include "tiff.h"
 
 class HistogramPanel: public QWidget
 {
 public:
 	HistogramPanel();
 
-	void updateHistogram(QImage * image);
+	void updateHistogram(TIFF * image);
 	void clearHistogram(); 
 	
 private:
 	HistogramPainter * painter;
 	
-	QImage * spectatedImage;
+	TIFF * spectatedImage;
 
 	QComboBox * channelSelector;
 	

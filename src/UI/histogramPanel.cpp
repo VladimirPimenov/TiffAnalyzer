@@ -43,7 +43,7 @@ void HistogramPanel::reloadHistogramScene()
 	histogram->setScene(scene);
 }
 
-void HistogramPanel::updateHistogram(QImage * image)
+void HistogramPanel::updateHistogram(TIFF * image)
 {
 	spectatedImage = image;
 

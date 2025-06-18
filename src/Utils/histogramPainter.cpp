@@ -44,18 +44,16 @@ void HistogramPainter::paintAxisX(QGraphicsScene * histogram)
 	histogram->addRect(axisOffset + 255, 0, 1, -5, pen, brush);
 
 	QGraphicsTextItem * x0 = histogram->addText("0");
-	QGraphicsTextItem * x50 = histogram->addText("50");
-	QGraphicsTextItem * x100 = histogram->addText("100");
-	QGraphicsTextItem * x150 = histogram->addText("150");
-	QGraphicsTextItem * x200 = histogram->addText("200");
-	QGraphicsTextItem * x255 = histogram->addText("255");
+	QGraphicsTextItem * x14 = histogram->addText(QString::fromStdString(std::to_string(maxPixelValue / 4)));
+	QGraphicsTextItem * xHalf = histogram->addText(QString::fromStdString(std::to_string(maxPixelValue / 2)));
+	QGraphicsTextItem * x34 = histogram->addText(QString::fromStdString(std::to_string(3 * maxPixelValue / 4)));
+	QGraphicsTextItem * xMax = histogram->addText(QString::fromStdString(std::to_string(maxPixelValue)));
 	
 	x0->setPos(axisOffset + 0,0);
-	x50->setPos(axisOffset + 50 - 10,0);
-	x100->setPos(axisOffset + 100 - 10,0);
-	x150->setPos(axisOffset + 150 - 10,0);
-	x200->setPos(axisOffset + 200 - 10,0);
-	x255->setPos(axisOffset + 255 - 10,0);
+	x14->setPos(axisOffset + 64 - 10,0);
+	xHalf->setPos(axisOffset + 127 - 10,0);
+	x34->setPos(axisOffset + 191 - 10,0);
+	xMax->setPos(axisOffset + 255 - 10,0);
 }
 
 void HistogramPainter::paintAxisY(QGraphicsScene * histogram)
@@ -77,12 +75,14 @@ void HistogramPainter::paintAxisY(QGraphicsScene * histogram)
 	yMaxHalf->setPos(0, scaledMaxY / 2 - 6);
 }
 
-void HistogramPainter::paintHistogram(QGraphicsScene * histogram, QImage * image, QPen usingPen)
+void HistogramPainter::paintHistogram(QGraphicsScene * histogram, TIFF * image, QPen usingPen)
 {
 	calculateColorsFrequency(image, usingPen);
 	
-    Yscale = findScale(maxPixelCount);
+	XScale = findScale(maxPixelValue);
 	paintAxisX(histogram);
+	
+    Yscale = findScale(maxPixelCount);
 	paintAxisY(histogram);
 	
 	int x, y;
@@ -92,41 +92,43 @@ void HistogramPainter::paintHistogram(QGraphicsScene * histogram, QImage * image
 		y = it->second;
 		
 		if(x != 0)
-			histogram->addLine(axisOffset + x, 0, axisOffset + x, -y/Yscale, usingPen);
+			histogram->addLine(axisOffset + x/XScale, 0, axisOffset + x/XScale, -y/Yscale, usingPen);
 	}
 	
 	colorsFrequency.clear();
 }
 
-void HistogramPainter::calculateColorsFrequency(QImage * image, QPen usingPen)
+void HistogramPainter::calculateColorsFrequency(TIFF * image, QPen usingPen)
 {
 	QColor usingColor = usingPen.color();
-	int colorValue;
+	uint16_t colorValue;
 	
-	QRgb pixel;
+	Pixel16bit pixel;
+	
 	maxPixelCount = 0;
+	maxPixelValue = 0;
 
-	for (int x = 0; x < image->width(); x++)
+	for (int x = 0; x < image->width; x++)
 	{
-		for (int y = 0; y < image->height(); y++)
+		for (int y = 0; y < image->height; y++)
 		{
-			pixel = image->pixel(x, y);
+			pixel = image->pixels[y][x];
 
 			if (usingColor == Qt::red)
 			{
-				colorValue = qRed(pixel);
+				colorValue = pixel.red;
 			}
 			else if (usingColor == Qt::green)
 			{
-				colorValue = qGreen(pixel);
+				colorValue = pixel.green;
 			}
 			else if (usingColor == Qt::blue)
 			{
-				colorValue = qBlue(pixel);
+				colorValue = pixel.blue;
 			}
 			else
 			{
-			    colorValue = qGray(pixel);
+			    colorValue = pixel.red;
 			}
 
 			if (colorsFrequency.count(colorValue))
@@ -136,9 +138,10 @@ void HistogramPainter::calculateColorsFrequency(QImage * image, QPen usingPen)
 				maxPixelCount = std::max(maxPixelCount, colorsFrequency[colorValue]);
 			}
 			else
-			{
 				colorsFrequency[colorValue] = 1;
-			}
+			
+			if(colorValue > maxPixelValue)
+				maxPixelValue = colorValue;
 		}
 	}
 }
