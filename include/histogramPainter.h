@@ -11,26 +11,22 @@
 #include <map>
 #include <string>
 
-class HistogramPanel;
-
 class HistogramPainter
 {
 public:
-    HistogramPainter(HistogramPanel * histogram);
-    
-	void paintHistogram(QImage * image, QPen usingPen);
+	HistogramPainter();
+	
+	void paintHistogram(QGraphicsScene * histogram, QImage * image, QPen usingPen);
 	
 private:
-    HistogramPanel * paintedHistogram;
-    
 	int axisOffset;
     int maxPixelCount;
 	float Yscale;
 	
 	std::map<int, int> colorsFrequency;
 	
-	void paintAxisX();
-	void paintAxisY();
+	void paintAxisX(QGraphicsScene * histogram);
+	void paintAxisY(QGraphicsScene * histogram);
 	
 	void calculateColorsFrequency(QImage * image, QPen usingPen);
 };

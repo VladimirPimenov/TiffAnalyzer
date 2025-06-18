@@ -7,7 +7,7 @@ HistogramPanel::HistogramPanel() : QWidget()
 
 	panel = new QVBoxLayout(this);
 
-	painter = new HistogramPainter(this);
+	painter = new HistogramPainter();
 
 	createChannelSelector();
 	createHistogramPanel();
@@ -53,7 +53,7 @@ void HistogramPanel::updateHistogram(QImage * image)
 	QPen pen;
 	pen.setColor(paintColor);
 
-	painter->paintHistogram(spectatedImage, pen);
+	painter->paintHistogram(scene, spectatedImage, pen);
 	
 	channelSelector->setEnabled(true);
 }
@@ -86,4 +86,6 @@ QColor HistogramPanel::getChannelColor()
 	{
 		return Qt::blue;
 	}
+	else
+	    return Qt::gray;
 }

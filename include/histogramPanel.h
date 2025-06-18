@@ -14,12 +14,10 @@
 #include <map>
 #include <string>
 
-class HistogramPainter;
+#include "histogramPainter.h"
 
 class HistogramPanel: public QWidget
 {
-	friend class HistogramPainter;
-
 public:
 	HistogramPanel();
 
