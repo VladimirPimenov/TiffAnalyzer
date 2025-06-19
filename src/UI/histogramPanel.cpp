@@ -55,7 +55,8 @@ void HistogramPanel::updateHistogram(TIFF * image)
 
 	painter->paintHistogram(scene, spectatedImage, pen);
 	
-	channelSelector->setEnabled(true);
+	if(!image->isGrayscale)
+		channelSelector->setEnabled(true);
 }
 
 void HistogramPanel::changeColor()

@@ -15,6 +15,7 @@
 #include "tiff.h"
 #include "imagePainter.h"
 #include "channelSelectionWindow.h"
+#include "contrastingWindow.h"
 #include "pixelStatusBar.h"
 #include "histogramPanel.h"
 
@@ -24,13 +25,18 @@ public:
 	ImageLabel();
 	
 	ChannelSelectionWindow * channelSelector;
+	ContrastingWindow * contrastingWin;
+	
 	PixelStatusBar * statusBar;
+	
 	HistogramPanel * histrogram;
 
 	std::string tiffLoadPath;
 
 	void loadGrayscaleTIFF(std::string loadPath);
 	void loadRgbTIFF(std::string loadPath);
+	
+	void standartContrasting();
 	
 	void updateImage();
 
@@ -42,10 +48,15 @@ private:
 	
 	ImagePainter * painter;
 	
+	uint16_t minNormalizationValue = 0;
+	uint16_t maxNormalizationValue = 255;
+	
 	void openGrayscaleSelectionWindow(int channelsCount);
 	void openRgbSelectionWindow(int channelsCount);
 
-	void channelsSelectedEvent();
+	void grayScaleSelectedEvent();
+	void rgbSelectedEvent();
+	void standartContrastingEvent();
 	
 	void mouseMoveEvent(QMouseEvent * event) override;
 };

@@ -22,9 +22,10 @@ void MainWindow::createMenuBar()
 	closeImageAction = fileMenu->addAction("Закрыть");
 	exitAction = fileMenu->addAction("Выход",this, SLOT(close()));
 	
-	displayModeMenu = new QMenu("Режим отображения");
-	grayscaleModeAction = displayModeMenu->addAction("Grayscale");
-	rgbModeAction = displayModeMenu->addAction("RGB");
+	displayModeMenu = new QMenu("Отображение");
+	grayscaleModeAction = displayModeMenu->addAction("Режим Grayscale");
+	rgbModeAction = displayModeMenu->addAction("Режим RGB");
+	standartContrastingAction = displayModeMenu->addAction("Контрастирование");
 	
 	displayModeMenu->setEnabled(false);
 	
@@ -38,12 +39,18 @@ void MainWindow::createMenuBar()
 	
 	connect(grayscaleModeAction, &QAction::triggered, this, &MainWindow::openGrayscale);
 	connect(rgbModeAction, &QAction::triggered, this, &MainWindow::openRgb);
+	connect(standartContrastingAction, &QAction::triggered, this, &MainWindow::standartContrasting);
 	
 	connect(showHistogramAction, &QAction::triggered, this, &MainWindow::showHistogram);
 	
 	menuBar()->addMenu(fileMenu);
 	menuBar()->addMenu(displayModeMenu);
 	menuBar()->addMenu(viewMenu);
+}
+
+void MainWindow::standartContrasting()
+{
+    imageViewer->standartContrasting();
 }
 
 void MainWindow::createCentralPanel()

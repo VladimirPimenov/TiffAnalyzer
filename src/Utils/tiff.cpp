@@ -76,6 +76,13 @@ void TIFF::readEntry(std::ifstream & tiff)
     ifd->entries.push_back(entry);
 }
 
+void TIFF::loadGrayscale(std::string loadFilePath, int channel)
+{    
+    loadRgb(loadFilePath, RgbChannels {channel, channel, channel});
+    
+    isGrayscale = true;
+}
+
 void TIFF::loadRgb(std::string loadFilePath, RgbChannels channels)
 {
     std::ifstream tiff;
@@ -105,6 +112,8 @@ void TIFF::loadRgb(std::string loadFilePath, RgbChannels channels)
        
         tiff.close();
     }
+    
+    isGrayscale = false;
 }
 
 TIFF::~TIFF()

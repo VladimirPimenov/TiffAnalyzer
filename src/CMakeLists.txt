@@ -3,6 +3,7 @@ add_executable(TiffAnalyzer
     UI/mainWindow.cpp 
     UI/imageLabel.cpp 
     UI/channelSelectionWindow.cpp
+    UI/contrastingWindow.cpp
     UI/pixelStatusBar.cpp
     UI/histogramPanel.cpp
 

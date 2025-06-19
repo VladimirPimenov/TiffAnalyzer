@@ -33,11 +33,14 @@ public:
     int height;
     int channelsCount = 124;
     
+    bool isGrayscale;
+    
     Pixel16bit ** pixels;
     
     void loadTiffMetadata(std::string loadFilePath);
     
     void loadRgb(std::string loadFilePath, RgbChannels channels);
+    void loadGrayscale(std::string loadFilePath, int channel);
     
     ~TIFF();
     

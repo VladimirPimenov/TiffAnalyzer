@@ -32,7 +32,7 @@ void ImageLabel::openGrayscaleSelectionWindow(int channelsCount)
 	channelSelector = new ChannelSelectionWindow(this);
 	channelSelector->createGrayscaleChannelSelector(channelsCount);
 	
-	channelSelector->setChannelSelectedEvent([this](){channelsSelectedEvent(); });
+	channelSelector->setChannelSelectedEvent([this](){ grayScaleSelectedEvent(); });
 	
 	channelSelector->show();
 }
@@ -42,7 +42,7 @@ void ImageLabel::openRgbSelectionWindow(int channelsCount)
     channelSelector = new ChannelSelectionWindow(this);
     channelSelector->createRgbChannelSelector(channelsCount);
 	
-	channelSelector->setChannelSelectedEvent([this](){channelsSelectedEvent(); });
+	channelSelector->setChannelSelectedEvent([this](){rgbSelectedEvent(); });
 	
 	channelSelector->show();
 }
@@ -51,7 +51,7 @@ void ImageLabel::updateImage()
 {
 	image = new QImage(tiffImage->width, tiffImage->height, QImage::Format_RGB888);
 	
-	painter->paintImage(tiffImage, image);
+	painter->paintImage(tiffImage, image, minNormalizationValue, maxNormalizationValue);
 	
 	setPixmap(QPixmap::fromImage(*image));
 	
@@ -66,7 +66,17 @@ void ImageLabel::clearImageLabel()
     tiffImage->~TIFF();
 }
 
-void ImageLabel::channelsSelectedEvent()
+void ImageLabel::grayScaleSelectedEvent()
+{   
+    int channel = channelSelector->getSelectedChannels().red;
+    
+    channelSelector->close();
+    
+    tiffImage->loadGrayscale(tiffLoadPath, channel);
+    updateImage();
+}
+
+void ImageLabel::rgbSelectedEvent()
 {   
     RgbChannels channels = channelSelector->getSelectedChannels();
     
@@ -96,4 +106,23 @@ void ImageLabel::mouseMoveEvent(QMouseEvent * event)
 	{
 		statusBar->clearInfo();
 	}
+}
+
+void ImageLabel::standartContrasting()
+{
+    contrastingWin = new ContrastingWindow(this);
+    
+    contrastingWin->setContrastingEvent([this](){ standartContrastingEvent(); });
+    
+    contrastingWin->show();
+}
+
+void ImageLabel::standartContrastingEvent()
+{
+    minNormalizationValue = contrastingWin->getMinValue();
+    maxNormalizationValue = contrastingWin->getMaxValue();
+    
+    contrastingWin->close();
+    
+    updateImage();
 }

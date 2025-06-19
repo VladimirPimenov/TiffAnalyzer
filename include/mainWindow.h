@@ -36,6 +36,7 @@ private:
 	QMenu * displayModeMenu;
 	QAction * grayscaleModeAction;
 	QAction * rgbModeAction;
+	QAction * standartContrastingAction;
 	
 	QMenu * viewMenu;
 	QAction * showHistogramAction;
@@ -54,6 +55,8 @@ private:
 	void openGrayscale();
 	void openRgb();
 	void closeImage();
+	
+	void standartContrasting();
 	
 	void showHistogram();
 	

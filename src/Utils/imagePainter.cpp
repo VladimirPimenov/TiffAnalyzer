@@ -1,16 +1,16 @@
 #include "../../include/imagePainter.h"
 #include <iostream>
 
-uint16_t minMaxNormalization(uint16_t x, uint16_t minX, uint16_t maxX)
+uint16_t minMaxNormalization(uint16_t x, uint16_t minX, uint16_t maxX, uint16_t a, uint16_t b)
 {
     /* 
     Формула minMax-нормализации в диапазоне [a; b]:
     x' = (x - min(x)) * (b - a) / (max(x) - min(x)) + a
     */
-    return ((x - minX) * 255) / (maxX - minX);
+    return ((x - minX) * (b - a)) / (maxX - minX) + a;
 }
 
-void ImagePainter::paintImage(TIFF * sourceTiff, QImage * image)
+void ImagePainter::paintImage(TIFF * sourceTiff, QImage * image, uint16_t minNormalizationValue, uint16_t maxNormalizationValue)
 {
     findMinMaxPixelValues(sourceTiff);
     
@@ -18,9 +18,15 @@ void ImagePainter::paintImage(TIFF * sourceTiff, QImage * image)
     {
         for(int x = 0; x < image->width(); x++)
         {
-            uint normalizedRed = minMaxNormalization(sourceTiff->pixels[y][x].red, minPixelValue, maxPixelValue);
-            uint normalizedGreen = minMaxNormalization(sourceTiff->pixels[y][x].green, minPixelValue, maxPixelValue);
-            uint normalizedBlue = minMaxNormalization(sourceTiff->pixels[y][x].blue, minPixelValue, maxPixelValue);
+            uint16_t normalizedRed = minMaxNormalization(sourceTiff->pixels[y][x].red, 
+                                                    minPixelValue, maxPixelValue, 
+                                                    minNormalizationValue, maxNormalizationValue);
+            uint16_t normalizedGreen = minMaxNormalization(sourceTiff->pixels[y][x].green, 
+                                                    minPixelValue, maxPixelValue, 
+                                                    minNormalizationValue, maxNormalizationValue);
+            uint16_t normalizedBlue = minMaxNormalization(sourceTiff->pixels[y][x].blue, 
+                                                    minPixelValue, maxPixelValue, 
+                                                    minNormalizationValue, maxNormalizationValue);
             
 			image->setPixel(x, y, qRgb(normalizedRed, normalizedGreen, normalizedBlue));
         }
