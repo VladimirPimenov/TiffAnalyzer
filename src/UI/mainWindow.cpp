@@ -26,6 +26,7 @@ void MainWindow::createMenuBar()
 	grayscaleModeAction = displayModeMenu->addAction("Режим Grayscale");
 	rgbModeAction = displayModeMenu->addAction("Режим RGB");
 	standartContrastingAction = displayModeMenu->addAction("Контрастирование");
+	histogramContrastingAction = displayModeMenu->addAction("Контрастирование по гистограмме");
 	
 	displayModeMenu->setEnabled(false);
 	
@@ -40,6 +41,7 @@ void MainWindow::createMenuBar()
 	connect(grayscaleModeAction, &QAction::triggered, this, &MainWindow::openGrayscale);
 	connect(rgbModeAction, &QAction::triggered, this, &MainWindow::openRgb);
 	connect(standartContrastingAction, &QAction::triggered, this, &MainWindow::standartContrasting);
+	connect(histogramContrastingAction, &QAction::triggered, this, &MainWindow::histogramContrasting);
 	
 	connect(showHistogramAction, &QAction::triggered, this, &MainWindow::showHistogram);
 	
@@ -48,10 +50,6 @@ void MainWindow::createMenuBar()
 	menuBar()->addMenu(viewMenu);
 }
 
-void MainWindow::standartContrasting()
-{
-    imageViewer->standartContrasting();
-}
 
 void MainWindow::createCentralPanel()
 {
@@ -110,6 +108,17 @@ void MainWindow::openRgb()
 {
 	imageViewer->loadRgbTIFF(openImagePath.toStdString());
 }
+
+void MainWindow::standartContrasting()
+{
+    imageViewer->standartContrasting();
+}
+
+void MainWindow::histogramContrasting()
+{
+    imageViewer->histogramContrasting();
+}
+
 
 void MainWindow::showHistogram()
 {

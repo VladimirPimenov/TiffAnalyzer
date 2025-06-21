@@ -5,6 +5,9 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QPushButton>
+#include <QLabel>
+
+#include "rgb.h"
 
 #include <functional>
 
@@ -13,24 +16,40 @@ class ContrastingWindow: public QDialog
 public:
     ContrastingWindow(QWidget * parent);
     
+    void createGrayscaleContrastingWindow();
+    void createRgbContrastingWindow();
+	void createHistogramContrastingWindow();
+    
 	void setContrastingEvent(std::function<void()> eventHandler);
 	
-	uint16_t getMinValue();
-	uint16_t getMaxValue();
+	Pixel16bit getMinPixelParameters();
+	Pixel16bit getMaxPixelParameters();
 
 private:
+	bool isGrayscaleContrasting;
+	
 	QVBoxLayout * vWidgetsBox;
-	QHBoxLayout * hWidgetsBox;
+	
+	QHBoxLayout * textBox;
+	
+	QLabel * minValueText;
+	QLabel * maxValueText;
 	
 	QPushButton * okButton;
 	
-	QLineEdit * minContrastingValueEntry;
-	QLineEdit * maxContrastingValueEntry;
+	QLineEdit * grayscaleMinContastingEntry;
+	QLineEdit * grayscaleMaxContastingEntry;
+	
+	QLineEdit * redMinContastingEntry;
+	QLineEdit * redMaxContastingEntry;
+	QLineEdit * greenMinContastingEntry;
+	QLineEdit * greenMaxContastingEntry;
+	QLineEdit * blueMinContastingEntry;
+	QLineEdit * blueMaxContastingEntry;
+	
+	QLineEdit * histogramCuttingPercentEntry;
 	
 	std::function<void()> contrastingEventHandler;
-	
-	void createGrayscaleContrastingWindow();
-	void createRgbContrastingWindow();
 	
 private slots:
 	void contrastingEvent();

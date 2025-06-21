@@ -13,6 +13,7 @@
 #include <fstream>
 
 #include "tiff.h"
+#include "rgb.h"
 #include "imagePainter.h"
 #include "channelSelectionWindow.h"
 #include "contrastingWindow.h"
@@ -37,6 +38,7 @@ public:
 	void loadRgbTIFF(std::string loadPath);
 	
 	void standartContrasting();
+	void histogramContrasting();
 	
 	void updateImage();
 
@@ -48,8 +50,8 @@ private:
 	
 	ImagePainter * painter;
 	
-	uint16_t minNormalizationValue = 0;
-	uint16_t maxNormalizationValue = 255;
+	Pixel16bit minNormalizationPixel;
+	Pixel16bit maxNormalizationPixel;
 	
 	void openGrayscaleSelectionWindow(int channelsCount);
 	void openRgbSelectionWindow(int channelsCount);
@@ -59,4 +61,6 @@ private:
 	void standartContrastingEvent();
 	
 	void mouseMoveEvent(QMouseEvent * event) override;
+	
+	void resetContrasting();
 };

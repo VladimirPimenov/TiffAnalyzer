@@ -59,22 +59,21 @@ void ChannelSelectionWindow::createRgbChannelSelector(int channelsCount)
 
 RgbChannels ChannelSelectionWindow::getSelectedChannels()
 {
-    if(grayscaleChannelsList != nullptr)
-        return RgbChannels
-        {
-            grayscaleChannelsList->currentText().toInt() - 1,
-            grayscaleChannelsList->currentText().toInt() - 1,
-            grayscaleChannelsList->currentText().toInt() - 1
-        };
-    else
-    {
+    if(grayscaleChannelsList == nullptr)
         return RgbChannels
         {
             redChannelsList->currentText().toInt() - 1,
             greenChannelsList->currentText().toInt() - 1,
             blueChannelsList->currentText().toInt() - 1
         };
-    }
+        
+    else
+        return RgbChannels
+        {
+            grayscaleChannelsList->currentText().toInt() - 1,
+            grayscaleChannelsList->currentText().toInt() - 1,
+            grayscaleChannelsList->currentText().toInt() - 1
+        };
 }
 
 void ChannelSelectionWindow::setChannelSelectedEvent(std::function<void()> eventHandler)

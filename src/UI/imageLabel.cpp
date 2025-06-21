@@ -6,6 +6,8 @@ ImageLabel::ImageLabel(): QLabel()
     this->setMouseTracking(true);
     
     painter = new ImagePainter();
+    
+    resetContrasting();
 }
 
 void ImageLabel::loadGrayscaleTIFF(std::string loadPath)
@@ -47,11 +49,25 @@ void ImageLabel::openRgbSelectionWindow(int channelsCount)
 	channelSelector->show();
 }
 
+void ImageLabel::standartContrasting()
+{
+    contrastingWin = new ContrastingWindow(this);
+    
+    contrastingWin->setContrastingEvent([this](){ standartContrastingEvent(); });
+    
+    if(tiffImage->isGrayscale)
+    	contrastingWin->createGrayscaleContrastingWindow();
+    else
+		contrastingWin->createRgbContrastingWindow();		
+    
+    contrastingWin->show();
+}
+
 void ImageLabel::updateImage()
 {
 	image = new QImage(tiffImage->width, tiffImage->height, QImage::Format_RGB888);
 	
-	painter->paintImage(tiffImage, image, minNormalizationValue, maxNormalizationValue);
+	painter->paintImage(tiffImage, image, minNormalizationPixel, maxNormalizationPixel);
 	
 	setPixmap(QPixmap::fromImage(*image));
 	
@@ -66,6 +82,12 @@ void ImageLabel::clearImageLabel()
     tiffImage->~TIFF();
 }
 
+void ImageLabel::resetContrasting()
+{
+    minNormalizationPixel = Pixel16bit {0, 0, 0};
+    maxNormalizationPixel = Pixel16bit {255, 255, 255};
+}
+
 void ImageLabel::grayScaleSelectedEvent()
 {   
     int channel = channelSelector->getSelectedChannels().red;
@@ -73,6 +95,9 @@ void ImageLabel::grayScaleSelectedEvent()
     channelSelector->close();
     
     tiffImage->loadGrayscale(tiffLoadPath, channel);
+    
+    resetContrasting();
+    
     updateImage();
 }
 
@@ -83,7 +108,25 @@ void ImageLabel::rgbSelectedEvent()
     channelSelector->close();
     
     tiffImage->loadRgb(tiffLoadPath, channels);
+    
+    resetContrasting();
+    
     updateImage();
+}
+
+void ImageLabel::standartContrastingEvent()
+{
+    minNormalizationPixel = contrastingWin->getMinPixelParameters();
+    maxNormalizationPixel = contrastingWin->getMaxPixelParameters();
+    
+    contrastingWin->close();
+    
+    updateImage();
+}
+
+void ImageLabel::histogramContrasting()
+{
+    
 }
 
 void ImageLabel::mouseMoveEvent(QMouseEvent * event)
@@ -106,23 +149,4 @@ void ImageLabel::mouseMoveEvent(QMouseEvent * event)
 	{
 		statusBar->clearInfo();
 	}
-}
-
-void ImageLabel::standartContrasting()
-{
-    contrastingWin = new ContrastingWindow(this);
-    
-    contrastingWin->setContrastingEvent([this](){ standartContrastingEvent(); });
-    
-    contrastingWin->show();
-}
-
-void ImageLabel::standartContrastingEvent()
-{
-    minNormalizationValue = contrastingWin->getMinValue();
-    maxNormalizationValue = contrastingWin->getMaxValue();
-    
-    contrastingWin->close();
-    
-    updateImage();
 }

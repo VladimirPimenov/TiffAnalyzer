@@ -49,14 +49,19 @@ void HistogramPanel::updateHistogram(TIFF * image)
 
 	reloadHistogramScene();
 	
-	QColor paintColor = getChannelColor();
 	QPen pen;
-	pen.setColor(paintColor);
+	
+	if(!image->isGrayscale)
+	{
+		channelSelector->setEnabled(true);
+		QColor paintColor = getChannelColor();
+		pen.setColor(paintColor);
+	}
+	else
+		pen.setColor(Qt::gray);
 
 	painter->paintHistogram(scene, spectatedImage, pen);
 	
-	if(!image->isGrayscale)
-		channelSelector->setEnabled(true);
 }
 
 void HistogramPanel::changeColor()
