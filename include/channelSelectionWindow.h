@@ -26,7 +26,6 @@ private:
 	bool isGrayscaleChannel;
 
 	QVBoxLayout * vWidgetsBox;
-	QHBoxLayout * hWidgetBox;
 	
 	QComboBox * grayscaleChannelsList;
 	QComboBox * redChannelsList;

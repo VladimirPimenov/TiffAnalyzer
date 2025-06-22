@@ -119,7 +119,6 @@ void MainWindow::histogramContrasting()
     imageViewer->histogramContrasting();
 }
 
-
 void MainWindow::showHistogram()
 {
     if(showHistogramAction->isChecked())

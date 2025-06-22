@@ -1,5 +1,29 @@
 #include "../../include/tiff.h"
 
+uint16_t getMinPixelValue(uint16_t currentMin, Pixel16bit pixel)
+{
+    if(pixel.red < currentMin)
+        return pixel.red;
+    if(pixel.green < currentMin)
+        return pixel.green;
+    if(pixel.blue < currentMin)
+       return pixel.blue;
+       
+    return currentMin;
+}
+
+uint16_t getMaxPixelValue(uint16_t currentMax, Pixel16bit pixel)
+{
+    if(pixel.red > currentMax)
+        return pixel.red;
+    if(pixel.green > currentMax)
+        return pixel.green;
+    if(pixel.blue > currentMax)
+        return pixel.blue;
+    
+    return currentMax;
+}
+
 void TIFF::loadTiffMetadata(std::string loadFilePath)
 {
     std::ifstream tiff;
@@ -104,19 +128,8 @@ void TIFF::loadRgb(std::string loadFilePath, RgbChannels channels)
                 pixels[y][x].green = rowWithAllChannels[x * channelsCount + channels.green];
                 pixels[y][x].blue = rowWithAllChannels[x * channelsCount + channels.blue];
                 
-                if(pixels[y][x].red > maxPixelValue)
-                    maxPixelValue = pixels[y][x].red;
-                if(pixels[y][x].green > maxPixelValue)
-                    maxPixelValue = pixels[y][x].green;
-                if(pixels[y][x].blue > maxPixelValue)
-                    maxPixelValue = pixels[y][x].blue;
-                    
-                if(pixels[y][x].red < minPixelValue)
-                    minPixelValue = pixels[y][x].red;
-                if(pixels[y][x].green < minPixelValue)
-                    minPixelValue = pixels[y][x].green;
-                if(pixels[y][x].blue < minPixelValue)
-                    minPixelValue = pixels[y][x].blue;
+                minPixelValue = getMinPixelValue(minPixelValue, pixels[y][x]);
+                maxPixelValue = getMaxPixelValue(maxPixelValue, pixels[y][x]);
             }
         }
         

@@ -62,6 +62,11 @@ void ImageLabel::standartContrasting()
     contrastingWin->show();
 }
 
+void ImageLabel::histogramContrasting()
+{
+    
+}
+
 void ImageLabel::updateImage()
 {
 	image8bit = new QImage(image16bit->width, image16bit->height, QImage::Format_RGB888);
@@ -133,10 +138,6 @@ void ImageLabel::standartContrastingEvent()
     updateImage();
 }
 
-void ImageLabel::histogramContrasting()
-{
-    
-}
 
 void ImageLabel::mouseMoveEvent(QMouseEvent * event)
 {
@@ -149,7 +150,12 @@ void ImageLabel::mouseMoveEvent(QMouseEvent * event)
 		{
 			Pixel16bit pixel = image16bit->pixels[y][x];
 			
-			Pixel16bit normalizedPixel = {qRed(image8bit->pixel(x, y)), qGreen(image8bit->pixel(x, y)), qBlue(image8bit->pixel(x, y))};
+			Pixel16bit normalizedPixel = 
+			{
+				(uint16_t)qRed(image8bit->pixel(x, y)), 
+				(uint16_t)qGreen(image8bit->pixel(x, y)), 
+				(uint16_t)qBlue(image8bit->pixel(x, y))
+			};
 			
 			statusBar->updateInfo(x, y, pixel, normalizedPixel);
 		}

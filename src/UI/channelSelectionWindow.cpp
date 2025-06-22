@@ -44,7 +44,7 @@ void ChannelSelectionWindow::createRgbChannelSelector(int channelsCount)
 	    blueChannelsList->addItem(QString::fromStdString(std::to_string(channelNumber)));
 	}
 	
-	hWidgetBox = new QHBoxLayout();
+	QHBoxLayout * hWidgetBox = new QHBoxLayout();
 	
 	hWidgetBox->addWidget(redChannelsList);
 	hWidgetBox->addWidget(greenChannelsList);
