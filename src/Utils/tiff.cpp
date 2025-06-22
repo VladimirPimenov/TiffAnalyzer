@@ -1,5 +1,3 @@
-#include <fstream>
-
 #include "../../include/tiff.h"
 
 void TIFF::loadTiffMetadata(std::string loadFilePath)
@@ -105,6 +103,20 @@ void TIFF::loadRgb(std::string loadFilePath, RgbChannels channels)
                 pixels[y][x].red = rowWithAllChannels[x * channelsCount + channels.red];
                 pixels[y][x].green = rowWithAllChannels[x * channelsCount + channels.green];
                 pixels[y][x].blue = rowWithAllChannels[x * channelsCount + channels.blue];
+                
+                if(pixels[y][x].red > maxPixelValue)
+                    maxPixelValue = pixels[y][x].red;
+                if(pixels[y][x].green > maxPixelValue)
+                    maxPixelValue = pixels[y][x].green;
+                if(pixels[y][x].blue > maxPixelValue)
+                    maxPixelValue = pixels[y][x].blue;
+                    
+                if(pixels[y][x].red < minPixelValue)
+                    minPixelValue = pixels[y][x].red;
+                if(pixels[y][x].green < minPixelValue)
+                    minPixelValue = pixels[y][x].green;
+                if(pixels[y][x].blue < minPixelValue)
+                    minPixelValue = pixels[y][x].blue;
             }
         }
         

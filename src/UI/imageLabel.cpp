@@ -1,32 +1,31 @@
 #include "../../include/imageLabel.h"
 #include <iostream>
+#include <cmath>
 
 ImageLabel::ImageLabel(): QLabel()
 {
     this->setMouseTracking(true);
     
     painter = new ImagePainter();
-    
-    resetContrasting();
 }
 
 void ImageLabel::loadGrayscaleTIFF(std::string loadPath)
 {
 	tiffLoadPath = loadPath;
 	
-	tiffImage = new TIFF();
-	tiffImage->loadTiffMetadata(tiffLoadPath);
+	image16bit = new TIFF();
+	image16bit->loadTiffMetadata(tiffLoadPath);
 	
-	openGrayscaleSelectionWindow(tiffImage->channelsCount);
+	openGrayscaleSelectionWindow(image16bit->channelsCount);
 }
 
 void ImageLabel::loadRgbTIFF(std::string loadPath)
 {
 	tiffLoadPath = loadPath;
 	
-	tiffImage->loadTiffMetadata(tiffLoadPath);
+	image16bit->loadTiffMetadata(tiffLoadPath);
 	
-    openRgbSelectionWindow(tiffImage->channelsCount);
+    openRgbSelectionWindow(image16bit->channelsCount);
 }
 
 void ImageLabel::openGrayscaleSelectionWindow(int channelsCount)
@@ -55,7 +54,7 @@ void ImageLabel::standartContrasting()
     
     contrastingWin->setContrastingEvent([this](){ standartContrastingEvent(); });
     
-    if(tiffImage->isGrayscale)
+    if(image16bit->isGrayscale)
     	contrastingWin->createGrayscaleContrastingWindow();
     else
 		contrastingWin->createRgbContrastingWindow();		
@@ -65,27 +64,37 @@ void ImageLabel::standartContrasting()
 
 void ImageLabel::updateImage()
 {
-	image = new QImage(tiffImage->width, tiffImage->height, QImage::Format_RGB888);
+	image8bit = new QImage(image16bit->width, image16bit->height, QImage::Format_RGB888);
 	
-	painter->paintImage(tiffImage, image, minNormalizationPixel, maxNormalizationPixel);
+	painter->paintImage(image16bit, image8bit, minNormalizationPixel, maxNormalizationPixel);
 	
-	setPixmap(QPixmap::fromImage(*image));
+	setPixmap(QPixmap::fromImage(*image8bit));
 	
-	histrogram->updateHistogram(tiffImage);
+	histrogram->updateHistogram(image16bit);
 }
 
 void ImageLabel::clearImageLabel()
 {
 	this->clear();
-    image = nullptr;
+    image8bit = nullptr;
     
-    tiffImage->~TIFF();
+    image16bit->~TIFF();
 }
 
 void ImageLabel::resetContrasting()
 {
-    minNormalizationPixel = Pixel16bit {0, 0, 0};
-    maxNormalizationPixel = Pixel16bit {255, 255, 255};
+    minNormalizationPixel = Pixel16bit 
+    {
+    	image16bit->minPixelValue,
+    	image16bit->minPixelValue, 
+    	image16bit->minPixelValue
+	};
+    maxNormalizationPixel = Pixel16bit 
+    {
+    	image16bit->maxPixelValue, 
+    	image16bit->maxPixelValue, 
+    	image16bit->maxPixelValue
+	};
 }
 
 void ImageLabel::grayScaleSelectedEvent()
@@ -94,7 +103,7 @@ void ImageLabel::grayScaleSelectedEvent()
     
     channelSelector->close();
     
-    tiffImage->loadGrayscale(tiffLoadPath, channel);
+    image16bit->loadGrayscale(tiffLoadPath, channel);
     
     resetContrasting();
     
@@ -107,7 +116,7 @@ void ImageLabel::rgbSelectedEvent()
     
     channelSelector->close();
     
-    tiffImage->loadRgb(tiffLoadPath, channels);
+    image16bit->loadRgb(tiffLoadPath, channels);
     
     resetContrasting();
     
@@ -131,16 +140,16 @@ void ImageLabel::histogramContrasting()
 
 void ImageLabel::mouseMoveEvent(QMouseEvent * event)
 {
-	if(image != nullptr )
+	if(image8bit != nullptr)
 	{
-		int x = event->pos().rx() - (this->width() - image->width()) / 2;
-		int y = event->pos().ry() - (this->height() - image->height()) / 2;
+		int x = event->pos().rx() - (this->width() - image8bit->width()) / 2;
+		int y = event->pos().ry() - (this->height() - image8bit->height()) / 2;
 		
-		if(x >= 0 && y >= 0 && x < image->width() && y < image->height())
+		if(x >= 0 && y >= 0 && x < image8bit->width() && y < image8bit->height())
 		{
-			Pixel16bit pixel = tiffImage->pixels[y][x];
+			Pixel16bit pixel = image16bit->pixels[y][x];
 			
-			Pixel16bit normalizedPixel = {qRed(image->pixel(x, y)), qGreen(image->pixel(x, y)), qBlue(image->pixel(x, y))};
+			Pixel16bit normalizedPixel = {qRed(image8bit->pixel(x, y)), qGreen(image8bit->pixel(x, y)), qBlue(image8bit->pixel(x, y))};
 			
 			statusBar->updateInfo(x, y, pixel, normalizedPixel);
 		}

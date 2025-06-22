@@ -5,19 +5,21 @@ ContrastingWindow::ContrastingWindow(QWidget * parent = nullptr) : QDialog(paren
     this->setFixedSize(400, 100);
 	this->setWindowModality(Qt::WindowModality::WindowModal);
 	
+    minValueText = new QLabel("Минимальное значение");
+	maxValueText = new QLabel("Максимальное значение");
+	
+	textBox = new QHBoxLayout();
+	
+	textBox->addWidget(minValueText);
+	textBox->addWidget(maxValueText);
+	
     okButton = new QPushButton();
 	okButton->setText("Выполнить контрастирование");
     connect(okButton, &QPushButton::clicked, this, &ContrastingWindow::contrastingEvent);
     
-	textBox = new QHBoxLayout();
-    minValueText = new QLabel("Минимальное значение");
-	maxValueText = new QLabel("Максимальное значение");
-			
-	vWidgetsBox = new QVBoxLayout(this);
 	
-	grayscaleMinContastingEntry = nullptr;
-	grayscaleMaxContastingEntry = nullptr;
-	histogramCuttingPercentEntry = nullptr;
+	vWidgetsBox = new QVBoxLayout(this);
+	vWidgetsBox->addLayout(textBox);
 }
 
 void ContrastingWindow::createGrayscaleContrastingWindow()
@@ -29,12 +31,9 @@ void ContrastingWindow::createGrayscaleContrastingWindow()
     grayscaleMinContastingEntry = new QLineEdit();
 	grayscaleMaxContastingEntry = new QLineEdit();
 	
-	textBox->addWidget(minValueText);
-	textBox->addWidget(maxValueText);
 	entryBox->addWidget(grayscaleMinContastingEntry);
 	entryBox->addWidget(grayscaleMaxContastingEntry);
 	
-	vWidgetsBox->addLayout(textBox);
 	vWidgetsBox->addLayout(entryBox);
 	vWidgetsBox->addWidget(okButton);
 	
@@ -43,13 +42,15 @@ void ContrastingWindow::createGrayscaleContrastingWindow()
 
 void ContrastingWindow::createRgbContrastingWindow()
 {
+	this->setFixedHeight(200);
+	
     QHBoxLayout * redEntryBox = new QHBoxLayout();
     QHBoxLayout * greenEntryBox = new QHBoxLayout();
     QHBoxLayout * blueEntryBox = new QHBoxLayout();
     
-    QLabel * redText = new QLabel("Красный");
-	QLabel * greenText = new QLabel("Зелёный");
-	QLabel * blueText = new QLabel("Синий");
+    QLabel * redText = new QLabel("R");
+	QLabel * greenText = new QLabel("G");
+	QLabel * blueText = new QLabel("B");
 	
 	redMinContastingEntry = new QLineEdit();
 	redMaxContastingEntry = new QLineEdit();
@@ -69,7 +70,10 @@ void ContrastingWindow::createRgbContrastingWindow()
 	blueEntryBox->addWidget(blueText);
 	blueEntryBox->addWidget(blueMinContastingEntry);
 	blueEntryBox->addWidget(blueMaxContastingEntry);
-	
+
+	textBox->setAlignment(minValueText, Qt::AlignCenter);
+	textBox->setAlignment(maxValueText, Qt::AlignCenter);
+
 	vWidgetsBox->addLayout(redEntryBox);
 	vWidgetsBox->addLayout(greenEntryBox);
 	vWidgetsBox->addLayout(blueEntryBox);
@@ -92,12 +96,13 @@ Pixel16bit ContrastingWindow::getMinPixelParameters()
 			(uint16_t)(grayscaleMinContastingEntry->text().toUInt()),
 			(uint16_t)(grayscaleMinContastingEntry->text().toUInt())
 		};
-	return Pixel16bit
-	{
-	    (uint16_t)(redMinContastingEntry->text().toUInt()),
-		(uint16_t)(greenMinContastingEntry->text().toUInt()),
-		(uint16_t)(blueMinContastingEntry->text().toUInt())
-	};
+	else
+		return Pixel16bit
+		{
+			(uint16_t)(redMinContastingEntry->text().toUInt()),
+			(uint16_t)(greenMinContastingEntry->text().toUInt()),
+			(uint16_t)(blueMinContastingEntry->text().toUInt())
+		};
 }
 
 Pixel16bit ContrastingWindow::getMaxPixelParameters()

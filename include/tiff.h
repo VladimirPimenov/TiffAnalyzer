@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <fstream>
 
 #include "rgb.h"
 
@@ -32,6 +33,9 @@ public:
     int width;
     int height;
     int channelsCount = 124;
+    
+    uint16_t minPixelValue;
+    uint16_t maxPixelValue;
     
     bool isGrayscale;
     

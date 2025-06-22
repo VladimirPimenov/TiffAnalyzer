@@ -45,8 +45,8 @@ public:
 	void clearImageLabel();
 	
 private:
-	TIFF * tiffImage;	
-	QImage * image = nullptr;
+	TIFF * image16bit;	
+	QImage * image8bit = nullptr;
 	
 	ImagePainter * painter;
 	

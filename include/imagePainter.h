@@ -7,11 +7,5 @@
 class ImagePainter
 {
 public:
-    void paintImage(TIFF * sourceTiff, QImage * image, Pixel16bit minNormalizationPixel, Pixel16bit maxNormalizationPixel);
-    
-private:
-    uint16_t minPixelValue;
-    uint16_t maxPixelValue;
-    
-    void findMinMaxPixelValues(TIFF * tiff);
+    void paintImage(TIFF * image16bit, QImage * image8bit, Pixel16bit minNormalizationPixel, Pixel16bit maxNormalizationPixel);
 };

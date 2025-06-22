@@ -145,3 +145,8 @@ void HistogramPainter::calculateColorsFrequency(TIFF * image, QPen usingPen)
 		}
 	}
 }
+
+uint16_t HistogramPainter::getMaxPixelValue()
+{
+    return maxPixelValue;
+}

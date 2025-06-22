@@ -4,11 +4,6 @@ ChannelSelectionWindow::ChannelSelectionWindow(QWidget * parent = nullptr) : QDi
 {
     this->setFixedSize(400, 100);
 	this->setWindowModality(Qt::WindowModality::WindowModal);
-
-    grayscaleChannelsList = nullptr;
-	redChannelsList = nullptr;
-	greenChannelsList = nullptr;
-	blueChannelsList = nullptr;
 	
     okButton = new QPushButton();
 	okButton->setText("Загрузить канал");
@@ -30,6 +25,8 @@ void ChannelSelectionWindow::createGrayscaleChannelSelector(int channelsCount)
 	
 	vWidgetsBox->addWidget(grayscaleChannelsList);
 	vWidgetsBox->addWidget(okButton);
+	
+	isGrayscaleChannel = true;
 }
 
 void ChannelSelectionWindow::createRgbChannelSelector(int channelsCount)
@@ -55,24 +52,26 @@ void ChannelSelectionWindow::createRgbChannelSelector(int channelsCount)
 	
 	vWidgetsBox->addLayout(hWidgetBox);
 	vWidgetsBox->addWidget(okButton);
+	
+	isGrayscaleChannel = false;
 }
 
 RgbChannels ChannelSelectionWindow::getSelectedChannels()
 {
-    if(grayscaleChannelsList == nullptr)
-        return RgbChannels
-        {
-            redChannelsList->currentText().toInt() - 1,
-            greenChannelsList->currentText().toInt() - 1,
-            blueChannelsList->currentText().toInt() - 1
-        };
+    if(isGrayscaleChannel)
         
-    else
         return RgbChannels
         {
             grayscaleChannelsList->currentText().toInt() - 1,
             grayscaleChannelsList->currentText().toInt() - 1,
             grayscaleChannelsList->currentText().toInt() - 1
+        };
+    else
+        return RgbChannels
+        {
+            redChannelsList->currentText().toInt() - 1,
+            greenChannelsList->currentText().toInt() - 1,
+            blueChannelsList->currentText().toInt() - 1
         };
 }
 

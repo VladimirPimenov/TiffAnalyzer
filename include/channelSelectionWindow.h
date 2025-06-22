@@ -23,6 +23,8 @@ public:
     RgbChannels getSelectedChannels();
     
 private:
+	bool isGrayscaleChannel;
+
 	QVBoxLayout * vWidgetsBox;
 	QHBoxLayout * hWidgetBox;
 	

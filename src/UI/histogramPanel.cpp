@@ -61,7 +61,6 @@ void HistogramPanel::updateHistogram(TIFF * image)
 		pen.setColor(Qt::gray);
 
 	painter->paintHistogram(scene, spectatedImage, pen);
-	
 }
 
 void HistogramPanel::changeColor()
@@ -94,4 +93,9 @@ QColor HistogramPanel::getChannelColor()
 	}
 	else
 	    return Qt::gray;
+}
+
+uint16_t HistogramPanel::getMaxPixel16Value()
+{
+    return painter->getMaxPixelValue();
 }

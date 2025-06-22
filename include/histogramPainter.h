@@ -21,13 +21,14 @@ public:
 	
 	void paintHistogram(QGraphicsScene * histogram, TIFF * image, QPen usingPen);
 	
+	uint16_t getMaxPixelValue();
 private:
 	int axisOffset;
 	float XScale;
 	float Yscale;
 	
     int maxPixelCount;
-    int maxPixelValue;
+    uint16_t maxPixelValue;
     
 	std::map<uint16_t, int> colorsFrequency;
 	
