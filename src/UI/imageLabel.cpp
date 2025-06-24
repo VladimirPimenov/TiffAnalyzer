@@ -64,10 +64,16 @@ void ImageLabel::standartContrasting()
 
 void ImageLabel::histogramContrasting()
 {
+    contrastingWin = new ContrastingWindow(this);
     
+    contrastingWin->setContrastingEvent([this](){ histogramContrastingEvent(); });
+    
+    contrastingWin->createHistogramContrastingWindow();
+    
+    contrastingWin->show();
 }
 
-void ImageLabel::updateImage()
+void ImageLabel::updateImage(uint16_t min16bitValue = 0, uint16_t max16bitValue = 0)
 {
 	image8bit = new QImage(image16bit->width, image16bit->height, QImage::Format_RGB888);
 	
@@ -75,7 +81,7 @@ void ImageLabel::updateImage()
 	
 	setPixmap(QPixmap::fromImage(*image8bit));
 	
-	histrogram->updateHistogram(image16bit);
+	histrogram->updateHistogram(image16bit, min16bitValue, max16bitValue);
 }
 
 void ImageLabel::clearImageLabel()
@@ -138,6 +144,31 @@ void ImageLabel::standartContrastingEvent()
     updateImage();
 }
 
+void ImageLabel::histogramContrastingEvent()
+{
+    float histogramCuttingPercent = contrastingWin->getHistogramCuttingPercent();
+    uint16_t histogramMaxValue = histrogram->getMaxPixel16Value();
+    
+    uint16_t min16bitValue = histogramCuttingPercent * histogramMaxValue;
+    uint16_t max16bitValue = (1 - histogramCuttingPercent) * histogramMaxValue;
+    
+    minNormalizationPixel = Pixel16bit
+    {
+        (uint16_t)(min16bitValue),
+        (uint16_t)(min16bitValue),
+        (uint16_t)(min16bitValue)
+    };
+    maxNormalizationPixel = Pixel16bit
+    {
+        (uint16_t)(max16bitValue),
+        (uint16_t)(max16bitValue),
+        (uint16_t)(max16bitValue)
+    };
+    
+    contrastingWin->close();
+    
+    updateImage(min16bitValue, max16bitValue);
+}
 
 void ImageLabel::mouseMoveEvent(QMouseEvent * event)
 {

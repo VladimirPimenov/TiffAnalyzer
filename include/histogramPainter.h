@@ -21,6 +21,8 @@ public:
 	
 	void paintHistogram(QGraphicsScene * histogram, TIFF * image, QPen usingPen);
 	
+	void setHistogramCutting(uint16_t minCuttingValue, uint16_t maxCuttingValue);
+	
 	uint16_t getMaxPixelValue();
 private:
 	int axisOffset;
@@ -29,6 +31,9 @@ private:
 	
     int maxPixelCount;
     uint16_t maxPixelValue;
+
+    uint16_t minCuttingValue;
+    uint16_t maxCuttingValue;
     
 	std::map<uint16_t, int> colorsFrequency;
 	
@@ -36,4 +41,6 @@ private:
 	void paintAxisY(QGraphicsScene * histogram);
 	
 	void calculateColorsFrequency(TIFF * image, QPen usingPen);
+	
+	bool isNeedCutting();
 };

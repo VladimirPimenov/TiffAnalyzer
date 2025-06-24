@@ -40,7 +40,7 @@ public:
 	void standartContrasting();
 	void histogramContrasting();
 	
-	void updateImage();
+	void updateImage(uint16_t min16bitValue, uint16_t max16bitValue);
 
 	void clearImageLabel();
 	
@@ -59,6 +59,7 @@ private:
 	void grayScaleSelectedEvent();
 	void rgbSelectedEvent();
 	void standartContrastingEvent();
+	void histogramContrastingEvent();
 	
 	void mouseMoveEvent(QMouseEvent * event) override;
 	

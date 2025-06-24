@@ -22,7 +22,7 @@ class HistogramPanel: public QWidget
 public:
 	HistogramPanel();
 
-	void updateHistogram(TIFF * image);
+	void updateHistogram(TIFF * image, uint16_t minValue, uint16_t maxValue);
 	void clearHistogram(); 
 	
 	uint16_t getMaxPixel16Value();
@@ -30,7 +30,10 @@ private:
 	HistogramPainter * painter;
 	
 	TIFF * spectatedImage;
-
+	
+	uint16_t minValue;
+	uint16_t maxValue;
+	
 	QComboBox * channelSelector;
 	
 	QVBoxLayout * panel;

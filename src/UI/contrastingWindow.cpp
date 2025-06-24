@@ -84,7 +84,10 @@ void ContrastingWindow::createRgbContrastingWindow()
 
 void ContrastingWindow::createHistogramContrastingWindow()
 {
-    
+	histogramCuttingPercentEntry = new QLineEdit();
+	
+	vWidgetsBox->addWidget(histogramCuttingPercentEntry);
+	vWidgetsBox->addWidget(okButton);
 }
 
 Pixel16bit ContrastingWindow::getMinPixelParameters()
@@ -120,6 +123,11 @@ Pixel16bit ContrastingWindow::getMaxPixelParameters()
 		(uint16_t)(greenMaxContastingEntry->text().toUInt()),
 		(uint16_t)(blueMaxContastingEntry->text().toUInt())
 	};
+}
+
+float ContrastingWindow::getHistogramCuttingPercent()
+{
+    return histogramCuttingPercentEntry->text().toFloat() / 100.0f;
 }
 
 void ContrastingWindow::setContrastingEvent(std::function<void()> eventHandler)

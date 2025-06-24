@@ -24,6 +24,7 @@ public:
 	
 	Pixel16bit getMinPixelParameters();
 	Pixel16bit getMaxPixelParameters();
+	float getHistogramCuttingPercent();
 
 private:
 	bool isGrayscaleContrasting;

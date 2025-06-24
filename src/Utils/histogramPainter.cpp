@@ -28,6 +28,9 @@ std::string getExponencialView(double num)
 HistogramPainter::HistogramPainter()
 {
 	axisOffset = 50;
+	
+	minCuttingValue = 0;
+	maxCuttingValue = 0;
 }
 
 void HistogramPainter::paintAxisX(QGraphicsScene * histogram)
@@ -92,6 +95,8 @@ void HistogramPainter::paintHistogram(QGraphicsScene * histogram, TIFF * image, 
 		y = it->second;
 		
 		if(x != 0)
+			if(isNeedCutting() && (x < minCuttingValue || x > maxCuttingValue))
+				continue;
 			histogram->addLine(axisOffset + x/XScale, 0, axisOffset + x/XScale, -y/Yscale, usingPen);
 	}
 	
@@ -149,4 +154,17 @@ void HistogramPainter::calculateColorsFrequency(TIFF * image, QPen usingPen)
 uint16_t HistogramPainter::getMaxPixelValue()
 {
     return maxPixelValue;
+}
+
+void HistogramPainter::setHistogramCutting(uint16_t minCuttingValue, uint16_t maxCuttingValue)
+{
+    this->minCuttingValue = minCuttingValue;
+    this->maxCuttingValue = maxCuttingValue;
+}
+
+bool HistogramPainter::isNeedCutting()
+{
+    if(maxCuttingValue != 0)
+		return true;
+	return false;
 }

@@ -43,9 +43,11 @@ void HistogramPanel::reloadHistogramScene()
 	histogram->setScene(scene);
 }
 
-void HistogramPanel::updateHistogram(TIFF * image)
+void HistogramPanel::updateHistogram(TIFF * image, uint16_t minValue, uint16_t maxValue)
 {
 	spectatedImage = image;
+	this->minValue = minValue;
+	this->maxValue = maxValue;
 
 	reloadHistogramScene();
 	
@@ -60,12 +62,13 @@ void HistogramPanel::updateHistogram(TIFF * image)
 	else
 		pen.setColor(Qt::gray);
 
+	painter->setHistogramCutting(minValue, maxValue);
 	painter->paintHistogram(scene, spectatedImage, pen);
 }
 
 void HistogramPanel::changeColor()
 {
-    updateHistogram(spectatedImage);
+    updateHistogram(spectatedImage, minValue, maxValue);
 }
 
 void HistogramPanel::clearHistogram()
