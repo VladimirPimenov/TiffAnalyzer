@@ -179,7 +179,7 @@ void ImageLabel::histogramContrastingEvent()
 
 void ImageLabel::mouseMoveEvent(QMouseEvent * event)
 {
-	if(image8bit->isNull())
+	if(hasImage())
 	{
 		int x = event->pos().rx() - (this->width() - image8bit->width()) / 2;
 		int y = event->pos().ry() - (this->height() - image8bit->height()) / 2;

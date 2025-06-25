@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "../../include/mainWindow.h"
 
 MainWindow::MainWindow():QMainWindow()
@@ -50,7 +48,6 @@ void MainWindow::createMenuBar()
 	menuBar()->addMenu(viewMenu);
 }
 
-
 void MainWindow::createCentralPanel()
 {
     centralWidget = new QWidget();
@@ -78,7 +75,8 @@ void MainWindow::createHistogramPanel()
 {
     histogramPanel = new HistogramPanel();
     
-    centralBox->insertWidget(1, histogramPanel);
+    centralBox->insertWidget(0, histogramPanel);
+    
 }
 
 void MainWindow::callError(std::string errorText)

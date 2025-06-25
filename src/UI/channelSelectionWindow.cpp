@@ -1,8 +1,5 @@
 #include "../../include/channelSelectionWindow.h"
 
-#include <QMessageBox>
-#include <iostream>
-
 ChannelSelectionWindow::ChannelSelectionWindow(QWidget * parent = nullptr) : QDialog(parent)
 {
     this->setFixedSize(400, 100);

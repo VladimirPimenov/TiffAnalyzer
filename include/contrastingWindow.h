@@ -7,9 +7,9 @@
 #include <QPushButton>
 #include <QLabel>
 
-#include "rgb.h"
-
 #include <functional>
+
+#include "rgb.h"
 
 class ContrastingWindow: public QDialog
 {
@@ -51,6 +51,8 @@ private:
 	QLineEdit * histogramCuttingPercentEntry;
 	
 	std::function<void()> contrastingEventHandler;
+	
+	void createTextBox();
 	
 private slots:
 	void contrastingEvent();

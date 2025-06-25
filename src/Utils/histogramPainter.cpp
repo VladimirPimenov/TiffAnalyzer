@@ -25,6 +25,19 @@ std::string getExponencialView(double num)
     return std::to_string(num).substr(0,3) + "E" + std::to_string(tenMultiplier);
 }
 
+int calculatePrettyAxisValue(int realMaxValue)
+{
+    int prettyValue = realMaxValue;
+    
+    while(true)
+    {
+        if(prettyValue % 4 == 0 && prettyValue % 5 == 0)
+			return prettyValue;
+			
+		prettyValue++;
+    }
+}
+
 HistogramPainter::HistogramPainter()
 {
 	axisOffset = 50;
@@ -35,47 +48,55 @@ HistogramPainter::HistogramPainter()
 
 void HistogramPainter::paintAxisX(QGraphicsScene * histogram)
 {
+	int prettyMaxPixelValue = calculatePrettyAxisValue(maxPixelValue);
+
 	QPen pen = Qt::black;
 	QBrush brush = Qt::black;
 	
-    histogram->addRect(axisOffset, 0, 260, 1, pen, brush);
+    histogram->addRect(axisOffset, 0, 265, 1, pen, brush);
 
-	histogram->addRect(axisOffset + 50, 0, 1, -5, pen, brush);
-	histogram->addRect(axisOffset + 100, 0, 1, -5, pen, brush);
-	histogram->addRect(axisOffset + 150, 0, 1, -5, pen, brush);
-	histogram->addRect(axisOffset + 200, 0, 1, -5, pen, brush);
+	histogram->addRect(axisOffset + 255 / 4, 0, 1, -5, pen, brush);
+	histogram->addRect(axisOffset + 255 / 2, 0, 1, -5, pen, brush);
+	histogram->addRect(axisOffset + 255 * 3 / 4, 0, 1, -5, pen, brush);
 	histogram->addRect(axisOffset + 255, 0, 1, -5, pen, brush);
 
 	QGraphicsTextItem * x0 = histogram->addText("0");
-	QGraphicsTextItem * x14 = histogram->addText(QString::fromStdString(std::to_string(maxPixelValue / 4)));
-	QGraphicsTextItem * xHalf = histogram->addText(QString::fromStdString(std::to_string(maxPixelValue / 2)));
-	QGraphicsTextItem * x34 = histogram->addText(QString::fromStdString(std::to_string(3 * maxPixelValue / 4)));
-	QGraphicsTextItem * xMax = histogram->addText(QString::fromStdString(std::to_string(maxPixelValue)));
+	QGraphicsTextItem * x1 = histogram->addText(QString::fromStdString(std::to_string(prettyMaxPixelValue / 4)));
+	QGraphicsTextItem * x2 = histogram->addText(QString::fromStdString(std::to_string(prettyMaxPixelValue / 2)));
+	QGraphicsTextItem * x3 = histogram->addText(QString::fromStdString(std::to_string(prettyMaxPixelValue * 3 / 4)));
+	QGraphicsTextItem * x4 = histogram->addText(QString::fromStdString(std::to_string(prettyMaxPixelValue)));
 	
-	x0->setPos(axisOffset + 0,0);
-	x14->setPos(axisOffset + 64 - 10,0);
-	xHalf->setPos(axisOffset + 127 - 10,0);
-	x34->setPos(axisOffset + 191 - 10,0);
-	xMax->setPos(axisOffset + 255 - 10,0);
+	x0->setPos(axisOffset - 15,0);
+	x1->setPos(axisOffset + 50,0);
+	x2->setPos(axisOffset + 110,0);
+	x3->setPos(axisOffset + 175,0);
+	x4->setPos(axisOffset + 235,0);
 }
 
 void HistogramPainter::paintAxisY(QGraphicsScene * histogram)
 {
 	int scaledMaxY = -maxPixelCount/Yscale;
+	int yOffset = 10;
 	
 	QPen pen = Qt::black;
 	QBrush brush = Qt::black;
 
-	histogram->addRect(axisOffset, 0, 1, scaledMaxY, pen, brush);
+	histogram->addRect(axisOffset, 0, 1, scaledMaxY - yOffset, pen, brush);
 	
-	histogram->addRect(axisOffset, scaledMaxY, 5, 1, pen, brush);
+	histogram->addRect(axisOffset, scaledMaxY / 4, 5, 1, pen, brush);
 	histogram->addRect(axisOffset, scaledMaxY / 2, 5, 1, pen, brush);
+	histogram->addRect(axisOffset, scaledMaxY * 3 / 4, 5, 1, pen, brush);
+	histogram->addRect(axisOffset, scaledMaxY, 5, 1, pen, brush);
 	
-	QGraphicsItem * yMax = histogram->addText(QString::fromStdString(getExponencialView(maxPixelCount)));
-	QGraphicsItem * yMaxHalf = histogram->addText(QString::fromStdString(getExponencialView(maxPixelCount / 2)));
+	QGraphicsItem * y1 = histogram->addText(QString::fromStdString(getExponencialView(maxPixelCount / 4)));
+	QGraphicsItem * y2 = histogram->addText(QString::fromStdString(getExponencialView(maxPixelCount / 2)));
+	QGraphicsItem * y3 = histogram->addText(QString::fromStdString(getExponencialView(maxPixelCount * 3 / 4)));
+	QGraphicsItem * y4 = histogram->addText(QString::fromStdString(getExponencialView(maxPixelCount)));
 	
-	yMax->setPos(0, scaledMaxY - 6);
-	yMaxHalf->setPos(0, scaledMaxY / 2 - 6);
+	y1->setPos(0, scaledMaxY / 4 - yOffset);
+	y2->setPos(0, scaledMaxY / 2 - yOffset);
+	y3->setPos(0, scaledMaxY * 3 / 4 - yOffset);
+	y4->setPos(0, scaledMaxY - yOffset);
 }
 
 void HistogramPainter::paintHistogram(QGraphicsScene * histogram, TIFF * image, QPen usingPen)

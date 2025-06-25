@@ -5,18 +5,11 @@ ContrastingWindow::ContrastingWindow(QWidget * parent = nullptr) : QDialog(paren
     this->setFixedSize(400, 100);
 	this->setWindowModality(Qt::WindowModality::WindowModal);
 	
-    minValueText = new QLabel("Минимальное значение");
-	maxValueText = new QLabel("Максимальное значение");
-	
-	textBox = new QHBoxLayout();
-	
-	textBox->addWidget(minValueText);
-	textBox->addWidget(maxValueText);
-	
     okButton = new QPushButton();
 	okButton->setText("Выполнить контрастирование");
     connect(okButton, &QPushButton::clicked, this, &ContrastingWindow::contrastingEvent);
     
+	textBox = new QHBoxLayout();
 	
 	vWidgetsBox = new QVBoxLayout(this);
 	vWidgetsBox->addLayout(textBox);
@@ -25,6 +18,8 @@ ContrastingWindow::ContrastingWindow(QWidget * parent = nullptr) : QDialog(paren
 void ContrastingWindow::createGrayscaleContrastingWindow()
 {
 	this->setWindowTitle("Контрастирование Grayscale");
+
+	createTextBox();
 
 	QHBoxLayout * entryBox = new QHBoxLayout();
 	
@@ -43,6 +38,8 @@ void ContrastingWindow::createGrayscaleContrastingWindow()
 void ContrastingWindow::createRgbContrastingWindow()
 {
 	this->setFixedHeight(200);
+	
+	createTextBox();
 	
     QHBoxLayout * redEntryBox = new QHBoxLayout();
     QHBoxLayout * greenEntryBox = new QHBoxLayout();
@@ -86,6 +83,10 @@ void ContrastingWindow::createHistogramContrastingWindow()
 {
 	histogramCuttingPercentEntry = new QLineEdit();
 	
+	QLabel * text = new QLabel("Введите процент обрезки гистограммы");
+	textBox->addWidget(text);
+	textBox->setAlignment(text, Qt::AlignCenter);
+	
 	vWidgetsBox->addWidget(histogramCuttingPercentEntry);
 	vWidgetsBox->addWidget(okButton);
 }
@@ -128,6 +129,15 @@ Pixel16bit ContrastingWindow::getMaxPixelParameters()
 float ContrastingWindow::getHistogramCuttingPercent()
 {
     return histogramCuttingPercentEntry->text().toFloat() / 100.0f;
+}
+
+void ContrastingWindow::createTextBox()
+{
+    minValueText = new QLabel("Минимальное значение");
+	maxValueText = new QLabel("Максимальное значение");
+	
+	textBox->addWidget(minValueText);
+	textBox->addWidget(maxValueText);
 }
 
 void ContrastingWindow::setContrastingEvent(std::function<void()> eventHandler)
