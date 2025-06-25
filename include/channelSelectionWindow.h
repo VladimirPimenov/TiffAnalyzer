@@ -36,6 +36,8 @@ private:
 	
 	std::function<void()> channelSelectedEventHandler;
 
+	void showCloseMessage();
+
 private slots:
 	void channelSelectedEvent();
 };

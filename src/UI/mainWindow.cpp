@@ -92,21 +92,24 @@ void MainWindow::callError(std::string errorText)
 
 void MainWindow::openImage()
 {
-	openImagePath = QFileDialog::getOpenFileName(this, "Открыть файл", "./", "TIFF (*.tif *.tiff)");
+	openImagePath = QFileDialog::getOpenFileName(this, "Открыть файл", "./", "TIFF (*.tif *.tiff)").toStdString();
 
-	imageViewer->loadGrayscaleTIFF(openImagePath.toStdString());
-
-    displayModeMenu->setEnabled(true);
+	if(!openImagePath.empty())
+	{
+	    imageViewer->loadGrayscaleTIFF(openImagePath);
+	
+		displayModeMenu->setEnabled(true);
+	}
 }
 
 void MainWindow::openGrayscale()
 {
-	imageViewer->loadGrayscaleTIFF(openImagePath.toStdString());
+	imageViewer->loadGrayscaleTIFF(openImagePath);
 }
 
 void MainWindow::openRgb()
 {
-	imageViewer->loadRgbTIFF(openImagePath.toStdString());
+	imageViewer->loadRgbTIFF(openImagePath);
 }
 
 void MainWindow::standartContrasting()
@@ -129,8 +132,11 @@ void MainWindow::showHistogram()
 
 void MainWindow::closeImage()
 {
-    imageViewer->clearImageLabel();
-    histogramPanel->clearHistogram();
+	if(imageViewer->hasImage())
+	{
+	    imageViewer->clearImageLabel();
+		histogramPanel->clearHistogram();
     
-    displayModeMenu->setEnabled(false);
+    	displayModeMenu->setEnabled(false);
+	}
 }

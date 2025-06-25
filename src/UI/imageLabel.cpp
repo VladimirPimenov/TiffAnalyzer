@@ -6,17 +6,19 @@ ImageLabel::ImageLabel(): QLabel()
 {
     this->setMouseTracking(true);
     
+    image8bit = new QImage();
+    
     painter = new ImagePainter();
 }
 
 void ImageLabel::loadGrayscaleTIFF(std::string loadPath)
 {
-	tiffLoadPath = loadPath;
-	
-	image16bit = new TIFF();
-	image16bit->loadTiffMetadata(tiffLoadPath);
-	
-	openGrayscaleSelectionWindow(image16bit->channelsCount);
+    tiffLoadPath = loadPath;
+
+    image16bit = new TIFF();
+    image16bit->loadTiffMetadata(tiffLoadPath);
+
+    openGrayscaleSelectionWindow(image16bit->channelsCount);
 }
 
 void ImageLabel::loadRgbTIFF(std::string loadPath)
@@ -87,7 +89,7 @@ void ImageLabel::updateImage(uint16_t min16bitValue = 0, uint16_t max16bitValue 
 void ImageLabel::clearImageLabel()
 {
 	this->clear();
-    image8bit = nullptr;
+    image8bit = new QImage();
     
     image16bit->~TIFF();
 }
@@ -106,6 +108,11 @@ void ImageLabel::resetContrasting()
     	image16bit->maxPixelValue, 
     	image16bit->maxPixelValue
 	};
+}
+
+bool ImageLabel::hasImage()
+{
+    return !image8bit->isNull();
 }
 
 void ImageLabel::grayScaleSelectedEvent()
@@ -172,7 +179,7 @@ void ImageLabel::histogramContrastingEvent()
 
 void ImageLabel::mouseMoveEvent(QMouseEvent * event)
 {
-	if(image8bit != nullptr)
+	if(image8bit->isNull())
 	{
 		int x = event->pos().rx() - (this->width() - image8bit->width()) / 2;
 		int y = event->pos().ry() - (this->height() - image8bit->height()) / 2;

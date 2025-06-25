@@ -44,9 +44,11 @@ public:
 
 	void clearImageLabel();
 	
+	bool hasImage();
+	
 private:
 	TIFF * image16bit;	
-	QImage * image8bit = nullptr;
+	QImage * image8bit;
 	
 	ImagePainter * painter;
 	

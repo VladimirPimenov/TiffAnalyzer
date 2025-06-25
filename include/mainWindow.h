@@ -50,7 +50,7 @@ private:
 	
 	HistogramPanel * histogramPanel;
 	
-	QString openImagePath;
+	std::string openImagePath;
 	
 	void openImage();
 	void openGrayscale();
