@@ -39,6 +39,7 @@ public:
 	
 	void standartContrasting();
 	void histogramContrasting();
+	void resetContrasting();
 	
 	void updateImage(uint16_t min16bitValue, uint16_t max16bitValue);
 
@@ -65,5 +66,5 @@ private:
 	
 	void mouseMoveEvent(QMouseEvent * event) override;
 	
-	void resetContrasting();
+	void resetContrastingParams();
 };

@@ -11,6 +11,8 @@ Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
 #include <QMessageBox>
 #include <QScrollArea>
 #include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QPushButton>
 
 #include <string>
 
@@ -33,14 +35,20 @@ private:
 	QAction * closeImageAction;
 	QAction * exitAction;
 	
-	QMenu * displayModeMenu;
+	QMenu * viewModeMenu;
 	QAction * grayscaleModeAction;
 	QAction * rgbModeAction;
-	QAction * standartContrastingAction;
-	QAction * histogramContrastingAction;
 	
-	QMenu * viewMenu;
-	QAction * showHistogramAction;
+	QVBoxLayout * instrumentsBox;
+	QVBoxLayout * histogramBox;
+	QVBoxLayout * contrastingBox;
+	
+	QPushButton * standartContrastingButton;
+	QPushButton * histogramContrastingButton;
+	QPushButton * resetContrastingButton;
+	
+	QMenu * showMenu;
+	QAction * showInstrumentsAction;
 	
 	QWidget * centralWidget;
 	QHBoxLayout * centralBox;
@@ -59,13 +67,16 @@ private:
 	
 	void standartContrasting();
 	void histogramContrasting();
+	void resetContrasting();
 	
-	void showHistogram();
+	void switchInstrumentsPanelVisible();
 	
 	void createCentralPanel();
 	void createMenuBar();
 	void createImagePanel();
+	void createInstrumentsPanel();
 	void createHistogramPanel();
+	void createContrastingPanel();
 	
 	void callError(std::string errorText);
 };

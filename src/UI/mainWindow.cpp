@@ -9,7 +9,7 @@ MainWindow::MainWindow():QMainWindow()
 	
 	createCentralPanel();
 	
-	createHistogramPanel();
+	createInstrumentsPanel();
 	createImagePanel();
 }
 
@@ -20,32 +20,28 @@ void MainWindow::createMenuBar()
 	closeImageAction = fileMenu->addAction("Закрыть");
 	exitAction = fileMenu->addAction("Выход",this, SLOT(close()));
 	
-	displayModeMenu = new QMenu("Отображение");
-	grayscaleModeAction = displayModeMenu->addAction("Режим Grayscale");
-	rgbModeAction = displayModeMenu->addAction("Режим RGB");
-	standartContrastingAction = displayModeMenu->addAction("Контрастирование");
-	histogramContrastingAction = displayModeMenu->addAction("Контрастирование по гистограмме");
+	viewModeMenu = new QMenu("Отображение");
+	grayscaleModeAction = viewModeMenu->addAction("Режим Grayscale");
+	rgbModeAction = viewModeMenu->addAction("Режим RGB");
 	
-	displayModeMenu->setEnabled(false);
+	viewModeMenu->setEnabled(false);
 	
-	viewMenu = new QMenu("Вид");
-	showHistogramAction = viewMenu->addAction("Гистограмма");
-	showHistogramAction->setCheckable(true);
-	showHistogramAction->setChecked(true);
+	showMenu = new QMenu("Вид");
+	showInstrumentsAction = showMenu->addAction("Панель инструментов");
+	showInstrumentsAction->setCheckable(true);
+	showInstrumentsAction->setChecked(true);
 	
 	connect(openImageAction, &QAction::triggered, this, &MainWindow::openImage);
 	connect(closeImageAction, &QAction::triggered, this, &MainWindow::closeImage);
 	
 	connect(grayscaleModeAction, &QAction::triggered, this, &MainWindow::openGrayscale);
 	connect(rgbModeAction, &QAction::triggered, this, &MainWindow::openRgb);
-	connect(standartContrastingAction, &QAction::triggered, this, &MainWindow::standartContrasting);
-	connect(histogramContrastingAction, &QAction::triggered, this, &MainWindow::histogramContrasting);
 	
-	connect(showHistogramAction, &QAction::triggered, this, &MainWindow::showHistogram);
+	connect(showInstrumentsAction, &QAction::triggered, this, &MainWindow::switchInstrumentsPanelVisible);
 	
 	menuBar()->addMenu(fileMenu);
-	menuBar()->addMenu(displayModeMenu);
-	menuBar()->addMenu(viewMenu);
+	menuBar()->addMenu(viewModeMenu);
+	menuBar()->addMenu(showMenu);
 }
 
 void MainWindow::createCentralPanel()
@@ -71,11 +67,56 @@ void MainWindow::createImagePanel()
 	centralBox->insertWidget(0, scrollArea);
 }
 
+void MainWindow::createInstrumentsPanel()
+{
+	instrumentsBox = new QVBoxLayout();
+
+    createHistogramPanel();
+    
+    createContrastingPanel();
+    
+    instrumentsBox->addStretch(1);
+    
+    centralBox->insertLayout(0, instrumentsBox);
+}
+
+void MainWindow::createContrastingPanel()
+{
+	contrastingBox = new QVBoxLayout();
+
+	QLabel * text = new QLabel("Контрастирование");
+
+	standartContrastingButton = new QPushButton("Контрастирование");
+	histogramContrastingButton = new QPushButton("Контрастирование по гистограмме");
+	resetContrastingButton = new QPushButton("Сбросить контрастирование");
+
+	standartContrastingButton->setEnabled(false);
+	histogramContrastingButton->setEnabled(false);
+	resetContrastingButton->setEnabled(false);
+
+    connect(standartContrastingButton, &QPushButton::clicked, this, &MainWindow::standartContrasting);
+	connect(histogramContrastingButton, &QPushButton::clicked, this, &MainWindow::histogramContrasting);
+	connect(resetContrastingButton, &QPushButton::clicked, this, &MainWindow::resetContrasting);
+	
+	contrastingBox->addWidget(text, Qt::AlignLeft);
+	contrastingBox->addWidget(standartContrastingButton);
+	contrastingBox->addWidget(histogramContrastingButton);
+	contrastingBox->addWidget(resetContrastingButton);
+	
+	instrumentsBox->addLayout(contrastingBox);
+}
+
 void MainWindow::createHistogramPanel()
 {
+	histogramBox = new QVBoxLayout();
     histogramPanel = new HistogramPanel();
     
-    centralBox->insertWidget(0, histogramPanel);
+    QLabel * text = new QLabel("Гистограмма изображения");
+    
+    histogramBox->addWidget(text, Qt::AlignLeft);
+    histogramBox->addWidget(histogramPanel);
+    
+    instrumentsBox->addLayout(histogramBox);
     
 }
 
@@ -96,7 +137,10 @@ void MainWindow::openImage()
 	{
 	    imageViewer->loadGrayscaleTIFF(openImagePath);
 	
-		displayModeMenu->setEnabled(true);
+		viewModeMenu->setEnabled(true);
+		standartContrastingButton->setEnabled(true);
+		histogramContrastingButton->setEnabled(true);
+		resetContrastingButton->setEnabled(true);
 	}
 }
 
@@ -120,12 +164,27 @@ void MainWindow::histogramContrasting()
     imageViewer->histogramContrasting();
 }
 
-void MainWindow::showHistogram()
+void MainWindow::resetContrasting()
 {
-    if(showHistogramAction->isChecked())
-		histogramPanel->setVisible(true);
+    imageViewer->resetContrasting();
+}
+
+void MainWindow::switchInstrumentsPanelVisible()
+{
+    if(showInstrumentsAction->isChecked())
+    {
+	    histogramPanel->setVisible(true);
+	    standartContrastingButton->setVisible(true);
+    	histogramContrastingButton->setVisible(true);
+    	resetContrastingButton->setVisible(true);
+    }
 	else
-		histogramPanel->setVisible(false);
+	{
+	    histogramPanel->setVisible(false);
+    	standartContrastingButton->setVisible(false);
+    	histogramContrastingButton->setVisible(false);
+    	resetContrastingButton->setVisible(false);
+	}
 }
 
 void MainWindow::closeImage()
@@ -135,6 +194,9 @@ void MainWindow::closeImage()
 	    imageViewer->clearImageLabel();
 		histogramPanel->clearHistogram();
     
-    	displayModeMenu->setEnabled(false);
+    	viewModeMenu->setEnabled(false);
+    	standartContrastingButton->setEnabled(false);
+    	histogramContrastingButton->setEnabled(false);
+    	resetContrastingButton->setEnabled(false);
 	}
 }

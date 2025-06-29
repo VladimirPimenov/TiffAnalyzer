@@ -75,6 +75,13 @@ void ImageLabel::histogramContrasting()
     contrastingWin->show();
 }
 
+void ImageLabel::resetContrasting()
+{
+    resetContrastingParams();
+    
+    updateImage(minNormalizationPixel.red, maxNormalizationPixel.red);
+}
+
 void ImageLabel::updateImage(uint16_t min16bitValue = 0, uint16_t max16bitValue = 0)
 {
 	image8bit = new QImage(image16bit->width, image16bit->height, QImage::Format_RGB888);
@@ -94,7 +101,7 @@ void ImageLabel::clearImageLabel()
     image16bit->~TIFF();
 }
 
-void ImageLabel::resetContrasting()
+void ImageLabel::resetContrastingParams()
 {
     minNormalizationPixel = Pixel16bit 
     {
@@ -123,7 +130,7 @@ void ImageLabel::grayScaleSelectedEvent()
     
     image16bit->loadGrayscale(tiffLoadPath, channel);
     
-    resetContrasting();
+    resetContrastingParams();
     
     updateImage();
 }
@@ -136,7 +143,7 @@ void ImageLabel::rgbSelectedEvent()
     
     image16bit->loadRgb(tiffLoadPath, channels);
     
-    resetContrasting();
+    resetContrastingParams();
     
     updateImage();
 }
