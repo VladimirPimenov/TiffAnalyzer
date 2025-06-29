@@ -15,6 +15,8 @@ ChannelSelectionWindow::ChannelSelectionWindow(QWidget * parent = nullptr) : QDi
 void ChannelSelectionWindow::createGrayscaleChannelSelector(int channelsCount)
 {
     this->setWindowTitle("Grayscale");
+    
+	isGrayscaleChannel = true;
 
     grayscaleChannelsList = new QComboBox();
     
@@ -25,13 +27,13 @@ void ChannelSelectionWindow::createGrayscaleChannelSelector(int channelsCount)
 	
 	vWidgetsBox->addWidget(grayscaleChannelsList);
 	vWidgetsBox->addWidget(okButton);
-	
-	isGrayscaleChannel = true;
 }
 
 void ChannelSelectionWindow::createRgbChannelSelector(int channelsCount)
 {
     this->setWindowTitle("RGB");
+    
+	isGrayscaleChannel = false;
 
     redChannelsList = new QComboBox();
     greenChannelsList = new QComboBox();
@@ -52,8 +54,6 @@ void ChannelSelectionWindow::createRgbChannelSelector(int channelsCount)
 	
 	vWidgetsBox->addLayout(hWidgetBox);
 	vWidgetsBox->addWidget(okButton);
-	
-	isGrayscaleChannel = false;
 }
 
 RgbChannels ChannelSelectionWindow::getSelectedChannels()

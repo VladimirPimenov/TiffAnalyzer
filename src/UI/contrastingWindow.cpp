@@ -18,65 +18,43 @@ ContrastingWindow::ContrastingWindow(QWidget * parent = nullptr) : QDialog(paren
 void ContrastingWindow::createGrayscaleContrastingWindow()
 {
 	this->setWindowTitle("Контрастирование Grayscale");
+	
+	isGrayscaleContrasting = true;
 
 	createTextBox();
 
-	QHBoxLayout * entryBox = new QHBoxLayout();
-	
-    grayscaleMinContastingEntry = new QLineEdit();
-	grayscaleMaxContastingEntry = new QLineEdit();
-	
-	entryBox->addWidget(grayscaleMinContastingEntry);
-	entryBox->addWidget(grayscaleMaxContastingEntry);
+	QHBoxLayout * entryBox = createContrastingEntryBox(new QLabel(),
+													grayscaleMinContastingEntry,
+													grayscaleMaxContastingEntry);
 	
 	vWidgetsBox->addLayout(entryBox);
 	vWidgetsBox->addWidget(okButton);
-	
-	isGrayscaleContrasting = true;
 }
 
 void ContrastingWindow::createRgbContrastingWindow()
 {
 	this->setFixedHeight(200);
 	
+	isGrayscaleContrasting = false;
+	
 	createTextBox();
 	
-    QHBoxLayout * redEntryBox = new QHBoxLayout();
-    QHBoxLayout * greenEntryBox = new QHBoxLayout();
-    QHBoxLayout * blueEntryBox = new QHBoxLayout();
-    
-    QLabel * redText = new QLabel("R");
-	QLabel * greenText = new QLabel("G");
-	QLabel * blueText = new QLabel("B");
-	
-	redMinContastingEntry = new QLineEdit();
-	redMaxContastingEntry = new QLineEdit();
-	greenMinContastingEntry = new QLineEdit();
-	greenMaxContastingEntry = new QLineEdit();
-	blueMinContastingEntry = new QLineEdit();
-	blueMaxContastingEntry = new QLineEdit();
-	
-	redEntryBox->addWidget(redText);
-	redEntryBox->addWidget(redMinContastingEntry);
-	redEntryBox->addWidget(redMaxContastingEntry);
-	
-	greenEntryBox->addWidget(greenText);
-	greenEntryBox->addWidget(greenMinContastingEntry);
-	greenEntryBox->addWidget(greenMaxContastingEntry);
-	
-	blueEntryBox->addWidget(blueText);
-	blueEntryBox->addWidget(blueMinContastingEntry);
-	blueEntryBox->addWidget(blueMaxContastingEntry);
-
 	textBox->setAlignment(minValueText, Qt::AlignCenter);
 	textBox->setAlignment(maxValueText, Qt::AlignCenter);
-
+	
+	QHBoxLayout * redEntryBox = createContrastingEntryBox(new QLabel("R"), 
+													redMinContastingEntry,
+													redMaxContastingEntry);
+	QHBoxLayout * greenEntryBox = createContrastingEntryBox(new QLabel("G"), 
+													greenMinContastingEntry,
+													greenMaxContastingEntry);
+	QHBoxLayout * blueEntryBox = createContrastingEntryBox(new QLabel("B"), 
+													blueMinContastingEntry,
+													blueMaxContastingEntry);
 	vWidgetsBox->addLayout(redEntryBox);
 	vWidgetsBox->addLayout(greenEntryBox);
 	vWidgetsBox->addLayout(blueEntryBox);
 	vWidgetsBox->addWidget(okButton);
-	
-	isGrayscaleContrasting = false;
 }
 
 void ContrastingWindow::createHistogramContrastingWindow()
@@ -138,6 +116,20 @@ void ContrastingWindow::createTextBox()
 	
 	textBox->addWidget(minValueText);
 	textBox->addWidget(maxValueText);
+}
+
+QHBoxLayout * ContrastingWindow::createContrastingEntryBox(QLabel * text, QLineEdit *& minEntry, QLineEdit *& maxEntry)
+{
+	minEntry = new QLineEdit();
+	maxEntry = new QLineEdit();
+
+    QHBoxLayout * entryBox = new QHBoxLayout();
+    
+    entryBox->addWidget(text);
+    entryBox->addWidget(minEntry);
+    entryBox->addWidget(maxEntry);
+    
+    return entryBox;
 }
 
 void ContrastingWindow::setContrastingEvent(std::function<void()> eventHandler)

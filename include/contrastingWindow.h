@@ -53,6 +53,7 @@ private:
 	std::function<void()> contrastingEventHandler;
 	
 	void createTextBox();
+	QHBoxLayout * createContrastingEntryBox(QLabel * text, QLineEdit *& minEntry, QLineEdit *& maxEntry);
 	
 private slots:
 	void contrastingEvent();

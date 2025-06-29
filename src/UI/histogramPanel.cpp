@@ -19,7 +19,6 @@ void HistogramPanel::createHistogramPanel()
 	histogram->setFixedSize(330, 330);
 	
 	panel->addWidget(histogram);
-    
 }
 
 void HistogramPanel::createChannelSelector()
