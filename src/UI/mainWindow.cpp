@@ -17,8 +17,12 @@ void MainWindow::createMenuBar()
 {
 	fileMenu = new QMenu("Файл");
 	openImageAction = fileMenu->addAction("Открыть");
+	saveImageAction = fileMenu->addAction("Сохранить");
 	closeImageAction = fileMenu->addAction("Закрыть");
 	exitAction = fileMenu->addAction("Выход",this, SLOT(close()));
+	
+	saveImageAction->setEnabled(false);
+	closeImageAction->setEnabled(false);
 	
 	viewModeMenu = new QMenu("Отображение");
 	grayscaleModeAction = viewModeMenu->addAction("Режим Grayscale");
@@ -32,6 +36,7 @@ void MainWindow::createMenuBar()
 	showInstrumentsAction->setChecked(true);
 	
 	connect(openImageAction, &QAction::triggered, this, &MainWindow::openImage);
+	connect(saveImageAction, &QAction::triggered, this, &MainWindow::saveImage);
 	connect(closeImageAction, &QAction::triggered, this, &MainWindow::closeImage);
 	
 	connect(grayscaleModeAction, &QAction::triggered, this, &MainWindow::openGrayscale);
@@ -137,10 +142,23 @@ void MainWindow::openImage()
 	{
 	    imageViewer->loadGrayscaleTIFF(openImagePath);
 	
+		saveImageAction->setEnabled(true);
+		closeImageAction->setEnabled(true);
+	
 		viewModeMenu->setEnabled(true);
 		standartContrastingButton->setEnabled(true);
 		histogramContrastingButton->setEnabled(true);
 		resetContrastingButton->setEnabled(true);
+	}
+}
+
+void MainWindow::saveImage()
+{
+    std::string saveFilePath = QFileDialog::getSaveFileName(this, "Сохранить файл", "./", "BMP (*.bmp)").toStdString();
+
+	if(!saveFilePath.empty())
+	{
+	    imageViewer->saveImageAsBmp(saveFilePath);
 	}
 }
 
@@ -191,6 +209,9 @@ void MainWindow::closeImage()
 {
 	if(imageViewer->hasImage())
 	{
+		saveImageAction->setEnabled(false);
+		closeImageAction->setEnabled(false);
+	
 	    imageViewer->clearImageLabel();
 		histogramPanel->clearHistogram();
     

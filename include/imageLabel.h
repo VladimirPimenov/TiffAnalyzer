@@ -19,6 +19,8 @@
 #include "contrastingWindow.h"
 #include "pixelStatusBar.h"
 #include "histogramPanel.h"
+#include "bmp.h"
+#include "ImageConverter.h"
 
 class ImageLabel: public QLabel
 {
@@ -36,6 +38,8 @@ public:
 
 	void loadGrayscaleTIFF(std::string loadPath);
 	void loadRgbTIFF(std::string loadPath);
+	
+	void saveImageAsBmp(std::string savePath);
 	
 	void standartContrasting();
 	void histogramContrasting();

@@ -32,6 +32,7 @@ private:
 	
 	QMenu * fileMenu;
 	QAction * openImageAction; 
+	QAction * saveImageAction;
 	QAction * closeImageAction;
 	QAction * exitAction;
 	
@@ -61,6 +62,7 @@ private:
 	std::string openImagePath;
 	
 	void openImage();
+	void saveImage();
 	void openGrayscale();
 	void openRgb();
 	void closeImage();

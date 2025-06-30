@@ -10,4 +10,6 @@ add_executable(TiffAnalyzer
     Utils/tiff.cpp
     Utils/imagePainter.cpp
     Utils/histogramPainter.cpp
+    Utils/bmp.cpp
+    Utils/imageConverter.cpp
 )

@@ -30,6 +30,15 @@ void ImageLabel::loadRgbTIFF(std::string loadPath)
     openRgbSelectionWindow(image16bit->channelsCount);
 }
 
+void ImageLabel::saveImageAsBmp(std::string savePath)
+{
+    BMP * bmp = new BMP();
+    
+    ImageConverter::convertQImageToBmp(image8bit, bmp);
+    
+    bmp->save(savePath);
+}
+
 void ImageLabel::openGrayscaleSelectionWindow(int channelsCount)
 {
 	channelSelector = new ChannelSelectionWindow(this);
