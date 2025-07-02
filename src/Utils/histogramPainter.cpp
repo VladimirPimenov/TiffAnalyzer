@@ -1,6 +1,8 @@
 #include "../../include/histogramPainter.h"
 #include "../../include/histogramPanel.h"
 
+#include <iostream>
+
 float findScale(float max)
 {
 	float scale = 1;
@@ -120,12 +122,12 @@ void HistogramPainter::paintHistogram(QGraphicsScene * histogram, TIFF * image, 
 				continue;
 			histogram->addLine(axisOffset + x/XScale, 0, axisOffset + x/XScale, -y/Yscale, usingPen);
 	}
-	
-	colorsFrequency.clear();
 }
 
 void HistogramPainter::calculateColorsFrequency(TIFF * image, QPen usingPen)
 {
+	colorsFrequency.clear();
+
 	QColor usingColor = usingPen.color();
 	uint16_t colorValue;
 	
@@ -172,11 +174,6 @@ void HistogramPainter::calculateColorsFrequency(TIFF * image, QPen usingPen)
 	}
 }
 
-uint16_t HistogramPainter::getMaxPixelValue()
-{
-    return maxPixelValue;
-}
-
 void HistogramPainter::setHistogramCutting(uint16_t minCuttingValue, uint16_t maxCuttingValue)
 {
     this->minCuttingValue = minCuttingValue;
@@ -188,4 +185,12 @@ bool HistogramPainter::isNeedCutting()
     if(maxCuttingValue != 0)
 		return true;
 	return false;
+}
+
+int HistogramPainter::getColumnValue(int x)
+{
+	if(x > maxPixelValue)
+		return 0;
+		
+    return colorsFrequency[x];
 }

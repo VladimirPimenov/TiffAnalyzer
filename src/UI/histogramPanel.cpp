@@ -97,7 +97,7 @@ QColor HistogramPanel::getChannelColor()
 	    return Qt::gray;
 }
 
-uint16_t HistogramPanel::getMaxPixel16Value()
+int HistogramPanel::getColumnValue(int x)
 {
-    return painter->getMaxPixelValue();
+    return painter->getColumnValue(x);
 }

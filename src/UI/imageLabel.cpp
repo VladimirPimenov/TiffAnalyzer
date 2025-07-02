@@ -169,11 +169,38 @@ void ImageLabel::standartContrastingEvent()
 
 void ImageLabel::histogramContrastingEvent()
 {
-    float histogramCuttingPercent = contrastingWin->getHistogramCuttingPercent();
-    uint16_t histogramMaxValue = histrogram->getMaxPixel16Value();
+    float leftCuttingPersent = contrastingWin->getLeftCuttingPercent();
+    float rightCuttingPersent = contrastingWin->getRightCuttingPercent();
     
-    uint16_t min16bitValue = histogramCuttingPercent * histogramMaxValue;
-    uint16_t max16bitValue = (1 - histogramCuttingPercent) * histogramMaxValue;
+    uint16_t min16bitValue = 0;
+    uint16_t max16bitValue = 0;
+    
+    int leftCuttingCount = image8bit->width() * image8bit->height() * leftCuttingPersent;
+    int rightCuttingCount = image8bit->width() * image8bit->height() * rightCuttingPersent;
+    
+    int currentCount = 0;
+    for(int x = 0; x < 65535; x++)
+    {
+        currentCount += histrogram->getColumnValue(x);
+        
+        if(currentCount >= leftCuttingCount)
+        {
+            min16bitValue = x;
+            break;
+        }
+    }
+    
+    currentCount = 0;
+    for(int x = 65535; x > 0; x--)
+    {
+        currentCount += histrogram->getColumnValue(x);
+        
+        if(currentCount >= rightCuttingCount)
+        {
+            max16bitValue = x;
+            break;
+        }
+    }
     
     minNormalizationPixel = Pixel16bit
     {

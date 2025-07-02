@@ -24,7 +24,8 @@ public:
 	
 	Pixel16bit getMinPixelParameters();
 	Pixel16bit getMaxPixelParameters();
-	float getHistogramCuttingPercent();
+	float getRightCuttingPercent();
+	float getLeftCuttingPercent();
 
 private:
 	bool isGrayscaleContrasting;
@@ -48,7 +49,8 @@ private:
 	QLineEdit * blueMinContastingEntry;
 	QLineEdit * blueMaxContastingEntry;
 	
-	QLineEdit * histogramCuttingPercentEntry;
+	QLineEdit * histogramRightPercentEntry;
+	QLineEdit * histogramLeftPercentEntry;
 	
 	std::function<void()> contrastingEventHandler;
 	

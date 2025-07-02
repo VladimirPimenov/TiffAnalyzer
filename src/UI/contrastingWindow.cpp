@@ -59,13 +59,21 @@ void ContrastingWindow::createRgbContrastingWindow()
 
 void ContrastingWindow::createHistogramContrastingWindow()
 {
-	histogramCuttingPercentEntry = new QLineEdit();
+	this->setFixedWidth(500);
+
+	histogramRightPercentEntry = new QLineEdit();
+	histogramLeftPercentEntry = new QLineEdit();
 	
-	QLabel * text = new QLabel("Введите процент обрезки гистограммы");
+	QHBoxLayout * persentEntryBox = new QHBoxLayout();
+	
+	persentEntryBox->addWidget(histogramLeftPercentEntry);
+	persentEntryBox->addWidget(histogramRightPercentEntry);
+	
+	QLabel * text = new QLabel("Введите процент обрезки гистограммы слева и справа по количеству пикселей");
 	textBox->addWidget(text);
 	textBox->setAlignment(text, Qt::AlignCenter);
 	
-	vWidgetsBox->addWidget(histogramCuttingPercentEntry);
+	vWidgetsBox->addLayout(persentEntryBox);
 	vWidgetsBox->addWidget(okButton);
 }
 
@@ -104,9 +112,14 @@ Pixel16bit ContrastingWindow::getMaxPixelParameters()
 	};
 }
 
-float ContrastingWindow::getHistogramCuttingPercent()
+float ContrastingWindow::getRightCuttingPercent()
 {
-    return histogramCuttingPercentEntry->text().toFloat() / 100.0f;
+    return histogramRightPercentEntry->text().toFloat() / 100.0f;
+}
+
+float ContrastingWindow::getLeftCuttingPercent()
+{
+    return histogramLeftPercentEntry->text().toFloat() / 100.0f;
 }
 
 void ContrastingWindow::createTextBox()

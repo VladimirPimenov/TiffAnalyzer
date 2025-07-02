@@ -25,7 +25,7 @@ public:
 	void updateHistogram(TIFF * image, uint16_t minValue, uint16_t maxValue);
 	void clearHistogram(); 
 	
-	uint16_t getMaxPixel16Value();
+	int getColumnValue(int x);
 private:
 	HistogramPainter * painter;
 	
