@@ -1,12 +1,21 @@
 #include "../../include/imagePainter.h"
 
+#include <iostream>
+
 int minMaxNormalization(uint16_t x, uint16_t minX, uint16_t maxX, uint16_t a, uint16_t b)
 {
     /* 
     Формула minMax-нормализации в диапазоне [a; b]:
     x' = (x - min(x)) * (b - a) / (max(x) - min(x)) + a
     */
-    return (b - a) * ((x - minX) / (double)(maxX - minX)) + a;
+    int result = (b - a) * ((x - minX) / (double)(maxX - minX)) + a;
+    
+    if(result > 255)
+        result = 255;
+    if(result < 0)
+        result = 0;
+    
+    return result;
 }
 
 void ImagePainter::paintImage(TIFF * image16bit, QImage * image8bit, Pixel16bit minNormalizationPixel, Pixel16bit maxNormalizationPixel)
@@ -31,7 +40,6 @@ void ImagePainter::paintImage(TIFF * image16bit, QImage * image8bit, Pixel16bit 
             int normalizedBlue8bit = minMaxNormalization(image16bit->pixels[y][x].blue, 
                                                         minBluePixelValue, maxBluePixelValue, 
                                                         0, 255);
-            
 			image8bit->setPixel(x, y, qRgb(normalizedRed8bit, normalizedGreen8bit, normalizedBlue8bit));
         }
     }

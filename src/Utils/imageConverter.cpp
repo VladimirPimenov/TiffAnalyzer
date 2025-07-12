@@ -1,4 +1,4 @@
-#include "../../include/ImageConverter.h"
+#include "../../include/imageConverter.h"
 
 int calculateNullBytesCount(int width)
 {
