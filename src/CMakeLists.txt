@@ -12,4 +12,5 @@ add_executable(TiffAnalyzer
     Utils/histogramPainter.cpp
     Utils/bmp.cpp
     Utils/imageConverter.cpp
+    Utils/sppReader.cpp
 )
