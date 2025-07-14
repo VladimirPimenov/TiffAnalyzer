@@ -1,15 +1,18 @@
 #pragma once
 
+#include <QWidget>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+
+#include <QImage>
+#include <QLabel>
+
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QGraphicsTextItem>
-#include <QLabel>
+
 #include <QComboBox>
-#include <QImage>
 #include <QPushButton>
-#include <QWidget>
 
 #include <map>
 #include <string>

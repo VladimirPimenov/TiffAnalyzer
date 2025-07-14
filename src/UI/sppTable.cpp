@@ -4,6 +4,8 @@
 SppTable::SppTable(int rowsCount, int colsCount)
 {
     table = new QTableView();
+    
+    table->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     sppModel = new QStandardItemModel(rowsCount, colsCount);
 }
@@ -31,8 +33,8 @@ void SppTable::fillSppModel(std::map<int, std::map<std::string, float>> & sppDat
     for(auto it = sppData.begin(); it != sppData.end(); it++)
     {
         int channelNum = it->first;
-        int waveLen = sppData[channelNum]["WaveLen"];
-        int waveDelta = sppData[channelNum]["WaveDelta"];
+        float waveLen = sppData[channelNum]["WaveLen"];
+        float waveDelta = sppData[channelNum]["WaveDelta"];
         
         sppModel->setItem(currentRow, 0, new QStandardItem(QString::fromStdString(std::to_string(channelNum))));
         sppModel->setItem(currentRow, 1, new QStandardItem(QString::fromStdString(std::to_string(waveLen))));

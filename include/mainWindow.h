@@ -59,8 +59,6 @@ private:
 	
 	HistogramPanel * histogramPanel;
 	
-	std::string openImagePath;
-	
 	void openImage();
 	void saveImage();
 	void openGrayscale();

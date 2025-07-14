@@ -1,5 +1,6 @@
 #include "../../include/imageLabel.h"
-#include <iostream>
+#include "../../include/sppReader.h"
+
 #include <cmath>
 
 ImageLabel::ImageLabel(): QLabel()
@@ -9,24 +10,40 @@ ImageLabel::ImageLabel(): QLabel()
     image8bit = new QImage();
     
     painter = new ImagePainter();
+    
+    createContextMenu();
 }
 
-void ImageLabel::loadGrayscaleTIFF(std::string loadPath)
+void ImageLabel::createContextMenu()
 {
-    tiffLoadPath = loadPath;
+    contextMenu = new QMenu();
+    
+    QAction * channelsInfoAction = contextMenu->addAction("Данные каналов");
+    
+    connect(channelsInfoAction, &QAction::triggered, this, &ImageLabel::showChannelsInfo);
+}
 
+void ImageLabel::loadNewTIFF(std::string loadPath)
+{
+    tiffPath = loadPath;
+    
     image16bit = new TIFF();
-    image16bit->loadTiffMetadata(tiffLoadPath);
+    image16bit->loadTiffMetadata(tiffPath);
+    
+    sppTable = new SppTable(image16bit->channelsCount, 3);
+    std::string sppPath = tiffPath.substr(0, tiffPath.length() - 3) + "spp";
+    sppTable->loadSppFromFile(sppPath);
+    
+    loadGrayscaleTIFF();
+}
 
+void ImageLabel::loadGrayscaleTIFF()
+{
     openGrayscaleSelectionWindow(image16bit->channelsCount);
 }
 
-void ImageLabel::loadRgbTIFF(std::string loadPath)
+void ImageLabel::loadRgbTIFF()
 {
-	tiffLoadPath = loadPath;
-	
-	image16bit->loadTiffMetadata(tiffLoadPath);
-	
     openRgbSelectionWindow(image16bit->channelsCount);
 }
 
@@ -126,6 +143,11 @@ void ImageLabel::resetContrastingParams()
 	};
 }
 
+void ImageLabel::showChannelsInfo()
+{
+    sppTable->show();
+}
+
 bool ImageLabel::hasImage()
 {
     return !image8bit->isNull();
@@ -137,7 +159,7 @@ void ImageLabel::grayScaleSelectedEvent()
     
     channelSelector->close();
     
-    image16bit->loadGrayscale(tiffLoadPath, channel);
+    image16bit->loadGrayscale(tiffPath, channel);
     
     resetContrastingParams();
     
@@ -150,7 +172,7 @@ void ImageLabel::rgbSelectedEvent()
     
     channelSelector->close();
     
-    image16bit->loadRgb(tiffLoadPath, channels);
+    image16bit->loadRgb(tiffPath, channels);
     
     resetContrastingParams();
     
@@ -245,4 +267,16 @@ void ImageLabel::mouseMoveEvent(QMouseEvent * event)
 	{
 		statusBar->clearInfo();
 	}
+}
+
+void ImageLabel::mouseReleaseEvent(QMouseEvent * event)
+{
+    if(hasImage() 
+    && event->button() == Qt::RightButton)
+    {
+        QPoint mousePos = mapToGlobal(event->pos());
+		contextMenu->move(mousePos.rx(), mousePos.ry());
+        
+        contextMenu->show();
+    }
 }

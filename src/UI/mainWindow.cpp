@@ -136,11 +136,11 @@ void MainWindow::callError(std::string errorText)
 
 void MainWindow::openImage()
 {
-	openImagePath = QFileDialog::getOpenFileName(this, "Открыть файл", "./", "TIFF (*.tif *.tiff)").toStdString();
+	std::string openImagePath = QFileDialog::getOpenFileName(this, "Открыть файл", "./", "TIFF (*.tif *.tiff)").toStdString();
 
 	if(!openImagePath.empty())
 	{
-	    imageViewer->loadGrayscaleTIFF(openImagePath);
+	    imageViewer->loadNewTIFF(openImagePath);
 	
 		saveImageAction->setEnabled(true);
 		closeImageAction->setEnabled(true);
@@ -164,12 +164,12 @@ void MainWindow::saveImage()
 
 void MainWindow::openGrayscale()
 {
-	imageViewer->loadGrayscaleTIFF(openImagePath);
+	imageViewer->loadGrayscaleTIFF();
 }
 
 void MainWindow::openRgb()
 {
-	imageViewer->loadRgbTIFF(openImagePath);
+	imageViewer->loadRgbTIFF();
 }
 
 void MainWindow::standartContrasting()

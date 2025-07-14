@@ -8,19 +8,25 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QMouseEvent>
+#include <QMenu>
+#include <QPoint>
 
 #include <string>
 #include <fstream>
 
 #include "tiff.h"
 #include "rgb.h"
+#include "bmp.h"
+
 #include "imagePainter.h"
-#include "channelSelectionWindow.h"
-#include "contrastingWindow.h"
+#include "imageConverter.h"
+
 #include "pixelStatusBar.h"
 #include "histogramPanel.h"
-#include "bmp.h"
-#include "ImageConverter.h"
+#include "channelSelectionWindow.h"
+#include "contrastingWindow.h"
+
+#include "sppTable.h"
 
 class ImageLabel: public QLabel
 {
@@ -34,10 +40,11 @@ public:
 	
 	HistogramPanel * histrogram;
 
-	std::string tiffLoadPath;
+	std::string tiffPath;
 
-	void loadGrayscaleTIFF(std::string loadPath);
-	void loadRgbTIFF(std::string loadPath);
+	void loadNewTIFF(std::string loadPath);
+	void loadGrayscaleTIFF();
+	void loadRgbTIFF();
 	
 	void saveImageAsBmp(std::string savePath);
 	
@@ -57,8 +64,14 @@ private:
 	
 	ImagePainter * painter;
 	
+	QMenu * contextMenu;
+	
 	Pixel16bit minNormalizationPixel;
 	Pixel16bit maxNormalizationPixel;
+	
+	SppTable * sppTable;
+	
+	void createContextMenu();
 	
 	void openGrayscaleSelectionWindow(int channelsCount);
 	void openRgbSelectionWindow(int channelsCount);
@@ -68,7 +81,10 @@ private:
 	void standartContrastingEvent();
 	void histogramContrastingEvent();
 	
-	void mouseMoveEvent(QMouseEvent * event) override;
-	
 	void resetContrastingParams();
+	
+	void showChannelsInfo();
+	
+	void mouseMoveEvent(QMouseEvent * event) override;
+	void mouseReleaseEvent(QMouseEvent * event) override;
 };
