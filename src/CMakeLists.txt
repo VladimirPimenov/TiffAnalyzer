@@ -6,6 +6,7 @@ add_executable(TiffAnalyzer
     UI/contrastingWindow.cpp
     UI/pixelStatusBar.cpp
     UI/histogramPanel.cpp
+    UI/sppTable.cpp
 
     Utils/tiff.cpp
     Utils/imagePainter.cpp
