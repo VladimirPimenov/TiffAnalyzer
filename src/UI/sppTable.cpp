@@ -1,11 +1,20 @@
 #include "../../include/sppTable.h"
-#include <iostream>
+
+#include <QHeaderView>
 
 SppTable::SppTable(int rowsCount, int colsCount)
 {
+    window = new QWidget();
+    window->setWindowFlag(Qt::MSWindowsFixedSizeDialogHint);
+    
     table = new QTableView();
     
     table->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    table->verticalHeader()->setVisible(false);
+    table->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
+    
+    box = new QHBoxLayout(window);
+    box->addWidget(table);
 
     sppModel = new QStandardItemModel(rowsCount, colsCount);
 }
@@ -46,5 +55,5 @@ void SppTable::fillSppModel(std::map<int, std::map<std::string, float>> & sppDat
 
 void SppTable::show()
 {
-    table->show();
+    window->show();
 }

@@ -2,6 +2,7 @@
 
 #include <QTableView>
 #include <QStandardItemModel>
+#include <QHBoxLayout>
 
 #include <string>
 #include <map>
@@ -19,6 +20,8 @@ public:
     void show();
 
 private:
+    QWidget * window;
+    QHBoxLayout * box;
     QTableView * table;
     QStandardItemModel * sppModel;
     
