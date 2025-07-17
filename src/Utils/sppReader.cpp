@@ -1,7 +1,5 @@
 #include "../../include/sppReader.h"
 
-#include <iostream>
-
 void SppReader::readSppData(std::string filePath, std::map<int, std::map<std::string, float>> & sppData)
 {
     std::ifstream spp;

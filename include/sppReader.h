@@ -4,7 +4,7 @@
 #include <map>
 #include <fstream>
 
-static class SppReader
+class SppReader
 {
 public:
     static void readSppData(std::string filePath, std::map<int, std::map<std::string, float>> & sppData);

@@ -4,7 +4,7 @@
 
 #include "bmp.h"
 
-static class ImageConverter
+class ImageConverter
 {
 public:
     static void convertQImageToBmp(QImage * image, BMP * bmp);
