@@ -1,6 +1,9 @@
 #include "../../include/imageLabel.h"
 #include "../../include/sppReader.h"
 
+#include <QMessageBox>
+#include <QFileDialog>
+
 #include <cmath>
 
 ImageLabel::ImageLabel(): QLabel()
@@ -30,11 +33,32 @@ void ImageLabel::loadNewTIFF(std::string loadPath)
     image16bit = new TIFF();
     image16bit->loadTiffMetadata(tiffPath);
     
+    loadSppTable();
+    
+    loadGrayscaleTIFF();
+}
+
+void ImageLabel::loadSppTable()
+{
     sppTable = new SppTable(image16bit->channelsCount, 3);
     std::string sppPath = tiffPath.substr(0, tiffPath.length() - 3) + "spp";
     sppTable->loadSppFromFile(sppPath);
     
-    loadGrayscaleTIFF();
+    if(!sppTable->isSppReaded())
+        requestSppFilePath();
+}
+
+void ImageLabel::requestSppFilePath()
+{
+    auto userAnswer = QMessageBox::question(this, "Выберите файл spp", "Файл .spp не найден. Выбрать путь вручную?",
+                                            QMessageBox::Yes | QMessageBox::No);
+
+    if(userAnswer == QMessageBox::Yes)
+    {
+        std::string sppPath = QFileDialog::getOpenFileName(this, "Открыть файл", "./", "SPP (*.spp)").toStdString();
+        
+        sppTable->loadSppFromFile(sppPath);
+    }
 }
 
 void ImageLabel::loadGrayscaleTIFF()

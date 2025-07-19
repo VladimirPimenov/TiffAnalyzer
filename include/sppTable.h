@@ -17,6 +17,8 @@ public:
     
     void loadSppFromFile(std::string sppPath);
     
+    bool isSppReaded();
+    
     void show();
 
 private:

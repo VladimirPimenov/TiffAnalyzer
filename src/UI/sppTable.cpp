@@ -53,6 +53,13 @@ void SppTable::fillSppModel(std::map<int, std::map<std::string, float>> & sppDat
     }
 }
 
+bool SppTable::isSppReaded()
+{
+    if(sppModel->item(0) == nullptr)
+        return false;
+    return true;
+}
+
 void SppTable::show()
 {
     window->show();

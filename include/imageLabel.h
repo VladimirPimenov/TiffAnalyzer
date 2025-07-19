@@ -73,6 +73,9 @@ private:
 	
 	void createContextMenu();
 	
+	void loadSppTable();
+	void requestSppFilePath();
+	
 	void openGrayscaleSelectionWindow(int channelsCount);
 	void openRgbSelectionWindow(int channelsCount);
 
