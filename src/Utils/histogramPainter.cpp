@@ -1,8 +1,6 @@
 #include "../../include/histogramPainter.h"
 #include "../../include/histogramPanel.h"
 
-#include <iostream>
-
 float findScale(float max)
 {
 	float scale = 1;
@@ -77,28 +75,27 @@ void HistogramPainter::paintAxisX(QGraphicsScene * histogram)
 
 void HistogramPainter::paintAxisY(QGraphicsScene * histogram)
 {
-	int scaledMaxY = -maxPixelCount/Yscale;
 	int yOffset = 10;
 	
 	QPen pen = Qt::black;
 	QBrush brush = Qt::black;
 
-	histogram->addRect(axisOffset, 0, 1, scaledMaxY - yOffset, pen, brush);
+	histogram->addRect(axisOffset, 0, 1, -255, pen, brush);
 	
-	histogram->addRect(axisOffset, scaledMaxY / 4, 5, 1, pen, brush);
-	histogram->addRect(axisOffset, scaledMaxY / 2, 5, 1, pen, brush);
-	histogram->addRect(axisOffset, scaledMaxY * 3 / 4, 5, 1, pen, brush);
-	histogram->addRect(axisOffset, scaledMaxY, 5, 1, pen, brush);
+	histogram->addRect(axisOffset, -255 / 4 + yOffset, 5, 1, pen, brush);
+	histogram->addRect(axisOffset, -255 / 2 + yOffset, 5, 1, pen, brush);
+	histogram->addRect(axisOffset, -255 * 3 / 4 + yOffset, 5, 1, pen, brush);
+	histogram->addRect(axisOffset, -255 + yOffset, 5, 1, pen, brush);
 	
 	QGraphicsItem * y1 = histogram->addText(QString::fromStdString(getExponencialView(maxPixelCount / 4)));
 	QGraphicsItem * y2 = histogram->addText(QString::fromStdString(getExponencialView(maxPixelCount / 2)));
 	QGraphicsItem * y3 = histogram->addText(QString::fromStdString(getExponencialView(maxPixelCount * 3 / 4)));
 	QGraphicsItem * y4 = histogram->addText(QString::fromStdString(getExponencialView(maxPixelCount)));
-	
-	y1->setPos(0, scaledMaxY / 4 - yOffset);
-	y2->setPos(0, scaledMaxY / 2 - yOffset);
-	y3->setPos(0, scaledMaxY * 3 / 4 - yOffset);
-	y4->setPos(0, scaledMaxY - yOffset);
+
+	y1->setPos(0, -64);
+	y2->setPos(0, -128);
+	y3->setPos(0, -191);
+	y4->setPos(0, -255);
 }
 
 void HistogramPainter::paintHistogram(QGraphicsScene * histogram, TIFF * image, QPen usingPen)

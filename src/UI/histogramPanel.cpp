@@ -3,7 +3,7 @@
 
 HistogramPanel::HistogramPanel() : QWidget()
 {
-	this->setFixedWidth(345);
+	this->setFixedWidth(360);
 
 	panel = new QVBoxLayout(this);
 
@@ -16,7 +16,7 @@ HistogramPanel::HistogramPanel() : QWidget()
 void HistogramPanel::createHistogramPanel()
 {
 	histogram = new QGraphicsView();
-	histogram->setFixedSize(330, 330);
+	histogram->setFixedSize(350, 350);
 	
 	panel->addWidget(histogram);
 }
