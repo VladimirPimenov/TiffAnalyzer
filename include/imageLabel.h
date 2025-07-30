@@ -52,7 +52,7 @@ public:
 	void histogramContrasting();
 	void resetContrasting();
 	
-	void updateImage(uint16_t min16bitValue, uint16_t max16bitValue);
+	void updateImage();
 
 	void clearImageLabel();
 	
@@ -65,9 +65,6 @@ private:
 	ImagePainter * painter;
 	
 	QMenu * contextMenu;
-	
-	Pixel16bit minNormalizationPixel;
-	Pixel16bit maxNormalizationPixel;
 	
 	SppTable * sppTable;
 	
@@ -83,6 +80,9 @@ private:
 	void rgbSelectedEvent();
 	void standartContrastingEvent();
 	void histogramContrastingEvent();
+	
+	uint16_t findMinContrasingValue(float leftCuttingPercent);
+	uint16_t findMaxContrasingValue(float rightCuttingPersent);
 	
 	void resetContrastingParams();
 	

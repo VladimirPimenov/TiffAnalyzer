@@ -18,7 +18,13 @@ int minMaxNormalization(uint16_t x, uint16_t minX, uint16_t maxX, uint16_t a, ui
     return result;
 }
 
-void ImagePainter::paintImage(TIFF * image16bit, QImage * image8bit, Pixel16bit minNormalizationPixel, Pixel16bit maxNormalizationPixel)
+ImagePainter::ImagePainter()
+{
+    minNormalizationPixel = {0, 0, 0};
+    maxNormalizationPixel = {65535, 65535, 65535};
+}
+
+void ImagePainter::paintImage(TIFF * image16bit, QImage * image8bit)
 {   
     uint16_t minRedPixelValue = minNormalizationPixel.red;
     uint16_t maxRedPixelValue = maxNormalizationPixel.red;
@@ -43,4 +49,26 @@ void ImagePainter::paintImage(TIFF * image16bit, QImage * image8bit, Pixel16bit 
 			image8bit->setPixel(x, y, qRgb(normalizedRed8bit, normalizedGreen8bit, normalizedBlue8bit));
         }
     }
+}
+
+void ImagePainter::setNormalization(uint16_t minNormalizationValue, uint16_t maxNormalizationValue)
+{
+    minNormalizationPixel = 
+    {
+        minNormalizationValue, 
+        minNormalizationValue,
+        minNormalizationValue
+    };
+    maxNormalizationPixel = 
+    {
+        maxNormalizationValue,
+        maxNormalizationValue,
+        maxNormalizationValue
+    };
+}
+
+void ImagePainter::setNormalization(Pixel16bit minNormalizationPixel, Pixel16bit maxNormalizationPixel)
+{
+    this->minNormalizationPixel = minNormalizationPixel;
+    this->maxNormalizationPixel = maxNormalizationPixel;
 }

@@ -114,12 +114,12 @@ Pixel16bit ContrastingWindow::getMaxPixelParameters()
 
 float ContrastingWindow::getRightCuttingPercent()
 {
-    return histogramRightPercentEntry->text().toFloat() / 100.0f;
+    return histogramRightPercentEntry->text().toFloat();
 }
 
 float ContrastingWindow::getLeftCuttingPercent()
 {
-    return histogramLeftPercentEntry->text().toFloat() / 100.0f;
+    return histogramLeftPercentEntry->text().toFloat();
 }
 
 void ContrastingWindow::createTextBox()

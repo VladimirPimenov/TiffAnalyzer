@@ -35,7 +35,22 @@ void ImageLabel::loadNewTIFF(std::string loadPath)
     
     loadSppTable();
     
-    loadGrayscaleTIFF();
+    RgbChannels defaultChannels = {55, 29, 14};
+    float defaultLeftCuttingPercent = 2.0f;
+    float defaultRightCuttingPercent = 2.0f;
+    
+    image16bit->loadRgb(tiffPath, defaultChannels);
+    
+    resetContrastingParams();
+    histrogram->updateHistogram(image16bit);
+    
+    uint16_t min16bitValue = findMinContrasingValue(defaultLeftCuttingPercent);
+    uint16_t max16bitValue = findMaxContrasingValue(defaultRightCuttingPercent);
+    
+    painter->setNormalization(min16bitValue, max16bitValue);
+    histrogram->setCutting(min16bitValue, max16bitValue);
+    
+    updateImage();
 }
 
 void ImageLabel::loadSppTable()
@@ -129,18 +144,18 @@ void ImageLabel::resetContrasting()
 {
     resetContrastingParams();
     
-    updateImage(minNormalizationPixel.red, maxNormalizationPixel.red);
+    updateImage();
 }
 
-void ImageLabel::updateImage(uint16_t min16bitValue = 0, uint16_t max16bitValue = 0)
+void ImageLabel::updateImage()
 {
 	image8bit = new QImage(image16bit->width, image16bit->height, QImage::Format_RGB888);
 	
-	painter->paintImage(image16bit, image8bit, minNormalizationPixel, maxNormalizationPixel);
+	painter->paintImage(image16bit, image8bit);
 	
 	setPixmap(QPixmap::fromImage(*image8bit));
 	
-	histrogram->updateHistogram(image16bit, min16bitValue, max16bitValue);
+	histrogram->updateHistogram(image16bit);
 }
 
 void ImageLabel::clearImageLabel()
@@ -153,18 +168,45 @@ void ImageLabel::clearImageLabel()
 
 void ImageLabel::resetContrastingParams()
 {
-    minNormalizationPixel = Pixel16bit 
+    painter->setNormalization(
+        image16bit->minPixelValue,
+        image16bit->maxPixelValue);
+        
+    histrogram->setCutting(
+        image16bit->minPixelValue, 
+        image16bit->maxPixelValue);
+}
+
+uint16_t ImageLabel::findMinContrasingValue(float leftCuttingPercent)
+{
+    int leftCuttingCount = image16bit->width * image16bit->height * leftCuttingPercent / 100;
+    
+    int currentCount = 0;
+    for(int x = 0; x < 65535; x++)
     {
-    	image16bit->minPixelValue,
-    	image16bit->minPixelValue, 
-    	image16bit->minPixelValue
-	};
-    maxNormalizationPixel = Pixel16bit 
+        currentCount += histrogram->getColumnValue(x);
+        
+        if(currentCount >= leftCuttingCount)
+        {
+            return x;
+        }
+    }
+}
+
+uint16_t ImageLabel::findMaxContrasingValue(float rightCuttingPercent)
+{
+    int rightCuttingCount = image16bit->width * image16bit->height * rightCuttingPercent / 100;
+    
+    int currentCount = 0;
+    for(int x = 65535; x > 0; x--)
     {
-    	image16bit->maxPixelValue, 
-    	image16bit->maxPixelValue, 
-    	image16bit->maxPixelValue
-	};
+        currentCount += histrogram->getColumnValue(x);
+        
+        if(currentCount >= rightCuttingCount)
+        {
+            return x;
+        }
+    }
 }
 
 void ImageLabel::showChannelsInfo()
@@ -204,9 +246,10 @@ void ImageLabel::rgbSelectedEvent()
 }
 
 void ImageLabel::standartContrastingEvent()
-{
-    minNormalizationPixel = contrastingWin->getMinPixelParameters();
-    maxNormalizationPixel = contrastingWin->getMaxPixelParameters();
+{    
+    painter->setNormalization(
+        contrastingWin->getMinPixelParameters(), 
+        contrastingWin->getMaxPixelParameters());
     
     contrastingWin->close();
     
@@ -215,55 +258,19 @@ void ImageLabel::standartContrastingEvent()
 
 void ImageLabel::histogramContrastingEvent()
 {
-    float leftCuttingPersent = contrastingWin->getLeftCuttingPercent();
-    float rightCuttingPersent = contrastingWin->getRightCuttingPercent();
+    float leftCuttingPercent = contrastingWin->getLeftCuttingPercent();
+    float rightCuttingPercent = contrastingWin->getRightCuttingPercent();
     
-    uint16_t min16bitValue = 0;
-    uint16_t max16bitValue = 0;
+    uint16_t min16bitValue = findMinContrasingValue(leftCuttingPercent);
+    uint16_t max16bitValue = findMaxContrasingValue(rightCuttingPercent);
     
-    int leftCuttingCount = image8bit->width() * image8bit->height() * leftCuttingPersent;
-    int rightCuttingCount = image8bit->width() * image8bit->height() * rightCuttingPersent;
-    
-    int currentCount = 0;
-    for(int x = 0; x < 65535; x++)
-    {
-        currentCount += histrogram->getColumnValue(x);
-        
-        if(currentCount >= leftCuttingCount)
-        {
-            min16bitValue = x;
-            break;
-        }
-    }
-    
-    currentCount = 0;
-    for(int x = 65535; x > 0; x--)
-    {
-        currentCount += histrogram->getColumnValue(x);
-        
-        if(currentCount >= rightCuttingCount)
-        {
-            max16bitValue = x;
-            break;
-        }
-    }
-    
-    minNormalizationPixel = Pixel16bit
-    {
-        (uint16_t)(min16bitValue),
-        (uint16_t)(min16bitValue),
-        (uint16_t)(min16bitValue)
-    };
-    maxNormalizationPixel = Pixel16bit
-    {
-        (uint16_t)(max16bitValue),
-        (uint16_t)(max16bitValue),
-        (uint16_t)(max16bitValue)
-    };
-    
+    painter->setNormalization(min16bitValue, max16bitValue);
+
     contrastingWin->close();
     
-    updateImage(min16bitValue, max16bitValue);
+    histrogram->setCutting(min16bitValue, max16bitValue);
+    
+    updateImage();
 }
 
 void ImageLabel::mouseMoveEvent(QMouseEvent * event)
