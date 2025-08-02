@@ -1,14 +1,14 @@
 #include "../../include/histogramPainter.h"
-#include "../../include/histogramPanel.h"
 
 float findScale(float max)
 {
+	float scaleAccuracy = 1.1f;
 	float scale = 1;
 	
     while(max > 255)
     {
-        max /= 1.5f;
-        scale *= 1.5f;
+        max /= scaleAccuracy;
+        scale *= scaleAccuracy;
     }
     return scale;
 }
@@ -76,7 +76,6 @@ void HistogramPainter::paintAxisX(QGraphicsScene * histogram)
 void HistogramPainter::paintAxisY(QGraphicsScene * histogram)
 {
 	int yOffset = 10;
-	
 	QPen pen = Qt::black;
 	QBrush brush = Qt::black;
 
@@ -98,17 +97,33 @@ void HistogramPainter::paintAxisY(QGraphicsScene * histogram)
 	y4->setPos(0, -255);
 }
 
-void HistogramPainter::paintHistogram(QGraphicsScene * histogram, TIFF * image, QPen usingPen)
+void HistogramPainter::paintHistogram(QGraphicsScene * histogram, QPen usingPen)
 {
-	calculateColorsFrequency(image, usingPen);
-	
 	XScale = findScale(maxPixelValue);
 	paintAxisX(histogram);
-	
     Yscale = findScale(maxPixelCount);
 	paintAxisY(histogram);
 	
+	QColor usingColor = usingPen.color();
+	
+	if(usingColor == Qt::red || usingColor == Qt::gray)
+	{
+	    paintHistogramGraphics(histogram, redFrequency, usingPen);
+	}
+	else if(usingColor == Qt::green)
+	{
+		paintHistogramGraphics(histogram, greenFrequency, usingPen);
+	}
+	else if(usingColor == Qt::blue)
+	{
+		paintHistogramGraphics(histogram, blueFrequency, usingPen);
+	}
+}
+
+void HistogramPainter::paintHistogramGraphics(QGraphicsScene * histogram, std::map<uint16_t, int> colorsFrequency, QPen usingPen)
+{
 	int x, y;
+
     for (auto it = colorsFrequency.begin(); it != colorsFrequency.end(); it++)
 	{
 		x = it->first;
@@ -121,12 +136,20 @@ void HistogramPainter::paintHistogram(QGraphicsScene * histogram, TIFF * image, 
 	}
 }
 
-void HistogramPainter::calculateColorsFrequency(TIFF * image, QPen usingPen)
+void HistogramPainter::setImage(TIFF * image)
 {
-	colorsFrequency.clear();
+	calculateColorsFrequency(image);
+}
 
-	QColor usingColor = usingPen.color();
-	uint16_t colorValue;
+void HistogramPainter::calculateColorsFrequency(TIFF * image)
+{
+	redFrequency.clear();
+	greenFrequency.clear();
+	blueFrequency.clear();
+
+	uint16_t redValue;
+	uint16_t greenValue;
+	uint16_t blueValue;
 	
 	Pixel16bit pixel;
 	
@@ -139,36 +162,30 @@ void HistogramPainter::calculateColorsFrequency(TIFF * image, QPen usingPen)
 		{
 			pixel = image->pixels[y][x];
 
-			if (usingColor == Qt::red)
-			{
-				colorValue = pixel.red;
-			}
-			else if (usingColor == Qt::green)
-			{
-				colorValue = pixel.green;
-			}
-			else if (usingColor == Qt::blue)
-			{
-				colorValue = pixel.blue;
-			}
-			else
-			{
-			    colorValue = pixel.red;
-			}
+			redValue = pixel.red;
+			greenValue = pixel.green;
+			blueValue = pixel.blue;
 
-			if (colorsFrequency.count(colorValue))
-			{
-				colorsFrequency[colorValue]++;
-				
-				maxPixelCount = std::max(maxPixelCount, colorsFrequency[colorValue]);
-			}
-			else
-				colorsFrequency[colorValue] = 1;
-			
-			if(colorValue > maxPixelValue)
-				maxPixelValue = colorValue;
+			updateColorFrequency(redFrequency, redValue);
+			updateColorFrequency(greenFrequency, greenValue);
+			updateColorFrequency(blueFrequency, blueValue);
 		}
 	}
+}
+
+void HistogramPainter::updateColorFrequency(std::map<uint16_t, int> & colorFrequency, uint16_t colorValue)
+{
+    if(colorFrequency.count(colorValue))
+	{
+		colorFrequency[colorValue]++;
+		
+		maxPixelCount = std::max(maxPixelCount, colorFrequency[colorValue]);
+	}
+	else
+		colorFrequency[colorValue] = 1;
+		
+	if(colorValue > maxPixelValue)
+		maxPixelValue = colorValue;
 }
 
 void HistogramPainter::setHistogramCutting(uint16_t minCuttingValue, uint16_t maxCuttingValue)
@@ -189,5 +206,5 @@ int HistogramPainter::getColumnValue(int x)
 	if(x > maxPixelValue)
 		return 0;
 		
-    return colorsFrequency[x];
+    return redFrequency[x];
 }

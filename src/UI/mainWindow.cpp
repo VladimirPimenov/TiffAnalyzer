@@ -67,7 +67,7 @@ void MainWindow::createImagePanel()
 	scrollArea->setWidget(imageViewer);
 	
 	imageViewer->statusBar = statusBar;
-	imageViewer->histrogram = histogramPanel;
+	imageViewer->histogram = histogramPanel;
 	
 	centralBox->insertWidget(0, scrollArea);
 }

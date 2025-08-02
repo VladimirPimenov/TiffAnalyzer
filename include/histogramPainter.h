@@ -19,7 +19,9 @@ class HistogramPainter
 public:
 	HistogramPainter();
 	
-	void paintHistogram(QGraphicsScene * histogram, TIFF * image, QPen usingPen);
+	void setImage(TIFF * image);
+	
+	void paintHistogram(QGraphicsScene * histogram, QPen usingPen);
 	
 	void setHistogramCutting(uint16_t minCuttingValue, uint16_t maxCuttingValue);
 	
@@ -36,12 +38,16 @@ private:
     uint16_t minCuttingValue;
     uint16_t maxCuttingValue;
     
-	std::map<uint16_t, int> colorsFrequency;
+	std::map<uint16_t, int> redFrequency;
+	std::map<uint16_t, int> greenFrequency;
+	std::map<uint16_t, int> blueFrequency;
 	
 	void paintAxisX(QGraphicsScene * histogram);
 	void paintAxisY(QGraphicsScene * histogram);
+	void paintHistogramGraphics(QGraphicsScene * histogram, std::map<uint16_t, int> colorsFrequency, QPen pen);
 	
-	void calculateColorsFrequency(TIFF * image, QPen usingPen);
+	void calculateColorsFrequency(TIFF * image);
+	void updateColorFrequency(std::map<uint16_t, int> & colorsFrequency, uint16_t colorValue);
 	
 	bool isNeedCutting();
 };

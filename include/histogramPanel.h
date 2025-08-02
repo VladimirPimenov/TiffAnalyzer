@@ -25,7 +25,9 @@ class HistogramPanel: public QWidget
 public:
 	HistogramPanel();
 
-	void updateHistogram(TIFF * image);
+	void setImage(TIFF * image);
+
+	void updateHistogram();
 	void clearHistogram(); 
 	
 	void setCutting(uint16_t leftValue, uint16_t rightValue);

@@ -42,13 +42,15 @@ void ImageLabel::loadNewTIFF(std::string loadPath)
     image16bit->loadRgb(tiffPath, defaultChannels);
     
     resetContrastingParams();
-    histrogram->updateHistogram(image16bit);
+    
+    histogram->setImage(image16bit);
+    histogram->updateHistogram();
     
     uint16_t min16bitValue = findMinContrasingValue(defaultLeftCuttingPercent);
     uint16_t max16bitValue = findMaxContrasingValue(defaultRightCuttingPercent);
     
     painter->setNormalization(min16bitValue, max16bitValue);
-    histrogram->setCutting(min16bitValue, max16bitValue);
+    histogram->setCutting(min16bitValue, max16bitValue);
     
     updateImage();
 }
@@ -155,7 +157,7 @@ void ImageLabel::updateImage()
 	
 	setPixmap(QPixmap::fromImage(*image8bit));
 	
-	histrogram->updateHistogram(image16bit);
+	histogram->updateHistogram();
 }
 
 void ImageLabel::clearImageLabel()
@@ -172,7 +174,7 @@ void ImageLabel::resetContrastingParams()
         image16bit->minPixelValue,
         image16bit->maxPixelValue);
         
-    histrogram->setCutting(
+    histogram->setCutting(
         image16bit->minPixelValue, 
         image16bit->maxPixelValue);
 }
@@ -184,7 +186,7 @@ uint16_t ImageLabel::findMinContrasingValue(float leftCuttingPercent)
     int currentCount = 0;
     for(int x = 0; x < 65535; x++)
     {
-        currentCount += histrogram->getColumnValue(x);
+        currentCount += histogram->getColumnValue(x);
         
         if(currentCount >= leftCuttingCount)
         {
@@ -200,7 +202,7 @@ uint16_t ImageLabel::findMaxContrasingValue(float rightCuttingPercent)
     int currentCount = 0;
     for(int x = 65535; x > 0; x--)
     {
-        currentCount += histrogram->getColumnValue(x);
+        currentCount += histogram->getColumnValue(x);
         
         if(currentCount >= rightCuttingCount)
         {
@@ -229,6 +231,7 @@ void ImageLabel::grayScaleSelectedEvent()
     
     resetContrastingParams();
     
+	histogram->setImage(image16bit);
     updateImage();
 }
 
@@ -242,6 +245,7 @@ void ImageLabel::rgbSelectedEvent()
     
     resetContrastingParams();
     
+	histogram->setImage(image16bit);
     updateImage();
 }
 
@@ -268,7 +272,7 @@ void ImageLabel::histogramContrastingEvent()
 
     contrastingWin->close();
     
-    histrogram->setCutting(min16bitValue, max16bitValue);
+    histogram->setCutting(min16bitValue, max16bitValue);
     
     updateImage();
 }

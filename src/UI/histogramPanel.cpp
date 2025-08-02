@@ -42,15 +42,22 @@ void HistogramPanel::reloadHistogramScene()
 	histogram->setScene(scene);
 }
 
-void HistogramPanel::updateHistogram(TIFF * image)
+void HistogramPanel::setImage(TIFF * image)
 {
-	spectatedImage = image;
+    spectatedImage = image;
 
+	reloadHistogramScene();
+	
+	painter->setImage(image);
+}
+
+void HistogramPanel::updateHistogram()
+{
 	reloadHistogramScene();
 	
 	QPen pen;
 	
-	if(!image->isGrayscale)
+	if(!spectatedImage->isGrayscale)
 	{
 		channelSelector->setEnabled(true);
 		QColor paintColor = getChannelColor();
@@ -59,7 +66,7 @@ void HistogramPanel::updateHistogram(TIFF * image)
 	else
 		pen.setColor(Qt::gray);
 
-	painter->paintHistogram(scene, spectatedImage, pen);
+	painter->paintHistogram(scene, pen);
 }
 
 void HistogramPanel::setCutting(uint16_t leftValue, uint16_t rightValue)
@@ -69,7 +76,7 @@ void HistogramPanel::setCutting(uint16_t leftValue, uint16_t rightValue)
 
 void HistogramPanel::changeColor()
 {
-    updateHistogram(spectatedImage);
+    updateHistogram();
 }
 
 void HistogramPanel::clearHistogram()

@@ -38,7 +38,7 @@ public:
 	
 	PixelStatusBar * statusBar;
 	
-	HistogramPanel * histrogram;
+	HistogramPanel * histogram;
 
 	std::string tiffPath;
 
