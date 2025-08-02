@@ -1,10 +1,10 @@
-#include "../../include/imageLabel.h"
-#include "../../include/sppReader.h"
-
 #include <QMessageBox>
 #include <QFileDialog>
 
 #include <cmath>
+
+#include "../../include/imageLabel.h"
+#include "../../include/histogramContrastingCalculator.h"
 
 ImageLabel::ImageLabel(): QLabel()
 {
@@ -46,8 +46,16 @@ void ImageLabel::loadNewTIFF(std::string loadPath)
     histogram->setImage(image16bit);
     histogram->updateHistogram();
     
-    uint16_t min16bitValue = findMinContrasingValue(defaultLeftCuttingPercent);
-    uint16_t max16bitValue = findMaxContrasingValue(defaultRightCuttingPercent);
+    uint16_t min16bitValue = HistogramContrastingCalculator::findMinContrasingValue(
+                                                                defaultLeftCuttingPercent,
+                                                                image16bit->width,
+                                                                image16bit->height,
+                                                                histogram);
+    uint16_t max16bitValue = HistogramContrastingCalculator::findMaxContrasingValue(
+                                                                defaultRightCuttingPercent,
+                                                                image16bit->width,
+                                                                image16bit->height,
+                                                                histogram);
     
     painter->setNormalization(min16bitValue, max16bitValue);
     histogram->setCutting(min16bitValue, max16bitValue);
@@ -179,38 +187,6 @@ void ImageLabel::resetContrastingParams()
         image16bit->maxPixelValue);
 }
 
-uint16_t ImageLabel::findMinContrasingValue(float leftCuttingPercent)
-{
-    int leftCuttingCount = image16bit->width * image16bit->height * leftCuttingPercent / 100;
-    
-    int currentCount = 0;
-    for(int x = 0; x < 65535; x++)
-    {
-        currentCount += histogram->getColumnValue(x);
-        
-        if(currentCount >= leftCuttingCount)
-        {
-            return x;
-        }
-    }
-}
-
-uint16_t ImageLabel::findMaxContrasingValue(float rightCuttingPercent)
-{
-    int rightCuttingCount = image16bit->width * image16bit->height * rightCuttingPercent / 100;
-    
-    int currentCount = 0;
-    for(int x = 65535; x > 0; x--)
-    {
-        currentCount += histogram->getColumnValue(x);
-        
-        if(currentCount >= rightCuttingCount)
-        {
-            return x;
-        }
-    }
-}
-
 void ImageLabel::showChannelsInfo()
 {
     sppTable->show();
@@ -265,13 +241,20 @@ void ImageLabel::histogramContrastingEvent()
     float leftCuttingPercent = contrastingWin->getLeftCuttingPercent();
     float rightCuttingPercent = contrastingWin->getRightCuttingPercent();
     
-    uint16_t min16bitValue = findMinContrasingValue(leftCuttingPercent);
-    uint16_t max16bitValue = findMaxContrasingValue(rightCuttingPercent);
+    uint16_t min16bitValue = HistogramContrastingCalculator::findMinContrasingValue(
+                                                                leftCuttingPercent,
+                                                                image16bit->width,
+                                                                image16bit->height,
+                                                                histogram);
+    uint16_t max16bitValue = HistogramContrastingCalculator::findMaxContrasingValue(
+                                                                rightCuttingPercent,
+                                                                image16bit->width,
+                                                                image16bit->height,
+                                                                histogram);
     
-    painter->setNormalization(min16bitValue, max16bitValue);
-
     contrastingWin->close();
     
+    painter->setNormalization(min16bitValue, max16bitValue);
     histogram->setCutting(min16bitValue, max16bitValue);
     
     updateImage();

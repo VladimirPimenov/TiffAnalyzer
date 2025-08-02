@@ -14,4 +14,5 @@ add_executable(TiffAnalyzer
     Utils/bmp.cpp
     Utils/imageConverter.cpp
     Utils/sppReader.cpp
+    Utils/histogramContrastingCalculator.cpp
 )

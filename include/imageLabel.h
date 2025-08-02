@@ -81,9 +81,6 @@ private:
 	void standartContrastingEvent();
 	void histogramContrastingEvent();
 	
-	uint16_t findMinContrasingValue(float leftCuttingPercent);
-	uint16_t findMaxContrasingValue(float rightCuttingPersent);
-	
 	void resetContrastingParams();
 	
 	void showChannelsInfo();
