@@ -25,7 +25,9 @@ public:
 	
 	void setHistogramCutting(uint16_t minCuttingValue, uint16_t maxCuttingValue);
 	
-	int getColumnValue(int x);
+	int getColumnRedValue(int x);
+	int getColumnGreenValue(int x);
+	int getColumnBlueValue(int x);
 	
 private:
 	int axisOffset;

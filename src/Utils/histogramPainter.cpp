@@ -201,10 +201,26 @@ bool HistogramPainter::isNeedCutting()
 	return false;
 }
 
-int HistogramPainter::getColumnValue(int x)
+int HistogramPainter::getColumnRedValue(int x)
 {
 	if(x > maxPixelValue)
 		return 0;
 		
     return redFrequency[x];
+}
+
+int HistogramPainter::getColumnGreenValue(int x)
+{
+	if(x > maxPixelValue)
+		return 0;
+		
+    return greenFrequency[x];
+}
+
+int HistogramPainter::getColumnBlueValue(int x)
+{
+	if(x > maxPixelValue)
+		return 0;
+		
+    return blueFrequency[x];
 }

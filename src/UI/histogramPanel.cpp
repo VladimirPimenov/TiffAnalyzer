@@ -106,7 +106,17 @@ QColor HistogramPanel::getChannelColor()
 	    return Qt::gray;
 }
 
-int HistogramPanel::getColumnValue(int x)
+int HistogramPanel::getColumnRedValue(int x)
 {
-    return painter->getColumnValue(x);
+    return painter->getColumnRedValue(x);
+}
+
+int HistogramPanel::getColumnGreenValue(int x)
+{
+    return painter->getColumnGreenValue(x);
+}
+
+int HistogramPanel::getColumnBlueValue(int x)
+{
+    return painter->getColumnBlueValue(x);
 }

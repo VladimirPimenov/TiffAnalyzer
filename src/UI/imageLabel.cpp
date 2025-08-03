@@ -46,19 +46,19 @@ void ImageLabel::loadNewTIFF(std::string loadPath)
     histogram->setImage(image16bit);
     histogram->updateHistogram();
     
-    uint16_t min16bitValue = HistogramContrastingCalculator::findMinContrasingValue(
+    Pixel16bit minCuttingPixel = HistogramContrastingCalculator::findMinContrasingValue(
                                                                 defaultLeftCuttingPercent,
                                                                 image16bit->width,
                                                                 image16bit->height,
                                                                 histogram);
-    uint16_t max16bitValue = HistogramContrastingCalculator::findMaxContrasingValue(
+    Pixel16bit maxCuttingPixel = HistogramContrastingCalculator::findMaxContrasingValue(
                                                                 defaultRightCuttingPercent,
                                                                 image16bit->width,
                                                                 image16bit->height,
                                                                 histogram);
     
-    painter->setNormalization(min16bitValue, max16bitValue);
-    histogram->setCutting(min16bitValue, max16bitValue);
+    painter->setNormalization(minCuttingPixel, maxCuttingPixel);
+    histogram->setCutting(minCuttingPixel.red, maxCuttingPixel.red);
     
     updateImage();
 }
@@ -241,12 +241,12 @@ void ImageLabel::histogramContrastingEvent()
     float leftCuttingPercent = contrastingWin->getLeftCuttingPercent();
     float rightCuttingPercent = contrastingWin->getRightCuttingPercent();
     
-    uint16_t min16bitValue = HistogramContrastingCalculator::findMinContrasingValue(
+    Pixel16bit minCuttingPixel = HistogramContrastingCalculator::findMinContrasingValue(
                                                                 leftCuttingPercent,
                                                                 image16bit->width,
                                                                 image16bit->height,
                                                                 histogram);
-    uint16_t max16bitValue = HistogramContrastingCalculator::findMaxContrasingValue(
+    Pixel16bit maxCuttingPixel = HistogramContrastingCalculator::findMaxContrasingValue(
                                                                 rightCuttingPercent,
                                                                 image16bit->width,
                                                                 image16bit->height,
@@ -254,8 +254,8 @@ void ImageLabel::histogramContrastingEvent()
     
     contrastingWin->close();
     
-    painter->setNormalization(min16bitValue, max16bitValue);
-    histogram->setCutting(min16bitValue, max16bitValue);
+    painter->setNormalization(minCuttingPixel, maxCuttingPixel);
+    histogram->setCutting(minCuttingPixel.red, maxCuttingPixel.red);
     
     updateImage();
 }

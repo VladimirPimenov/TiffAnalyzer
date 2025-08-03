@@ -32,7 +32,9 @@ public:
 	
 	void setCutting(uint16_t leftValue, uint16_t rightValue);
 	
-	int getColumnValue(int x);
+	int getColumnRedValue(int x);
+	int getColumnGreenValue(int x);
+	int getColumnBlueValue(int x);
 private:
 	HistogramPainter * painter;
 	
