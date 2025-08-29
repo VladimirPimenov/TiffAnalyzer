@@ -144,6 +144,11 @@ void TIFF::loadRgb(std::string loadFilePath, RgbChannels channels)
     isGrayscale = false;
 }
 
+Pixel16bit TIFF::getPixel(int x, int y)
+{
+    return pixels[y][x];
+}
+
 TIFF::~TIFF()
 {
     for(int y = 0; y < height; y++)

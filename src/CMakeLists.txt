@@ -8,11 +8,12 @@ add_executable(TiffAnalyzer
     UI/histogramPanel.cpp
     UI/sppTable.cpp
 
-    Utils/tiff.cpp
     Utils/imagePainter.cpp
     Utils/histogramPainter.cpp
-    Utils/bmp.cpp
     Utils/imageConverter.cpp
     Utils/sppReader.cpp
     Utils/histogramContrastingCalculator.cpp
+
+    TypeDefs/tiff.cpp
+    TypeDefs/bmp.cpp
 )
