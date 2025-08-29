@@ -69,9 +69,9 @@ void HistogramPanel::updateHistogram()
 	painter->paintHistogram(scene, pen);
 }
 
-void HistogramPanel::setCutting(uint16_t leftValue, uint16_t rightValue)
+void HistogramPanel::setCutting(Pixel16bit leftValues, Pixel16bit rightValues)
 {
-    painter->setHistogramCutting(leftValue, rightValue);
+    painter->setHistogramCutting(leftValues, rightValues);
 }
 
 void HistogramPanel::changeColor()

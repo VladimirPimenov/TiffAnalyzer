@@ -30,7 +30,7 @@ public:
 	void updateHistogram();
 	void clearHistogram(); 
 	
-	void setCutting(uint16_t leftValue, uint16_t rightValue);
+	void setCutting(Pixel16bit leftValues, Pixel16bit rightValues);
 	
 	int getColumnRedValue(int x);
 	int getColumnGreenValue(int x);

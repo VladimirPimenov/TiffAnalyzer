@@ -39,12 +39,14 @@ public:
     
     bool isGrayscale;
     
-    Pixel16bit ** pixels;
-    
     void loadTiffMetadata(std::string loadFilePath);
     
     void loadRgb(std::string loadFilePath, RgbChannels channels);
     void loadGrayscale(std::string loadFilePath, int channel);
+    
+    Pixel16bit getPixel(int x, int y);
+    
+    
     
     ~TIFF();
     
@@ -55,6 +57,8 @@ private:
     uint32_t * stripOffsets;
     uint32_t rowsPerStrip;
     uint16_t bitsPerSample;
+    
+    Pixel16bit ** pixels;
     
     void readIFD(std::ifstream & tiff);
     void readEntry(std::ifstream & tiff);

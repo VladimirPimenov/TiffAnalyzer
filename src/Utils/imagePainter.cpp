@@ -37,13 +37,13 @@ void ImagePainter::paintImage(TIFF * image16bit, QImage * image8bit)
     {
         for(int x = 0; x < image16bit->width; x++)
         {
-            int normalizedRed8bit = minMaxNormalization(image16bit->pixels[y][x].red, 
+            int normalizedRed8bit = minMaxNormalization(image16bit->getPixel(x,y).red, 
                                                         minRedPixelValue, maxRedPixelValue, 
                                                         0, 255);
-            int normalizedGreen8bit = minMaxNormalization(image16bit->pixels[y][x].green, 
+            int normalizedGreen8bit = minMaxNormalization(image16bit->getPixel(x,y).green, 
                                                         minGreenPixelValue, maxGreenPixelValue, 
                                                         0, 255);
-            int normalizedBlue8bit = minMaxNormalization(image16bit->pixels[y][x].blue, 
+            int normalizedBlue8bit = minMaxNormalization(image16bit->getPixel(x,y).blue, 
                                                         minBluePixelValue, maxBluePixelValue, 
                                                         0, 255);
 			image8bit->setPixel(x, y, qRgb(normalizedRed8bit, normalizedGreen8bit, normalizedBlue8bit));

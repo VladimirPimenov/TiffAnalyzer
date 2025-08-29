@@ -42,8 +42,8 @@ HistogramPainter::HistogramPainter()
 {
 	axisOffset = 50;
 	
-	minCuttingValue = 0;
-	maxCuttingValue = 0;
+	leftCuttingValues = { 0, 0, 0};
+	rightCuttingValues = { 0, 0, 0};
 }
 
 void HistogramPainter::paintAxisX(QGraphicsScene * histogram)
@@ -108,19 +108,19 @@ void HistogramPainter::paintHistogram(QGraphicsScene * histogram, QPen usingPen)
 	
 	if(usingColor == Qt::red || usingColor == Qt::gray)
 	{
-	    paintHistogramGraphics(histogram, redFrequency, usingPen);
+	    paintHistogramGraphics(histogram, usingPen, redFrequency, leftCuttingValues.red, rightCuttingValues.red);
 	}
 	else if(usingColor == Qt::green)
 	{
-		paintHistogramGraphics(histogram, greenFrequency, usingPen);
+		paintHistogramGraphics(histogram, usingPen, greenFrequency, leftCuttingValues.green, rightCuttingValues.green);
 	}
 	else if(usingColor == Qt::blue)
 	{
-		paintHistogramGraphics(histogram, blueFrequency, usingPen);
+		paintHistogramGraphics(histogram, usingPen, blueFrequency, leftCuttingValues.blue, rightCuttingValues.blue);
 	}
 }
 
-void HistogramPainter::paintHistogramGraphics(QGraphicsScene * histogram, std::map<uint16_t, int> colorsFrequency, QPen usingPen)
+void HistogramPainter::paintHistogramGraphics(QGraphicsScene * histogram, QPen usingPen, std::map<uint16_t, int> colorsFrequency, uint16_t leftCuttingValue, uint16_t rightCuttingValue)
 {
 	int x, y;
 
@@ -129,10 +129,9 @@ void HistogramPainter::paintHistogramGraphics(QGraphicsScene * histogram, std::m
 		x = it->first;
 		y = it->second;
 		
-		if(x != 0)
-			if(isNeedCutting() && (x < minCuttingValue || x > maxCuttingValue))
-				continue;
-			histogram->addLine(axisOffset + x/XScale, 0, axisOffset + x/XScale, -y/Yscale, usingPen);
+		if(isNeedCutting() && (x < leftCuttingValue || x > rightCuttingValue))
+			continue;
+		histogram->addLine(axisOffset + x/XScale, 0, axisOffset + x/XScale, -y/Yscale, usingPen);
 	}
 }
 
@@ -160,7 +159,7 @@ void HistogramPainter::calculateColorsFrequency(TIFF * image)
 	{
 		for (int y = 0; y < image->height; y++)
 		{
-			pixel = image->pixels[y][x];
+			pixel = image->getPixel(x, y);
 
 			redValue = pixel.red;
 			greenValue = pixel.green;
@@ -188,15 +187,15 @@ void HistogramPainter::updateColorFrequency(std::map<uint16_t, int> & colorFrequ
 		maxPixelValue = colorValue;
 }
 
-void HistogramPainter::setHistogramCutting(uint16_t minCuttingValue, uint16_t maxCuttingValue)
+void HistogramPainter::setHistogramCutting(Pixel16bit leftCuttingValues, Pixel16bit rightCuttingValues)
 {
-    this->minCuttingValue = minCuttingValue;
-    this->maxCuttingValue = maxCuttingValue;
+    this->leftCuttingValues = leftCuttingValues;
+    this->rightCuttingValues = rightCuttingValues;
 }
 
 bool HistogramPainter::isNeedCutting()
 {
-    if(maxCuttingValue != 0)
+    if(rightCuttingValues.red != 0 || rightCuttingValues.green != 0 || rightCuttingValues.blue != 0)
 		return true;
 	return false;
 }

@@ -58,7 +58,7 @@ void ImageLabel::loadNewTIFF(std::string loadPath)
                                                                 histogram);
     
     painter->setNormalization(minCuttingPixel, maxCuttingPixel);
-    histogram->setCutting(minCuttingPixel.red, maxCuttingPixel.red);
+    histogram->setCutting(minCuttingPixel, maxCuttingPixel);
     
     updateImage();
 }
@@ -183,8 +183,8 @@ void ImageLabel::resetContrastingParams()
         image16bit->maxPixelValue);
         
     histogram->setCutting(
-        image16bit->minPixelValue, 
-        image16bit->maxPixelValue);
+        { image16bit->minPixelValue, image16bit->minPixelValue, image16bit->minPixelValue },
+        { image16bit->maxPixelValue, image16bit->maxPixelValue, image16bit->maxPixelValue});
 }
 
 void ImageLabel::showChannelsInfo()
@@ -255,7 +255,7 @@ void ImageLabel::histogramContrastingEvent()
     contrastingWin->close();
     
     painter->setNormalization(minCuttingPixel, maxCuttingPixel);
-    histogram->setCutting(minCuttingPixel.red, maxCuttingPixel.red);
+    histogram->setCutting(minCuttingPixel, maxCuttingPixel);
     
     updateImage();
 }
@@ -269,7 +269,7 @@ void ImageLabel::mouseMoveEvent(QMouseEvent * event)
 		
 		if(x >= 0 && y >= 0 && x < image8bit->width() && y < image8bit->height())
 		{
-			Pixel16bit pixel = image16bit->pixels[y][x];
+			Pixel16bit pixel = image16bit->getPixel(x, y);
 			
 			Pixel16bit normalizedPixel = 
 			{
