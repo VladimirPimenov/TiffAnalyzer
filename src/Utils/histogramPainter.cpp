@@ -1,17 +1,6 @@
 #include "../../include/histogramPainter.h"
 
-float findScale(float max)
-{
-	float scaleAccuracy = 1.1f;
-	float scale = 1;
-	
-    while(max > 255)
-    {
-        max /= scaleAccuracy;
-        scale *= scaleAccuracy;
-    }
-    return scale;
-}
+#include "../../include/normalizer.h"
 
 std::string getExponencialView(double num)
 {
@@ -99,9 +88,7 @@ void HistogramPainter::paintAxisY(QGraphicsScene * histogram)
 
 void HistogramPainter::paintHistogram(QGraphicsScene * histogram, QPen usingPen)
 {
-	XScale = findScale(maxPixelValue);
 	paintAxisX(histogram);
-    Yscale = findScale(maxPixelCount);
 	paintAxisY(histogram);
 	
 	QColor usingColor = usingPen.color();
@@ -122,16 +109,19 @@ void HistogramPainter::paintHistogram(QGraphicsScene * histogram, QPen usingPen)
 
 void HistogramPainter::paintHistogramGraphics(QGraphicsScene * histogram, QPen usingPen, std::map<uint16_t, int> colorsFrequency, uint16_t leftCuttingValue, uint16_t rightCuttingValue)
 {
-	int x, y;
+	int x, y, scaledX, scaledY;
 
     for (auto it = colorsFrequency.begin(); it != colorsFrequency.end(); it++)
 	{
 		x = it->first;
 		y = it->second;
 		
+		scaledX = Normalizer::minMaxNormalization(x, 0, maxPixelValue, 0, 255);
+		scaledY = Normalizer::minMaxNormalization(y, 0, maxPixelCount, 0, 255);
+		
 		if(isNeedCutting() && (x < leftCuttingValue || x > rightCuttingValue))
 			continue;
-		histogram->addLine(axisOffset + x/XScale, 0, axisOffset + x/XScale, -y/Yscale, usingPen);
+		histogram->addLine(scaledX + axisOffset, 0, scaledX + axisOffset, -scaledY, usingPen);
 	}
 }
 

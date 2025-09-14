@@ -23,7 +23,7 @@ public:
 	
 	void paintHistogram(QGraphicsScene * histogram, QPen usingPen);
 	
-	void setHistogramCutting(Pixel16bit leftCuttingValues, Pixel16bit rightCuttingValues);
+	void setHistogramCutting(Pixel16bit leftCuttingValues, Pixel16bit rightCuttingValues); 
 	
 	int getColumnRedValue(int x);
 	int getColumnGreenValue(int x);
@@ -31,8 +31,6 @@ public:
 	
 private:
 	int axisOffset;
-	float XScale;
-	float Yscale;
 	
     int maxPixelCount;
     uint16_t maxPixelValue;

@@ -1,27 +1,22 @@
 #include "../../include/imagePainter.h"
-
-#include <iostream>
-
-int minMaxNormalization(uint16_t x, uint16_t minX, uint16_t maxX, uint16_t a, uint16_t b)
-{
-    /* 
-    Формула minMax-нормализации в диапазоне [a; b]:
-    x' = (x - min(x)) * (b - a) / (max(x) - min(x)) + a
-    */
-    int result = (b - a) * ((x - minX) / (double)(maxX - minX)) + a;
-    
-    if(result > 255)
-        result = 255;
-    if(result < 0)
-        result = 0;
-    
-    return result;
-}
+#include "../../include/normalizer.h"
 
 ImagePainter::ImagePainter()
 {
     minNormalizationPixel = {0, 0, 0};
     maxNormalizationPixel = {65535, 65535, 65535};
+}
+
+int correctTo8bitRange(int pixelValue)
+{
+    int corrected = pixelValue;
+    
+    if(corrected > 255)
+        corrected = 255;
+    if(corrected < 0)
+        corrected = 0;
+    
+    return corrected;
 }
 
 void ImagePainter::paintImage(TIFF * image16bit, QImage * image8bit)
@@ -37,15 +32,20 @@ void ImagePainter::paintImage(TIFF * image16bit, QImage * image8bit)
     {
         for(int x = 0; x < image16bit->width; x++)
         {
-            int normalizedRed8bit = minMaxNormalization(image16bit->getPixel(x,y).red, 
-                                                        minRedPixelValue, maxRedPixelValue, 
-                                                        0, 255);
-            int normalizedGreen8bit = minMaxNormalization(image16bit->getPixel(x,y).green, 
-                                                        minGreenPixelValue, maxGreenPixelValue, 
-                                                        0, 255);
-            int normalizedBlue8bit = minMaxNormalization(image16bit->getPixel(x,y).blue, 
-                                                        minBluePixelValue, maxBluePixelValue, 
-                                                        0, 255);
+            int normalizedRed8bit = Normalizer::minMaxNormalization(image16bit->getPixel(x,y).red, 
+                                                                        minRedPixelValue, maxRedPixelValue, 
+                                                                        0, 255);
+            int normalizedGreen8bit = Normalizer::minMaxNormalization(image16bit->getPixel(x,y).green, 
+                                                                        minGreenPixelValue, maxGreenPixelValue, 
+                                                                        0, 255);
+            int normalizedBlue8bit = Normalizer::minMaxNormalization(image16bit->getPixel(x,y).blue, 
+                                                                        minBluePixelValue, maxBluePixelValue, 
+                                                                        0, 255);
+                                                                                                                                                                                    
+            normalizedRed8bit = correctTo8bitRange(normalizedRed8bit);
+            normalizedGreen8bit = correctTo8bitRange(normalizedGreen8bit);
+            normalizedBlue8bit = correctTo8bitRange(normalizedBlue8bit);
+                                                                                                                                                                                                                                                       
 			image8bit->setPixel(x, y, qRgb(normalizedRed8bit, normalizedGreen8bit, normalizedBlue8bit));
         }
     }
