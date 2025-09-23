@@ -19,6 +19,8 @@ public:
     
     bool isSppReaded();
     
+    double * getWaveLengthValues();
+    
     void show();
 
 private:

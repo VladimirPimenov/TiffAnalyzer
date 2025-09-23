@@ -28,6 +28,8 @@
 
 #include "sppTable.h"
 
+#include "pixelReader.h"
+
 class ImageLabel: public QLabel
 {
 public:
@@ -39,8 +41,6 @@ public:
 	PixelStatusBar * statusBar;
 	
 	HistogramPanel * histogram;
-
-	std::string tiffPath;
 
 	void loadNewTIFF(std::string loadPath);
 	void loadGrayscaleTIFF();
@@ -84,6 +84,7 @@ private:
 	void resetContrastingParams();
 	
 	void showChannelsInfo();
+	void showPointCharacteristic();
 	
 	void mouseMoveEvent(QMouseEvent * event) override;
 	void mouseReleaseEvent(QMouseEvent * event) override;

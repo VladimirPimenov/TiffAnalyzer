@@ -115,6 +115,8 @@ void TIFF::loadRgb(std::string loadFilePath, RgbChannels channels)
     
     if(tiff.is_open())
     {
+        filePath = loadFilePath;
+    
         pixels = new Pixel16bit *[height];
         uint16_t * rowWithAllChannels = new uint16_t[width * channelsCount];
         
@@ -147,6 +149,16 @@ void TIFF::loadRgb(std::string loadFilePath, RgbChannels channels)
 Pixel16bit TIFF::getPixel(int x, int y)
 {
     return pixels[y][x];
+}
+
+uint32_t * TIFF::getStripOffsets()
+{
+    return stripOffsets;
+}
+
+std::string TIFF::getFilePath()
+{
+    return filePath;
 }
 
 TIFF::~TIFF()

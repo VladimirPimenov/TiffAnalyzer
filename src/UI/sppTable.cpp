@@ -42,8 +42,8 @@ void SppTable::fillSppModel(std::map<int, std::map<std::string, float>> & sppDat
     for(auto it = sppData.begin(); it != sppData.end(); it++)
     {
         int channelNum = it->first;
-        float waveLen = sppData[channelNum]["WaveLen"];
-        float waveDelta = sppData[channelNum]["WaveDelta"];
+        double waveLen = sppData[channelNum]["WaveLen"];
+        double waveDelta = sppData[channelNum]["WaveDelta"];
         
         sppModel->setItem(currentRow, 0, new QStandardItem(QString::fromStdString(std::to_string(channelNum))));
         sppModel->setItem(currentRow, 1, new QStandardItem(QString::fromStdString(std::to_string(waveLen))));
@@ -51,6 +51,20 @@ void SppTable::fillSppModel(std::map<int, std::map<std::string, float>> & sppDat
         
         currentRow++;
     }
+}
+
+double * SppTable::getWaveLengthValues()
+{
+    int rowCount = sppModel->rowCount();
+    
+    double * waveValues = new double[rowCount];
+    
+    for(int row = 0; row < rowCount; row++)
+    {
+        waveValues[row] = (sppModel->data(sppModel->index(row, 1))).toDouble();
+    }
+    
+    return waveValues;
 }
 
 bool SppTable::isSppReaded()

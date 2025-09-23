@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <string>
 
 #include "rgb.h"
 
@@ -33,6 +34,7 @@ public:
     int width;
     int height;
     int channelsCount = 124;
+    uint16_t bitsPerSample;
     
     uint16_t minPixelValue;
     uint16_t maxPixelValue;
@@ -46,7 +48,8 @@ public:
     
     Pixel16bit getPixel(int x, int y);
     
-    
+    uint32_t * getStripOffsets();
+    std::string getFilePath();
     
     ~TIFF();
     
@@ -56,9 +59,10 @@ private:
     
     uint32_t * stripOffsets;
     uint32_t rowsPerStrip;
-    uint16_t bitsPerSample;
     
     Pixel16bit ** pixels;
+    
+    std::string filePath;
     
     void readIFD(std::ifstream & tiff);
     void readEntry(std::ifstream & tiff);

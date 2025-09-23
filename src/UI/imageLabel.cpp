@@ -3,8 +3,11 @@
 
 #include <cmath>
 
+#include <iostream>
+
 #include "../../include/imageLabel.h"
 #include "../../include/histogramContrastingCalculator.h"
+#include "../../include/pixelGraphicsWindow.h"
 
 ImageLabel::ImageLabel(): QLabel()
 {
@@ -22,24 +25,24 @@ void ImageLabel::createContextMenu()
     contextMenu = new QMenu();
     
     QAction * channelsInfoAction = contextMenu->addAction("Данные каналов");
+    QAction * pointCharacteristicAction = contextMenu->addAction("Спектральная характеристика точки");
     
     connect(channelsInfoAction, &QAction::triggered, this, &ImageLabel::showChannelsInfo);
+    connect(pointCharacteristicAction, &QAction::triggered, this, &ImageLabel::showPointCharacteristic);
 }
 
-void ImageLabel::loadNewTIFF(std::string loadPath)
+void ImageLabel::loadNewTIFF(std::string tiffPath)
 {
-    tiffPath = loadPath;
-    
     image16bit = new TIFF();
     image16bit->loadTiffMetadata(tiffPath);
-    
-    loadSppTable();
     
     RgbChannels defaultChannels = {55, 29, 14};
     float defaultLeftCuttingPercent = 2.0f;
     float defaultRightCuttingPercent = 2.0f;
     
     image16bit->loadRgb(tiffPath, defaultChannels);
+    
+    loadSppTable();
     
     resetContrastingParams();
     
@@ -66,7 +69,7 @@ void ImageLabel::loadNewTIFF(std::string loadPath)
 void ImageLabel::loadSppTable()
 {
     sppTable = new SppTable(image16bit->channelsCount, 3);
-    std::string sppPath = tiffPath.substr(0, tiffPath.length() - 3) + "spp";
+    std::string sppPath = image16bit->getFilePath().substr(0, image16bit->getFilePath().length() - 3) + "spp";
     sppTable->loadSppFromFile(sppPath);
     
     if(!sppTable->isSppReaded())
@@ -192,6 +195,23 @@ void ImageLabel::showChannelsInfo()
     sppTable->show();
 }
 
+void ImageLabel::showPointCharacteristic()
+{
+    QPoint pos = mapFromGlobal(contextMenu->pos());
+
+    PixelReader * pixelReader = new PixelReader();
+    uint16_t * pixelValues = pixelReader->readPixelBrightness(pos.rx(), pos.ry(), image16bit);
+    double * waveLengthValues = sppTable->getWaveLengthValues();
+    
+    PixelGraphicsWindow * pixelWindow = new PixelGraphicsWindow();
+    
+    pixelWindow->paintPixelGraphics(pixelValues, waveLengthValues, image16bit->channelsCount);
+    pixelWindow->show();
+    
+    delete[] pixelValues;
+    delete[] waveLengthValues;
+}
+
 bool ImageLabel::hasImage()
 {
     return !image8bit->isNull();
@@ -203,7 +223,7 @@ void ImageLabel::grayScaleSelectedEvent()
     
     channelSelector->close();
     
-    image16bit->loadGrayscale(tiffPath, channel);
+    image16bit->loadGrayscale(image16bit->getFilePath(), channel);
     
     resetContrastingParams();
     
@@ -217,7 +237,7 @@ void ImageLabel::rgbSelectedEvent()
     
     channelSelector->close();
     
-    image16bit->loadRgb(tiffPath, channels);
+    image16bit->loadRgb(image16bit->getFilePath(), channels);
     
     resetContrastingParams();
     
@@ -264,8 +284,9 @@ void ImageLabel::mouseMoveEvent(QMouseEvent * event)
 {
 	if(hasImage())
 	{
-		int x = event->pos().rx() - (this->width() - image8bit->width()) / 2;
-		int y = event->pos().ry() - (this->height() - image8bit->height()) / 2;
+        QPoint mousePos = mapFromGlobal(QCursor::pos());
+        int x = mousePos.rx();
+        int y = mousePos.ry();
 		
 		if(x >= 0 && y >= 0 && x < image8bit->width() && y < image8bit->height())
 		{
