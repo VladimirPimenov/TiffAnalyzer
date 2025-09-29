@@ -6,8 +6,8 @@ void BMP::save(std::string saveFilePath)
 	
 	if(saveFile.is_open())
 	{
-		saveFile.write((char *)(&bmpHeader), sizeof(BITMAPFILEHEADER));
-		saveFile.write((char *)(&bmpInfo), sizeof(BITMAPINFOHEADER));
+		saveFile.write((char *)(&bmpHeader), sizeof(BMPFILEHEADER));
+		saveFile.write((char *)(&bmpInfo), sizeof(BMPINFOHEADER));
 		saveFile.seekp(bmpHeader.offset, std::ios::beg);
 		
 		Pixel8bit pixel;

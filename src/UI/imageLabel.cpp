@@ -197,19 +197,27 @@ void ImageLabel::showChannelsInfo()
 
 void ImageLabel::showPointCharacteristic()
 {
-    QPoint pos = mapFromGlobal(contextMenu->pos());
+    if(sppTable->isSppReaded())
+    {
+        QPoint pos = mapFromGlobal(contextMenu->pos());
 
-    PixelReader * pixelReader = new PixelReader();
-    uint16_t * pixelValues = pixelReader->readPixelBrightness(pos.rx(), pos.ry(), image16bit);
-    double * waveLengthValues = sppTable->getWaveLengthValues();
+        PixelReader * pixelReader = new PixelReader();
+        uint16_t * pixelValues = pixelReader->readPixelBrightness(pos.rx(), pos.ry(), image16bit);
+        double * waveLengthValues = sppTable->getWaveLengthValues();
+        
+        PixelGraphicsWindow * pixelWindow = new PixelGraphicsWindow();
+        
+        pixelWindow->paintPixelGraphics(pixelValues, waveLengthValues, image16bit->channelsCount);
+        pixelWindow->show();
+        
+        delete[] pixelValues;
+        delete[] waveLengthValues;
+    }
+    else
+    {
+        requestSppFilePath();
+    }
     
-    PixelGraphicsWindow * pixelWindow = new PixelGraphicsWindow();
-    
-    pixelWindow->paintPixelGraphics(pixelValues, waveLengthValues, image16bit->channelsCount);
-    pixelWindow->show();
-    
-    delete[] pixelValues;
-    delete[] waveLengthValues;
 }
 
 bool ImageLabel::hasImage()

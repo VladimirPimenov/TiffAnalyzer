@@ -24,7 +24,7 @@ void ImageConverter::convertQImageToBmp(QImage * image, BMP * bmp)
 
     bmp->bmpHeader.type = 0x4d42;
     bmp->bmpHeader.reserved = 0;
-    bmp->bmpHeader.offset = sizeof(BITMAPFILEHEADER) + 40;
+    bmp->bmpHeader.offset = sizeof(BMPFILEHEADER) + 40;
     bmp->bmpHeader.fileSize = (image->width() * 3 + nullBytesCount) * image->height() + bmp->bmpHeader.offset;
     
     bmp->bmpInfo.headerSize = 40;

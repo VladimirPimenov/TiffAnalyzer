@@ -7,14 +7,14 @@
 
 #pragma pack(push, 2)
 
-struct BITMAPFILEHEADER
+struct BMPFILEHEADER
 {
 	uint16_t type;
 	uint32_t fileSize;
 	uint32_t reserved;
 	uint32_t offset;
 };
-struct BITMAPINFOHEADER
+struct BMPINFOHEADER
 {
 	uint32_t headerSize;
 	uint32_t width;
@@ -27,8 +27,8 @@ struct BITMAPINFOHEADER
 class BMP
 {
 public:
-	BITMAPFILEHEADER bmpHeader;
-	BITMAPINFOHEADER bmpInfo;
+	BMPFILEHEADER bmpHeader;
+	BMPINFOHEADER bmpInfo;
 	
 	int nullBytesCount;
 	uint8_t nullByte = 0;

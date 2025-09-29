@@ -2,6 +2,8 @@
 #include <QGraphicsScene>
 #include <QGraphicsTextItem>
 
+#include "qcustomplot.h"
+
 #include <QPen>
 #include <QColor>
 
@@ -9,19 +11,15 @@ class PixelGraphicsWindow: public QWidget
 {
 public:
     PixelGraphicsWindow();
-
-    void paintAxisX(int minValue, int maxValue);
-	void paintAxisY(int minValue, int maxValue);
-	
+    
 	void paintPixelGraphics(uint16_t * pixelValues, double * waveLengthValues, int channelsCount);
 	
 	void show();
 	
 private:
-    int axisOffset;
-    float XScale;
-	float Yscale;
-
+	QCustomPlot * plot;
+	QCPGraph * graphic;
+	
     QGraphicsView * graphics;
 	QGraphicsScene * scene = nullptr;
 };
