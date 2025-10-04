@@ -5,15 +5,14 @@ add_executable(TiffAnalyzer
     UI/channelSelectionWindow.cpp
     UI/contrastingWindow.cpp
     UI/pixelStatusBar.cpp
-    UI/histogramPanel.cpp
     UI/sppTable.cpp
-    UI/pixelGraphicsWindow.cpp
+    UI/pixelStatisticsPanel.cpp
+    UI/contrastingPanel.cpp
 
     Utils/imagePainter.cpp
-    Utils/histogramPainter.cpp
     Utils/imageConverter.cpp
     Utils/sppReader.cpp
-    Utils/histogramContrastingCalculator.cpp
+    Utils/histogramCalculator.cpp
     Utils/pixelReader.cpp
     Utils/normalizer.cpp
 

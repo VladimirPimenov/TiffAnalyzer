@@ -22,13 +22,16 @@
 #include "imageConverter.h"
 
 #include "pixelStatusBar.h"
-#include "histogramPanel.h"
+#include "contrastingPanel.h"
+#include "pixelStatisticsPanel.h"
+
 #include "channelSelectionWindow.h"
 #include "contrastingWindow.h"
 
 #include "sppTable.h"
 
 #include "pixelReader.h"
+#include "histogramCalculator.h"
 
 class ImageLabel: public QLabel
 {
@@ -40,11 +43,12 @@ public:
 	
 	PixelStatusBar * statusBar;
 	
-	HistogramPanel * histogram;
-
 	void loadNewTIFF(std::string loadPath);
 	void loadGrayscaleTIFF();
 	void loadRgbTIFF();
+	
+	void linkContrastingPanel(ContrastingPanel * contrastingPanel);
+	void linkPixelPanel(PixelStatisticsPanel * pixelPanel);
 	
 	void saveImageAsBmp(std::string savePath);
 	
@@ -63,6 +67,10 @@ private:
 	QImage * image8bit;
 	
 	ImagePainter * painter;
+	HistogramCalculator * histogramCalculator;
+	
+	ContrastingPanel * contrastingPanel;
+	PixelStatisticsPanel * pixelPanel;
 	
 	QMenu * contextMenu;
 	
@@ -72,6 +80,8 @@ private:
 	
 	void loadSppTable();
 	void requestSppFilePath();
+	
+	void updateHistogram();
 	
 	void openGrayscaleSelectionWindow(int channelsCount);
 	void openRgbSelectionWindow(int channelsCount);
@@ -84,7 +94,8 @@ private:
 	void resetContrastingParams();
 	
 	void showChannelsInfo();
-	void showPointCharacteristic();
+
+	void updatePixelGraphics(int x, int y);
 	
 	void mouseMoveEvent(QMouseEvent * event) override;
 	void mouseReleaseEvent(QMouseEvent * event) override;

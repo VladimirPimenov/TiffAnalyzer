@@ -17,7 +17,9 @@ Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
 #include <string>
 
 #include "imageLabel.h"
-#include "histogramPanel.h"
+#include "pixelStatisticsPanel.h"
+#include "contrastingPanel.h"
+
 #include "pixelStatusBar.h"
 
 class MainWindow: public QMainWindow
@@ -40,24 +42,18 @@ private:
 	QAction * grayscaleModeAction;
 	QAction * rgbModeAction;
 	
-	QVBoxLayout * instrumentsBox;
-	QVBoxLayout * histogramBox;
-	QVBoxLayout * contrastingBox;
-	
-	QPushButton * standartContrastingButton;
-	QPushButton * histogramContrastingButton;
-	QPushButton * resetContrastingButton;
-	
 	QMenu * showMenu;
-	QAction * showInstrumentsAction;
+	QAction * showContrastingAction;
+	QAction * showPixelStatAction;
 	
 	QWidget * centralWidget;
 	QHBoxLayout * centralBox;
 	
 	QScrollArea * scrollArea;
-	ImageLabel * imageViewer;
 	
-	HistogramPanel * histogramPanel;
+	ImageLabel * imageViewer;	
+	ContrastingPanel * contrastingPanel;
+	PixelStatisticsPanel * pixelPanel;
 	
 	void openImage();
 	void saveImage();
@@ -69,14 +65,14 @@ private:
 	void histogramContrasting();
 	void resetContrasting();
 	
-	void switchInstrumentsPanelVisible();
-	
 	void createCentralPanel();
 	void createMenuBar();
 	void createImagePanel();
-	void createInstrumentsPanel();
-	void createHistogramPanel();
 	void createContrastingPanel();
+	void createPixelPanel();
+	
+	void switchContrastingPanelVisible();
+	void switchPixelPanelVisible();
 	
 	void callError(std::string errorText);
 };

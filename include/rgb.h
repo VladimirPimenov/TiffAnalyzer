@@ -2,6 +2,9 @@
 
 #include <cstdint>
 
+const unsigned MAX_PIXEL_8BIT_VALUE = 255;
+const unsigned MAX_PIXEL_16BIT_VALUE = 65535;
+
 struct RgbChannels 
 {
     int red; 

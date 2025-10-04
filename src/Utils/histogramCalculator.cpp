@@ -1,6 +1,55 @@
-#include "../../include/histogramContrastingCalculator.h"
+#include "../../include/histogramCalculator.h"
 
-Pixel16bit HistogramContrastingCalculator::findMinContrasingValue(float leftCuttingPercent, int width, int height, HistogramPanel * histogram)
+void HistogramCalculator::calculateColorsFrequency(TIFF * image)
+{
+	redFrequency.clear();
+	greenFrequency.clear();
+	blueFrequency.clear();
+
+	uint16_t redValue;
+	uint16_t greenValue;
+	uint16_t blueValue;
+	
+	Pixel16bit pixel;
+
+	for (int x = 0; x < image->width; x++)
+	{
+		for (int y = 0; y < image->height; y++)
+		{
+			pixel = image->getPixel(x, y);
+
+			redValue = pixel.red;
+			greenValue = pixel.green;
+			blueValue = pixel.blue;
+
+			updateColorFrequency(redFrequency, redValue);
+			updateColorFrequency(greenFrequency, greenValue);
+			updateColorFrequency(blueFrequency, blueValue);
+		}
+	}
+}
+
+std::map<uint16_t, int> & HistogramCalculator::getColorFrequency(QColor color)
+{
+    if(color == Qt::red)
+        return redFrequency;
+    else if(color == Qt::green)
+        return greenFrequency;
+    else if(color == Qt::blue)
+        return blueFrequency;
+    else
+        return redFrequency;
+}
+
+void HistogramCalculator::updateColorFrequency(std::map<uint16_t, int> & colorFrequency, uint16_t colorValue)
+{
+    if(colorFrequency.count(colorValue))
+		colorFrequency[colorValue]++;
+	else
+		colorFrequency[colorValue] = 1;
+}
+
+Pixel16bit HistogramCalculator::findMinContrasingValue(float leftCuttingPercent, int width, int height)
 {
     int leftCuttingCount = width * height * leftCuttingPercent / 100;
     
@@ -18,9 +67,9 @@ Pixel16bit HistogramContrastingCalculator::findMinContrasingValue(float leftCutt
         if(isCalculatedRed && isCalculatedGreen && isCalculatedBlue)
                 return minContrastingPixel;
     
-        redCurrentCount += histogram->getColumnRedValue(x);
-        greenCurrentCount += histogram->getColumnGreenValue(x);
-        blueCurrentCount += histogram->getColumnBlueValue(x);
+        redCurrentCount += redFrequency[x];
+        greenCurrentCount += greenFrequency[x];
+        blueCurrentCount += blueFrequency[x];
         
         if(!isCalculatedRed && redCurrentCount >= leftCuttingCount)
         {
@@ -45,7 +94,7 @@ Pixel16bit HistogramContrastingCalculator::findMinContrasingValue(float leftCutt
     }
 }
 
-Pixel16bit HistogramContrastingCalculator::findMaxContrasingValue(float rightCuttingPercent, int width, int height, HistogramPanel * histogram)
+Pixel16bit HistogramCalculator::findMaxContrasingValue(float rightCuttingPercent, int width, int height)
 {
     int rightCuttingCount = width * height * rightCuttingPercent / 100;
     
@@ -63,9 +112,9 @@ Pixel16bit HistogramContrastingCalculator::findMaxContrasingValue(float rightCut
         if(isCalculatedRed && isCalculatedGreen && isCalculatedBlue)
                 return maxContrastingPixel;
     
-        redCurrentCount += histogram->getColumnRedValue(x);
-        greenCurrentCount += histogram->getColumnGreenValue(x);
-        blueCurrentCount += histogram->getColumnBlueValue(x);
+        redCurrentCount += redFrequency[x];
+        greenCurrentCount += greenFrequency[x];
+        blueCurrentCount += blueFrequency[x];
         
         if(!isCalculatedRed && redCurrentCount >= rightCuttingCount)
         {
