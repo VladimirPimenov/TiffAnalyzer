@@ -7,7 +7,7 @@
 #include <QComboBox>
 #include <QLabel>
 
-#include "qcustomplot.h"
+#include "../src/Libs/qcustomplot.h"
 
 #include "histogramCalculator.h"
 

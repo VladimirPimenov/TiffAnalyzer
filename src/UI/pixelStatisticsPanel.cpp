@@ -10,13 +10,14 @@ PixelStatisticsPanel::PixelStatisticsPanel()
 	plot->setFixedSize(350, 350);
 	plot->xAxis->setRange(0, 1);
     plot->yAxis->setRange(0, 1);
-    plot->setInteraction(QCP::iRangeDrag, true);
-    plot->setInteraction(QCP::iRangeZoom, true);
+
+    plot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom);
+    plot->axisRect()->setRangeDrag(Qt::Horizontal);
+    plot->axisRect()->setRangeZoom(Qt::Horizontal);
+    plot->axisRect()->setRangeZoomAxes(plot->xAxis, NULL);
     
     graphic = new QCPGraph(plot->xAxis, plot->yAxis);
     graphic->setPen(QPen(Qt::red));
-    
-    plot->addPlottable(graphic);
     
 	this->addWidget(text);
     this->addWidget(plot);

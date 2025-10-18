@@ -36,7 +36,11 @@ void ContrastingPanel::createHistogram()
 	histogram->setPen(QPen(Qt::red));
 	histogram->setBrush(Qt::red);
 	
-	plot->addPlottable(histogram);
+    plot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
+    plot->axisRect()->setRangeDrag(Qt::Horizontal);
+    plot->axisRect()->setRangeZoom(Qt::Horizontal);
+    plot->axisRect()->setRangeZoomAxes(plot->xAxis, NULL);
+    plot->setSelectionRectMode(QCP::srmZoom);
 	
 	this->addWidget(plot);
 }

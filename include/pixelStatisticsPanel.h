@@ -4,7 +4,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 
-#include "qcustomplot.h"
+#include "../src/Libs/qcustomplot.h"
 
 class PixelStatisticsPanel: public QVBoxLayout
 {
