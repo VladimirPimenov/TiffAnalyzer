@@ -38,17 +38,13 @@ class ImageLabel: public QLabel
 public:
 	ImageLabel();
 	
-	ChannelSelectionWindow * channelSelector;
-	ContrastingWindow * contrastingWin;
-	
-	PixelStatusBar * statusBar;
-	
 	void loadNewTIFF(std::string loadPath);
 	void loadGrayscaleTIFF();
 	void loadRgbTIFF();
 	
 	void linkContrastingPanel(ContrastingPanel * contrastingPanel);
 	void linkPixelPanel(PixelStatisticsPanel * pixelPanel);
+	void linkPixelStatusBar(PixelStatusBar * statusBar);
 	
 	void saveImageAsBmp(std::string savePath);
 	
@@ -57,7 +53,7 @@ public:
 	void resetContrasting();
 	
 	void updateImage();
-
+	
 	void clearImageLabel();
 	
 	bool hasImage();
@@ -69,8 +65,11 @@ private:
 	ImagePainter * painter;
 	HistogramCalculator * histogramCalculator;
 	
+	ChannelSelectionWindow * channelSelector;
+	ContrastingWindow * contrastingWin;
 	ContrastingPanel * contrastingPanel;
 	PixelStatisticsPanel * pixelPanel;
+	PixelStatusBar * statusBar;
 	
 	QMenu * contextMenu;
 	

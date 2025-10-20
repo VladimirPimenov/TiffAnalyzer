@@ -3,6 +3,7 @@
 #include <QImage>
 
 #include "tiff.h"
+#include "rgb.h"
 
 class ImagePainter
 {

@@ -27,9 +27,7 @@ class MainWindow: public QMainWindow
 public:
 	MainWindow();
 	
-	PixelStatusBar * statusBar;
-	
-private:
+	private:
 	QMenuBar * optionsMenu;
 	
 	QMenu * fileMenu;
@@ -55,15 +53,13 @@ private:
 	ContrastingPanel * contrastingPanel;
 	PixelStatisticsPanel * pixelPanel;
 	
+	PixelStatusBar * statusBar;
+	
 	void openImage();
 	void saveImage();
 	void openGrayscale();
 	void openRgb();
 	void closeImage();
-	
-	void standartContrasting();
-	void histogramContrasting();
-	void resetContrasting();
 	
 	void createCentralPanel();
 	void createMenuBar();
@@ -73,6 +69,4 @@ private:
 	
 	void switchContrastingPanelVisible();
 	void switchPixelPanelVisible();
-	
-	void callError(std::string errorText);
 };

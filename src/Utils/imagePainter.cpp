@@ -4,15 +4,15 @@
 ImagePainter::ImagePainter()
 {
     minNormalizationPixel = {0, 0, 0};
-    maxNormalizationPixel = {65535, 65535, 65535};
+    maxNormalizationPixel = {MAX_PIXEL_16BIT_VALUE, MAX_PIXEL_16BIT_VALUE, MAX_PIXEL_16BIT_VALUE};
 }
 
 int correctTo8bitRange(int pixelValue)
 {
     int corrected = pixelValue;
     
-    if(corrected > 255)
-        corrected = 255;
+    if(corrected > (int)MAX_PIXEL_8BIT_VALUE)
+        corrected = (int)MAX_PIXEL_8BIT_VALUE;
     if(corrected < 0)
         corrected = 0;
     

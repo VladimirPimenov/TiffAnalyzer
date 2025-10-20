@@ -42,7 +42,11 @@ void ContrastingPanel::createHistogram()
     plot->axisRect()->setRangeZoomAxes(plot->xAxis, NULL);
     plot->setSelectionRectMode(QCP::srmZoom);
 	
+	resetScaleButton = new QPushButton("Сбросить масштаб");
+	connect(resetScaleButton, &QPushButton::clicked, this, &ContrastingPanel::resetScale);
+	
 	this->addWidget(plot);
+	this->addWidget(resetScaleButton);
 }
 
 void ContrastingPanel::createContrastingOptions()
@@ -224,6 +228,12 @@ void ContrastingPanel::standartContrastingEvent()
 void ContrastingPanel::histogramContrastingEvent()
 {
     histogramContrastingEventHandler();
+}
+
+void ContrastingPanel::resetScale()
+{
+    plot->rescaleAxes();
+    plot->replot();
 }
 
 void ContrastingPanel::resetContrastingEvent()

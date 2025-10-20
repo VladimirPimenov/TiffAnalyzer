@@ -14,7 +14,7 @@ void BMP::save(std::string saveFilePath)
 		
 		for(int row = bmpInfo.height - 1; row >= 0 ; row--) // в bmp строки хранятся снизу вверх
 		{
-			for(int col = 0; col < bmpInfo.width; col++)
+			for(uint32_t col = 0; col < bmpInfo.width; col++)
 			{
 				pixel = pixels[row][col];
 				
@@ -35,7 +35,7 @@ void BMP::save(std::string saveFilePath)
 
 BMP::~BMP()
 {
-	for(int i = 0; i < bmpInfo.height; i++)
+	for(uint32_t i = 0; i < bmpInfo.height; i++)
 	{
 		delete[] pixels[i];
 	}

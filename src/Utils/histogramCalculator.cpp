@@ -62,7 +62,7 @@ Pixel16bit HistogramCalculator::findMinContrasingValue(float leftCuttingPercent,
     bool isCalculatedGreen = false;
     bool isCalculatedBlue = false;
     
-    for(int x = 0; x < 65535; x++)
+    for(int x = 0; x < MAX_PIXEL_16BIT_VALUE; x++)
     {
         if(isCalculatedRed && isCalculatedGreen && isCalculatedBlue)
                 return minContrastingPixel;
@@ -107,7 +107,7 @@ Pixel16bit HistogramCalculator::findMaxContrasingValue(float rightCuttingPercent
     bool isCalculatedGreen = false;
     bool isCalculatedBlue = false;
     
-    for(int x = 65535; x > 0; x--)
+    for(int x = MAX_PIXEL_16BIT_VALUE; x > 0; x--)
     {
         if(isCalculatedRed && isCalculatedGreen && isCalculatedBlue)
                 return maxContrastingPixel;

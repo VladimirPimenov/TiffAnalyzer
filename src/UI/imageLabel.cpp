@@ -106,6 +106,11 @@ void ImageLabel::linkPixelPanel(PixelStatisticsPanel * pixelPanel)
     this->pixelPanel = pixelPanel;
 }
 
+void ImageLabel::linkPixelStatusBar(PixelStatusBar * statusBar)
+{
+    this->statusBar = statusBar;
+}
+
 void ImageLabel::saveImageAsBmp(std::string savePath)
 {
     BMP * bmp = new BMP();

@@ -57,7 +57,9 @@ void MainWindow::createMenuBar()
 void MainWindow::createCentralPanel()
 {
     centralWidget = new QWidget();
+    
 	this->setCentralWidget(centralWidget);
+	
 	centralBox = new QHBoxLayout(centralWidget);
 }
 
@@ -71,7 +73,7 @@ void MainWindow::createImagePanel()
 	scrollArea->setWidgetResizable(true);
 	scrollArea->setWidget(imageViewer);
 	
-	imageViewer->statusBar = statusBar;
+	imageViewer->linkPixelStatusBar(statusBar);
 	imageViewer->linkContrastingPanel(contrastingPanel);
 	imageViewer->linkPixelPanel(pixelPanel);
 	
@@ -93,15 +95,6 @@ void MainWindow::createPixelPanel()
     centralBox->insertLayout(1, pixelPanel);
     
     pixelPanel->setVisible(false);
-}
-
-void MainWindow::callError(std::string errorText)
-{
-	QMessageBox errorWindow;
-	
-	errorWindow.setText(QString::fromStdString(errorText));
-	errorWindow.setWindowTitle("TiffAnalyzer - ERROR");
-	errorWindow.exec();
 }
 
 void MainWindow::openImage()
@@ -139,21 +132,6 @@ void MainWindow::openGrayscale()
 void MainWindow::openRgb()
 {
 	imageViewer->loadRgbTIFF();
-}
-
-void MainWindow::standartContrasting()
-{
-    imageViewer->standartContrasting();
-}
-
-void MainWindow::histogramContrasting()
-{
-    imageViewer->histogramContrasting();
-}
-
-void MainWindow::resetContrasting()
-{
-    imageViewer->resetContrasting();
 }
 
 void MainWindow::switchContrastingPanelVisible()
