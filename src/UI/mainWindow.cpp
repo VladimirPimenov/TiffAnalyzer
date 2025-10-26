@@ -9,8 +9,7 @@ MainWindow::MainWindow():QMainWindow()
 	
 	createCentralPanel();
 	
-	createContrastingPanel();
-	createPixelPanel();
+	createSpectralPanel();
 	createImagePanel();
 	
 }
@@ -33,11 +32,9 @@ void MainWindow::createMenuBar()
 	viewModeMenu->setEnabled(false);
 	
 	showMenu = new QMenu("Вид");
-	showContrastingAction = showMenu->addAction("Панель контрастирования");
-	showPixelStatAction = showMenu -> addAction("Характеристика пикселя");
-	showContrastingAction->setCheckable(true);
-	showContrastingAction->setChecked(true);
-	showPixelStatAction->setCheckable(true);
+	showSpectralAction = showMenu->addAction("Спектральная характеристика");
+	showSpectralAction->setCheckable(true);
+	showSpectralAction->setChecked(true);
 	
 	connect(openImageAction, &QAction::triggered, this, &MainWindow::openImage);
 	connect(saveImageAction, &QAction::triggered, this, &MainWindow::saveImage);
@@ -46,8 +43,7 @@ void MainWindow::createMenuBar()
 	connect(grayscaleModeAction, &QAction::triggered, this, &MainWindow::openGrayscale);
 	connect(rgbModeAction, &QAction::triggered, this, &MainWindow::openRgb);
 	
-	connect(showContrastingAction, &QAction::triggered, this, &MainWindow::switchContrastingPanelVisible);
-	connect(showPixelStatAction, &QAction::triggered, this, &MainWindow::switchPixelPanelVisible);
+	connect(showSpectralAction, &QAction::triggered, this, &MainWindow::switchSpectralPanelVisible);
 	
 	menuBar()->addMenu(fileMenu);
 	menuBar()->addMenu(viewModeMenu);
@@ -72,29 +68,20 @@ void MainWindow::createImagePanel()
 	
 	scrollArea->setWidgetResizable(true);
 	scrollArea->setWidget(imageViewer);
+	scrollArea->setAlignment(Qt::AlignCenter);
 	
 	imageViewer->linkPixelStatusBar(statusBar);
-	imageViewer->linkContrastingPanel(contrastingPanel);
-	imageViewer->linkPixelPanel(pixelPanel);
+	imageViewer->linkSpectralPanel(spectralPanel);
 	
 	centralBox->insertWidget(0, scrollArea);
 }
 
-void MainWindow::createContrastingPanel()
-{	
-	contrastingPanel = new ContrastingPanel();
-	contrastingPanel->setEnabled(false);
-	
-	centralBox->insertLayout(0, contrastingPanel);
-}
-
-void MainWindow::createPixelPanel()
+void MainWindow::createSpectralPanel()
 {
-    pixelPanel = new PixelStatisticsPanel();
+    spectralPanel = new SpectralPanel();
+    spectralPanel->setEnabled(false);
     
-    centralBox->insertLayout(1, pixelPanel);
-    
-    pixelPanel->setVisible(false);
+	centralBox->insertLayout(0, spectralPanel);
 }
 
 void MainWindow::openImage()
@@ -110,7 +97,7 @@ void MainWindow::openImage()
 	
 		viewModeMenu->setEnabled(true);
 		
-		contrastingPanel->setEnabled(true);
+		spectralPanel->setEnabled(true);
 	}
 }
 
@@ -134,20 +121,12 @@ void MainWindow::openRgb()
 	imageViewer->loadRgbTIFF();
 }
 
-void MainWindow::switchContrastingPanelVisible()
+void MainWindow::switchSpectralPanelVisible()
 {
-    if(showContrastingAction->isChecked())
-    	contrastingPanel->setVisible(true);
+    if(showSpectralAction->isChecked())
+    	spectralPanel->setVisible(true);
 	else
-    	contrastingPanel->setVisible(false);
-}
-
-void MainWindow::switchPixelPanelVisible()
-{
-    if(showPixelStatAction->isChecked())
-        pixelPanel->setVisible(true);
-    else
-        pixelPanel->setVisible(false);
+    	spectralPanel->setVisible(false);
 }
 
 void MainWindow::closeImage()
@@ -161,6 +140,6 @@ void MainWindow::closeImage()
     
     	viewModeMenu->setEnabled(false);
     	
-    	contrastingPanel->setEnabled(false);
+    	spectralPanel->setEnabled(false);
 	}
 }

@@ -9,9 +9,9 @@ add_executable(TiffAnalyzer
     UI/contrastingWindow.cpp
     UI/pixelStatusBar.cpp
     UI/sppTable.cpp
-    UI/pixelStatisticsPanel.cpp
-    UI/contrastingPanel.cpp
-    
+    UI/SpectralPanel/spectralPanel.cpp
+    UI/SpectralPanel/pixelStatisticsPanel.cpp
+    UI/SpectralPanel/contrastingPanel.cpp
 
     Utils/imagePainter.cpp
     Utils/imageConverter.cpp

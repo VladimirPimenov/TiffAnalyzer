@@ -7,9 +7,8 @@ int main(int argc, char * argv[])
 	MainWindow * window = new MainWindow();
 	
 	window->setWindowTitle("TiffAnalyzer");
-	window->resize(720, window->height());
-	window->resize(1080, window->width());
-	window->show();
+	window->resize(1920, 1080);
+	window->showMaximized();
 	
 	return app.exec();
 }

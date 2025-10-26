@@ -31,6 +31,8 @@ void ImageLabel::loadNewTIFF(std::string tiffPath)
     image16bit = new TIFF();
     image16bit->loadTiffMetadata(tiffPath);
     
+    this->setFixedSize(image16bit->width, image16bit->height);
+    
     RgbChannels defaultChannels = {55, 29, 14};
     float defaultLeftCuttingPercent = 2.0f;
     float defaultRightCuttingPercent = 2.0f;
@@ -53,7 +55,7 @@ void ImageLabel::loadNewTIFF(std::string tiffPath)
                                                         image16bit->height);
     
     painter->setNormalization(minCuttingPixel, maxCuttingPixel);
-    contrastingPanel->setCutting(minCuttingPixel, maxCuttingPixel);
+    spectralPanel->setHistogramCutting(minCuttingPixel, maxCuttingPixel);
     
     updateImage();
 }
@@ -91,19 +93,14 @@ void ImageLabel::loadRgbTIFF()
     openRgbSelectionWindow(image16bit->channelsCount);
 }
 
-void ImageLabel::linkContrastingPanel(ContrastingPanel * contrastingPanel)
+void ImageLabel::linkSpectralPanel(SpectralPanel * spectralPanel)
 {
-    this->contrastingPanel = contrastingPanel;
+    this->spectralPanel = spectralPanel;
     
-    contrastingPanel->setStandartContrastingEvent([this](){ standartContrasting(); });
-	contrastingPanel->setHistogramContrastingEvent([this](){ histogramContrasting(); });
-	contrastingPanel->setResetContrastingEvent([this](){ resetContrasting(); });
-	contrastingPanel->setColorChangedEvent([this](){ updateHistogram(); });
-}
-
-void ImageLabel::linkPixelPanel(PixelStatisticsPanel * pixelPanel)
-{
-    this->pixelPanel = pixelPanel;
+    spectralPanel->setStandartContrastingEvent([this](){ standartContrasting(); });
+	spectralPanel->setHistogramContrastingEvent([this](){ histogramContrasting(); });
+	spectralPanel->setResetContrastingEvent([this](){ resetContrasting(); });
+	spectralPanel->setColorChangedEvent([this](){ updateHistogram(); });
 }
 
 void ImageLabel::linkPixelStatusBar(PixelStatusBar * statusBar)
@@ -185,9 +182,9 @@ void ImageLabel::updateImage()
 
 void ImageLabel::updateHistogram()
 {
-    QColor selectedColor = contrastingPanel->getChannelColor();
+    QColor selectedColor = spectralPanel->getHistogramSelectedColor();
     
-	contrastingPanel->paintImageHistogram(histogramCalculator->getColorFrequency(selectedColor));
+	spectralPanel->paintHistogramGraphics(histogramCalculator->getColorFrequency(selectedColor));
 }
 
 void ImageLabel::clearImageLabel()
@@ -204,7 +201,7 @@ void ImageLabel::resetContrastingParams()
         image16bit->minPixelValue,
         image16bit->maxPixelValue);
         
-    contrastingPanel->setCutting(
+    spectralPanel->setHistogramCutting(
         { image16bit->minPixelValue, image16bit->minPixelValue, image16bit->minPixelValue },
         { image16bit->maxPixelValue, image16bit->maxPixelValue, image16bit->maxPixelValue});
 }
@@ -220,7 +217,7 @@ void ImageLabel::updatePixelGraphics(int x, int y)
     uint16_t * pixelValues = pixelReader->readPixelBrightness(x, y, image16bit);
     double * waveLengthValues = sppTable->getWaveLengthValues();
     
-    pixelPanel->paintPixelGraphics(pixelValues, waveLengthValues, image16bit->channelsCount);
+    spectralPanel->paintPixelGraphics(pixelValues, waveLengthValues, image16bit->channelsCount);
     
     delete[] pixelValues;
     delete[] waveLengthValues;
@@ -269,7 +266,7 @@ void ImageLabel::standartContrastingEvent()
     contrastingWin->close();
     
     painter->setNormalization(minCuttingPixel, maxCuttingPixel);
-    contrastingPanel->setCutting(minCuttingPixel, maxCuttingPixel);
+    spectralPanel->setHistogramCutting(minCuttingPixel, maxCuttingPixel);
     
     updateImage();
 }
@@ -291,7 +288,7 @@ void ImageLabel::histogramContrastingEvent()
     contrastingWin->close();
     
     painter->setNormalization(minCuttingPixel, maxCuttingPixel);
-    contrastingPanel->setCutting(minCuttingPixel, maxCuttingPixel);
+    spectralPanel->setHistogramCutting(minCuttingPixel, maxCuttingPixel);
     
     updateImage();
 }

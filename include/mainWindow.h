@@ -17,8 +17,7 @@ Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
 #include <string>
 
 #include "imageLabel.h"
-#include "pixelStatisticsPanel.h"
-#include "contrastingPanel.h"
+#include "spectralPanel.h"
 
 #include "pixelStatusBar.h"
 
@@ -41,8 +40,7 @@ public:
 	QAction * rgbModeAction;
 	
 	QMenu * showMenu;
-	QAction * showContrastingAction;
-	QAction * showPixelStatAction;
+	QAction * showSpectralAction;
 	
 	QWidget * centralWidget;
 	QHBoxLayout * centralBox;
@@ -50,8 +48,7 @@ public:
 	QScrollArea * scrollArea;
 	
 	ImageLabel * imageViewer;	
-	ContrastingPanel * contrastingPanel;
-	PixelStatisticsPanel * pixelPanel;
+	SpectralPanel * spectralPanel;
 	
 	PixelStatusBar * statusBar;
 	
@@ -64,9 +61,7 @@ public:
 	void createCentralPanel();
 	void createMenuBar();
 	void createImagePanel();
-	void createContrastingPanel();
-	void createPixelPanel();
+	void createSpectralPanel();
 	
-	void switchContrastingPanelVisible();
-	void switchPixelPanelVisible();
+	void switchSpectralPanelVisible();
 };

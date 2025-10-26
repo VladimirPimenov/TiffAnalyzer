@@ -22,8 +22,7 @@
 #include "imageConverter.h"
 
 #include "pixelStatusBar.h"
-#include "contrastingPanel.h"
-#include "pixelStatisticsPanel.h"
+#include "spectralPanel.h"
 
 #include "channelSelectionWindow.h"
 #include "contrastingWindow.h"
@@ -42,8 +41,7 @@ public:
 	void loadGrayscaleTIFF();
 	void loadRgbTIFF();
 	
-	void linkContrastingPanel(ContrastingPanel * contrastingPanel);
-	void linkPixelPanel(PixelStatisticsPanel * pixelPanel);
+	void linkSpectralPanel(SpectralPanel * spectralPanel);
 	void linkPixelStatusBar(PixelStatusBar * statusBar);
 	
 	void saveImageAsBmp(std::string savePath);
@@ -67,8 +65,7 @@ private:
 	
 	ChannelSelectionWindow * channelSelector;
 	ContrastingWindow * contrastingWin;
-	ContrastingPanel * contrastingPanel;
-	PixelStatisticsPanel * pixelPanel;
+	SpectralPanel * spectralPanel;
 	PixelStatusBar * statusBar;
 	
 	QMenu * contextMenu;

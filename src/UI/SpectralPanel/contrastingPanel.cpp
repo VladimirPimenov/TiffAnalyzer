@@ -1,4 +1,4 @@
-#include "../../include/contrastingPanel.h"
+#include "../../../include/contrastingPanel.h"
 
 ContrastingPanel::ContrastingPanel()
 {
@@ -27,18 +27,16 @@ void ContrastingPanel::createChannelSelector()
 void ContrastingPanel::createHistogram()
 {
     plot = new QCustomPlot();
-	plot->setFixedSize(350, 350);
-	plot->xAxis->setRange(0, 1);
-    plot->yAxis->setRange(0, 1);
+	plot->setFixedSize(700, 350);
+	plot->xAxis->setRange(0, 10);
+    plot->yAxis->setRange(0, 10);
 	
 	histogram = new QCPBars(plot->xAxis, plot->yAxis);
 	
 	histogram->setPen(QPen(Qt::red));
 	histogram->setBrush(Qt::red);
 	
-    plot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
-    plot->axisRect()->setRangeDrag(Qt::Horizontal);
-    plot->axisRect()->setRangeZoom(Qt::Horizontal);
+    plot->setInteractions(QCP::iSelectPlottables);
     plot->axisRect()->setRangeZoomAxes(plot->xAxis, NULL);
     plot->setSelectionRectMode(QCP::srmZoom);
 	
@@ -95,10 +93,13 @@ void ContrastingPanel::paintImageHistogram(std::map<uint16_t, int> & colorFreque
         i++;
     }
     
-    histogram->setData(colorValues, frequency);
+    plot->xAxis->setLabel("Яркость 16 бит");
+    plot->yAxis->setLabel("Количество пикселей");
     
     plot->xAxis->setRange(0, 1);
     plot->yAxis->setRange(0, 1);
+    
+    histogram->setData(colorValues, frequency);
     
     plot->rescaleAxes();
     plot->replot();
@@ -106,52 +107,29 @@ void ContrastingPanel::paintImageHistogram(std::map<uint16_t, int> & colorFreque
 
 void ContrastingPanel::setEnabled(bool isEnabled)
 {
-    if(!isEnabled)
-    {
-        channelSelector->setEnabled(false);
-        
-        standartContrastingButton->setEnabled(false);
-        histogramContrastingButton->setEnabled(false);
-        resetContrastingButton->setEnabled(false);
-    }
-    else
-    {
-        channelSelector->setEnabled(true);
-        
-        standartContrastingButton->setEnabled(true);
-        histogramContrastingButton->setEnabled(true);
-        resetContrastingButton->setEnabled(true);
-    }
+    channelSelector->setEnabled(isEnabled);
+    
+    standartContrastingButton->setEnabled(isEnabled);
+    histogramContrastingButton->setEnabled(isEnabled);
+    resetContrastingButton->setEnabled(isEnabled);
+    
+    resetScaleButton->setEnabled(isEnabled);
 }
 
 void ContrastingPanel::setVisible(bool isVisible)
 {
-    if(isVisible)
-    {
-        channelSelector->setVisible(true);
-        
-        standartContrastingButton->setVisible(true);
-        histogramContrastingButton->setVisible(true);
-        resetContrastingButton->setVisible(true);
-        
-        histogramText->setVisible(true);
-        contrastingText->setVisible(true);
-        
-        plot->setVisible(true);
-    }
-    else
-    {
-        channelSelector->setVisible(false);
-        
-        standartContrastingButton->setVisible(false);
-        histogramContrastingButton->setVisible(false);
-        resetContrastingButton->setVisible(false);
-        
-        histogramText->setVisible(false);
-        contrastingText->setVisible(false);
-        
-        plot->setVisible(false);
-    }
+    channelSelector->setVisible(isVisible);
+    
+    standartContrastingButton->setVisible(isVisible);
+    histogramContrastingButton->setVisible(isVisible);
+    resetContrastingButton->setVisible(isVisible);
+    
+    histogramText->setVisible(isVisible);
+    contrastingText->setVisible(isVisible);
+    
+    resetScaleButton->setVisible(isVisible);
+    
+    plot->setVisible(isVisible);
 }
 
 void ContrastingPanel::setCutting(Pixel16bit leftCuttingValues, Pixel16bit rightCuttingValues)
