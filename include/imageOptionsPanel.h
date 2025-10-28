@@ -3,6 +3,7 @@
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QGridLayout>
 #include <QPushButton>
 #include <QComboBox>
 #include <QLabel>
@@ -14,10 +15,10 @@
 #include <map>
 #include <functional>
 
-class ContrastingPanel: public QVBoxLayout
+class ImageOptionsPanel: public QVBoxLayout
 {
 public: 
-    ContrastingPanel();
+    ImageOptionsPanel();
     
 	void paintImageHistogram(std::map<uint16_t, int> & colorFrequency);
 
@@ -26,6 +27,8 @@ public:
     
     void setCutting(Pixel16bit leftCuttingValues, Pixel16bit rightCuttingValues);
     
+    void setGrayscaleSelectedEvent(std::function<void()> eventHandler);
+	void setRgbSelectedEvent(std::function<void()> eventHandler);
     void setStandartContrastingEvent(std::function<void()> eventHandler);
     void setHistogramContrastingEvent(std::function<void()> eventHandler);
     void setResetContrastingEvent(std::function<void()> eventHandler);
@@ -36,13 +39,17 @@ public:
 private:
 	QComboBox * channelSelector;
     
+    QGridLayout * optionsButtonsTable;
+    
+    QPushButton * grayscaleButton;
+    QPushButton * rgbButton;
     QPushButton * standartContrastingButton;
 	QPushButton * histogramContrastingButton;
 	QPushButton * resetContrastingButton;
 	QPushButton * resetScaleButton;
 	
 	QLabel * histogramText;
-	QLabel * contrastingText;
+	QLabel * optionsText;
 	
 	QCustomPlot * plot;
 	QCPBars * histogram;
@@ -55,10 +62,12 @@ private:
 	
 	void createChannelSelector();
 	void createHistogram();
-	void createContrastingOptions();
+	void createOptionsTable();
 	
 	void switchCutting();
 	
+	std::function<void()> grayscaleSelectedEventHandler;
+	std::function<void()> rgbSelectedEventHandler;
 	std::function<void()> standartContrastingEventHandler;
 	std::function<void()> histogramContrastingEventHandler;
 	std::function<void()> resetContrastingEventHandler;
@@ -67,6 +76,8 @@ private:
 	void resetScale();
 
 private slots:
+	void grayscaleSelectedEvent();
+	void rgbSelectedEvent();
 	void standartContrastingEvent();
 	void histogramContrastingEvent();
 	void resetContrastingEvent();

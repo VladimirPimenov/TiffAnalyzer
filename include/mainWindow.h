@@ -17,7 +17,7 @@ Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
 #include <string>
 
 #include "imageLabel.h"
-#include "spectralPanel.h"
+#include "instrumentsPanel.h"
 
 #include "pixelStatusBar.h"
 
@@ -35,10 +35,6 @@ public:
 	QAction * closeImageAction;
 	QAction * exitAction;
 	
-	QMenu * viewModeMenu;
-	QAction * grayscaleModeAction;
-	QAction * rgbModeAction;
-	
 	QMenu * showMenu;
 	QAction * showSpectralAction;
 	
@@ -48,20 +44,18 @@ public:
 	QScrollArea * scrollArea;
 	
 	ImageLabel * imageViewer;	
-	SpectralPanel * spectralPanel;
+	InstrumentsPanel * instrumentsPanel;
 	
 	PixelStatusBar * statusBar;
 	
 	void openImage();
 	void saveImage();
-	void openGrayscale();
-	void openRgb();
 	void closeImage();
 	
 	void createCentralPanel();
 	void createMenuBar();
 	void createImagePanel();
-	void createSpectralPanel();
+	void createInstrumentsPanel();
 	
 	void switchSpectralPanelVisible();
 };

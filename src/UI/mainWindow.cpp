@@ -9,7 +9,7 @@ MainWindow::MainWindow():QMainWindow()
 	
 	createCentralPanel();
 	
-	createSpectralPanel();
+	createInstrumentsPanel();
 	createImagePanel();
 	
 }
@@ -25,14 +25,8 @@ void MainWindow::createMenuBar()
 	saveImageAction->setEnabled(false);
 	closeImageAction->setEnabled(false);
 	
-	viewModeMenu = new QMenu("Отображение");
-	grayscaleModeAction = viewModeMenu->addAction("Режим Grayscale");
-	rgbModeAction = viewModeMenu->addAction("Режим RGB");
-	
-	viewModeMenu->setEnabled(false);
-	
 	showMenu = new QMenu("Вид");
-	showSpectralAction = showMenu->addAction("Спектральная характеристика");
+	showSpectralAction = showMenu->addAction("Панель инструментов");
 	showSpectralAction->setCheckable(true);
 	showSpectralAction->setChecked(true);
 	
@@ -40,13 +34,9 @@ void MainWindow::createMenuBar()
 	connect(saveImageAction, &QAction::triggered, this, &MainWindow::saveImage);
 	connect(closeImageAction, &QAction::triggered, this, &MainWindow::closeImage);
 	
-	connect(grayscaleModeAction, &QAction::triggered, this, &MainWindow::openGrayscale);
-	connect(rgbModeAction, &QAction::triggered, this, &MainWindow::openRgb);
-	
 	connect(showSpectralAction, &QAction::triggered, this, &MainWindow::switchSpectralPanelVisible);
 	
 	menuBar()->addMenu(fileMenu);
-	menuBar()->addMenu(viewModeMenu);
 	menuBar()->addMenu(showMenu);
 }
 
@@ -71,17 +61,17 @@ void MainWindow::createImagePanel()
 	scrollArea->setAlignment(Qt::AlignCenter);
 	
 	imageViewer->linkPixelStatusBar(statusBar);
-	imageViewer->linkSpectralPanel(spectralPanel);
+	imageViewer->linkInstrumentsPanel(instrumentsPanel);
 	
 	centralBox->insertWidget(0, scrollArea);
 }
 
-void MainWindow::createSpectralPanel()
+void MainWindow::createInstrumentsPanel()
 {
-    spectralPanel = new SpectralPanel();
-    spectralPanel->setEnabled(false);
+    instrumentsPanel = new InstrumentsPanel();
+    instrumentsPanel->setEnabled(false);
     
-	centralBox->insertLayout(0, spectralPanel);
+	centralBox->insertLayout(0, instrumentsPanel);
 }
 
 void MainWindow::openImage()
@@ -95,9 +85,7 @@ void MainWindow::openImage()
 		saveImageAction->setEnabled(true);
 		closeImageAction->setEnabled(true);
 	
-		viewModeMenu->setEnabled(true);
-		
-		spectralPanel->setEnabled(true);
+		instrumentsPanel->setEnabled(true);
 	}
 }
 
@@ -111,22 +99,12 @@ void MainWindow::saveImage()
 	}
 }
 
-void MainWindow::openGrayscale()
-{
-	imageViewer->loadGrayscaleTIFF();
-}
-
-void MainWindow::openRgb()
-{
-	imageViewer->loadRgbTIFF();
-}
-
 void MainWindow::switchSpectralPanelVisible()
 {
     if(showSpectralAction->isChecked())
-    	spectralPanel->setVisible(true);
+    	instrumentsPanel->setVisible(true);
 	else
-    	spectralPanel->setVisible(false);
+    	instrumentsPanel->setVisible(false);
 }
 
 void MainWindow::closeImage()
@@ -138,8 +116,6 @@ void MainWindow::closeImage()
 	
 	    imageViewer->clearImageLabel();
     
-    	viewModeMenu->setEnabled(false);
-    	
-    	spectralPanel->setEnabled(false);
+    	instrumentsPanel->setEnabled(false);
 	}
 }

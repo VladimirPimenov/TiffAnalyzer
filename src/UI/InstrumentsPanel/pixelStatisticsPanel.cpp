@@ -7,7 +7,7 @@ PixelStatisticsPanel::PixelStatisticsPanel()
 	text = new QLabel("Спектральная характеристика пикселя");
 
     plot = new QCustomPlot();
-	plot->setFixedSize(700, 300);
+	plot->setFixedSize(355, 355);
 	
 	plot->xAxis->setRange(0, 10);
     plot->yAxis->setRange(0, 10);

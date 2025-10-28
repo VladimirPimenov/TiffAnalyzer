@@ -2,21 +2,23 @@
 
 #include <QVBoxLayout>
 
-#include "contrastingPanel.h"
+#include "imageOptionsPanel.h"
 #include "pixelStatisticsPanel.h"
 
 #include "rgb.h"
 
-class SpectralPanel: public QVBoxLayout
+class InstrumentsPanel: public QVBoxLayout
 {
 public:
-    SpectralPanel();
+    InstrumentsPanel();
     
 	void paintPixelGraphics(uint16_t * pixelValues, double * waveLengthValues, int channelsCount);
 	void paintHistogramGraphics(std::map<uint16_t, int> & colorFrequency);
     
     void setHistogramCutting(Pixel16bit leftCuttingValues, Pixel16bit rightCuttingValues);
     
+    void setGrayscaleSelectedEvent(std::function<void()> eventHandler);
+	void setRgbSelectedEvent(std::function<void()> eventHandler);
     void setStandartContrastingEvent(std::function<void()> eventHandler);
     void setHistogramContrastingEvent(std::function<void()> eventHandler);
     void setResetContrastingEvent(std::function<void()> eventHandler);
@@ -28,6 +30,6 @@ public:
 	QColor getHistogramSelectedColor();
   
 private:
-    ContrastingPanel * contrastingPanel;
+    ImageOptionsPanel * imagePanel;
     PixelStatisticsPanel * pixelPanel;      
 };

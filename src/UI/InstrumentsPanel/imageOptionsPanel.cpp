@@ -1,33 +1,32 @@
-#include "../../../include/contrastingPanel.h"
+#include "../../../include/imageOptionsPanel.h"
 
-ContrastingPanel::ContrastingPanel()
+ImageOptionsPanel::ImageOptionsPanel()
 {
     histogramText = new QLabel("Гистограмма");
-    contrastingText = new QLabel("Опции контрастирования");
+    optionsText = new QLabel("Инструменты");
 
     createChannelSelector();
     createHistogram();
-    createContrastingOptions();
+    createOptionsTable();
     
     this->addStretch(1);
 }
 
-void ContrastingPanel::createChannelSelector()
+void ImageOptionsPanel::createChannelSelector()
 {
     channelSelector = new QComboBox();
 	channelSelector->addItems({"Красный канал", "Зелёный канал", "Синий канал"});
-	channelSelector->setFixedWidth(255);
 
     this->addWidget(histogramText);
     this->addWidget(channelSelector);
     
-    connect(channelSelector, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &ContrastingPanel::colorChangedEvent);
+    connect(channelSelector, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &ImageOptionsPanel::colorChangedEvent);
 }
 
-void ContrastingPanel::createHistogram()
+void ImageOptionsPanel::createHistogram()
 {
     plot = new QCustomPlot();
-	plot->setFixedSize(700, 350);
+	plot->setFixedSize(355, 355);
 	plot->xAxis->setRange(0, 10);
     plot->yAxis->setRange(0, 10);
 	
@@ -41,38 +40,51 @@ void ContrastingPanel::createHistogram()
     plot->setSelectionRectMode(QCP::srmZoom);
 	
 	resetScaleButton = new QPushButton("Сбросить масштаб");
-	connect(resetScaleButton, &QPushButton::clicked, this, &ContrastingPanel::resetScale);
+	resetScaleButton->setToolTip("Сбросить масштаб");
+	
+	connect(resetScaleButton, &QPushButton::clicked, this, &ImageOptionsPanel::resetScale);
 	
 	this->addWidget(plot);
 	this->addWidget(resetScaleButton);
 }
 
-void ContrastingPanel::createContrastingOptions()
+void ImageOptionsPanel::createOptionsTable()
 {
-    QVBoxLayout * contrastingOptions = new QVBoxLayout();
+    QVBoxLayout * optionsBox = new QVBoxLayout();
 
+    optionsButtonsTable = new QGridLayout();
+
+    grayscaleButton = new QPushButton("Режим Grayscale");
+    rgbButton = new QPushButton("Режим RGB");
 	standartContrastingButton = new QPushButton("Ручное контрастирование");
 	histogramContrastingButton = new QPushButton("Контрастирование по гистограмме");
 	resetContrastingButton = new QPushButton("Сбросить контрастирование");
 	
+	grayscaleButton->setToolTip("Режим Grayscale");
+	rgbButton->setToolTip("Режим RGB");
+	standartContrastingButton->setToolTip("Ручное контрастирование");
+	histogramContrastingButton->setToolTip("Контрастирование по гистограмме");
+	resetContrastingButton->setToolTip("Сбросить контрастирование");
 	
-	standartContrastingButton->setFixedWidth(255);
-	histogramContrastingButton->setFixedWidth(255);
-	resetContrastingButton->setFixedWidth(255);
+    connect(grayscaleButton, &QPushButton::clicked, this, &ImageOptionsPanel::grayscaleSelectedEvent);
+    connect(rgbButton, &QPushButton::clicked, this, &ImageOptionsPanel::rgbSelectedEvent);
+    connect(standartContrastingButton, &QPushButton::clicked, this, &ImageOptionsPanel::standartContrastingEvent);
+    connect(histogramContrastingButton, &QPushButton::clicked, this, &ImageOptionsPanel::histogramContrastingEvent);
+    connect(resetContrastingButton, &QPushButton::clicked, this, &ImageOptionsPanel::resetContrastingEvent);
 	
-    connect(standartContrastingButton, &QPushButton::clicked, this, &ContrastingPanel::standartContrastingEvent);
-    connect(histogramContrastingButton, &QPushButton::clicked, this, &ContrastingPanel::histogramContrastingEvent);
-    connect(resetContrastingButton, &QPushButton::clicked, this, &ContrastingPanel::resetContrastingEvent);
+	optionsButtonsTable->addWidget(grayscaleButton, 0, 0);
+	optionsButtonsTable->addWidget(rgbButton, 0, 1);
+	optionsButtonsTable->addWidget(standartContrastingButton, 1, 0);
+	optionsButtonsTable->addWidget(histogramContrastingButton, 1, 1);
+	optionsButtonsTable->addWidget(resetContrastingButton, 2, 0);
 
-	contrastingOptions->addWidget(contrastingText);
-	contrastingOptions->addWidget(standartContrastingButton);
-	contrastingOptions->addWidget(histogramContrastingButton);
-	contrastingOptions->addWidget(resetContrastingButton);
+    optionsBox->addWidget(optionsText);
+    optionsBox->addLayout(optionsButtonsTable);
 	
-	this->addLayout(contrastingOptions);
+	this->addLayout(optionsBox);
 }
 
-void ContrastingPanel::paintImageHistogram(std::map<uint16_t, int> & colorFrequency)
+void ImageOptionsPanel::paintImageHistogram(std::map<uint16_t, int> & colorFrequency)
 {
     switchCutting();
 
@@ -105,10 +117,12 @@ void ContrastingPanel::paintImageHistogram(std::map<uint16_t, int> & colorFreque
     plot->replot();
 }
 
-void ContrastingPanel::setEnabled(bool isEnabled)
+void ImageOptionsPanel::setEnabled(bool isEnabled)
 {
     channelSelector->setEnabled(isEnabled);
     
+    grayscaleButton->setEnabled(isEnabled);
+    rgbButton->setEnabled(isEnabled);
     standartContrastingButton->setEnabled(isEnabled);
     histogramContrastingButton->setEnabled(isEnabled);
     resetContrastingButton->setEnabled(isEnabled);
@@ -116,23 +130,25 @@ void ContrastingPanel::setEnabled(bool isEnabled)
     resetScaleButton->setEnabled(isEnabled);
 }
 
-void ContrastingPanel::setVisible(bool isVisible)
+void ImageOptionsPanel::setVisible(bool isVisible)
 {
     channelSelector->setVisible(isVisible);
     
+    grayscaleButton->setVisible(isVisible);
+    rgbButton->setVisible(isVisible);
     standartContrastingButton->setVisible(isVisible);
     histogramContrastingButton->setVisible(isVisible);
     resetContrastingButton->setVisible(isVisible);
     
     histogramText->setVisible(isVisible);
-    contrastingText->setVisible(isVisible);
+    optionsText->setVisible(isVisible);
     
     resetScaleButton->setVisible(isVisible);
     
     plot->setVisible(isVisible);
 }
 
-void ContrastingPanel::setCutting(Pixel16bit leftCuttingValues, Pixel16bit rightCuttingValues)
+void ImageOptionsPanel::setCutting(Pixel16bit leftCuttingValues, Pixel16bit rightCuttingValues)
 {
     this->leftCuttingValues = leftCuttingValues;
     this->rightCuttingValues = rightCuttingValues;
@@ -140,7 +156,7 @@ void ContrastingPanel::setCutting(Pixel16bit leftCuttingValues, Pixel16bit right
     switchCutting();
 }
 
-void ContrastingPanel::switchCutting()
+void ImageOptionsPanel::switchCutting()
 {
     QColor currentColor = getChannelColor();
 
@@ -166,7 +182,7 @@ void ContrastingPanel::switchCutting()
 	}
 }
 
-QColor ContrastingPanel::getChannelColor()
+QColor ImageOptionsPanel::getChannelColor()
 {
     if (channelSelector->currentText() == "Красный канал")
 		return Qt::red;
@@ -178,48 +194,68 @@ QColor ContrastingPanel::getChannelColor()
 	    return Qt::gray;
 }
 
-void ContrastingPanel::setStandartContrastingEvent(std::function<void()> eventHandler)
+void ImageOptionsPanel::setGrayscaleSelectedEvent(std::function<void()> eventHandler)
+{
+    grayscaleSelectedEventHandler = eventHandler;
+}
+
+void ImageOptionsPanel::setRgbSelectedEvent(std::function<void()> eventHandler)
+{
+    rgbSelectedEventHandler = eventHandler;
+}
+
+void ImageOptionsPanel::setStandartContrastingEvent(std::function<void()> eventHandler)
 {
     standartContrastingEventHandler = eventHandler;
 }
 
-void ContrastingPanel::setHistogramContrastingEvent(std::function<void()> eventHandler)
+void ImageOptionsPanel::setHistogramContrastingEvent(std::function<void()> eventHandler)
 {
     histogramContrastingEventHandler = eventHandler;
 }
 
-void ContrastingPanel::setResetContrastingEvent(std::function<void()> eventHandler)
+void ImageOptionsPanel::setResetContrastingEvent(std::function<void()> eventHandler)
 {
     resetContrastingEventHandler = eventHandler;
 }
 
-void ContrastingPanel::setColorChangedEvent(std::function<void()> eventHandler)
+void ImageOptionsPanel::setColorChangedEvent(std::function<void()> eventHandler)
 {
     colorChangedEventHandler = eventHandler;
 }
 
-void ContrastingPanel::standartContrastingEvent()
+void ImageOptionsPanel::grayscaleSelectedEvent()
+{
+    grayscaleSelectedEventHandler();
+}
+
+void ImageOptionsPanel::rgbSelectedEvent()
+{
+    rgbSelectedEventHandler();
+}
+
+void ImageOptionsPanel::standartContrastingEvent()
 {
     standartContrastingEventHandler();
 }
 
-void ContrastingPanel::histogramContrastingEvent()
+void ImageOptionsPanel::histogramContrastingEvent()
 {
     histogramContrastingEventHandler();
 }
 
-void ContrastingPanel::resetScale()
+void ImageOptionsPanel::resetScale()
 {
     plot->rescaleAxes();
     plot->replot();
 }
 
-void ContrastingPanel::resetContrastingEvent()
+void ImageOptionsPanel::resetContrastingEvent()
 {
     resetContrastingEventHandler();
 }
 
-void ContrastingPanel::colorChangedEvent()
+void ImageOptionsPanel::colorChangedEvent()
 {
     QColor currentColor = getChannelColor();
     
