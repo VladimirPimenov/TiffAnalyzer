@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/Icons">
+        <file alias="grayscaleButton">../resources/Icons/grayscaleButton.png</file>
+        <file alias="rgbButton">../resources/Icons/rgbButton.png</file>
+        <file alias="standartContrastingButton">../resources/Icons/standartContrastingButton.png</file>
+        <file alias="histogramContrastingButton">../resources/Icons/histogramContrastingButton.png</file>
+        <file alias="resetContrastingButton">../resources/Icons/resetContrastingButton.png</file>
+        <file alias="resetHistogramScaleButton">../resources/Icons/resetHistogramScaleButton.png</file>
+    </qresource>
+</RCC>

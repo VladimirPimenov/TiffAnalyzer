@@ -17,7 +17,7 @@ PixelStatisticsPanel::PixelStatisticsPanel()
     graphic = new QCPGraph(plot->xAxis, plot->yAxis);
     graphic->setPen(QPen(Qt::red));
     
-    graphic->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 6));
+    graphic->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 5));
     
 	this->addWidget(text);
     this->addWidget(plot);

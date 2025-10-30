@@ -46,7 +46,7 @@ private:
     QPushButton * standartContrastingButton;
 	QPushButton * histogramContrastingButton;
 	QPushButton * resetContrastingButton;
-	QPushButton * resetScaleButton;
+	QPushButton * resetHistogramScaleButton;
 	
 	QLabel * histogramText;
 	QLabel * optionsText;
@@ -73,7 +73,7 @@ private:
 	std::function<void()> resetContrastingEventHandler;
 	std::function<void()> colorChangedEventHandler;
 	
-	void resetScale();
+	void resetHistogramScale();
 
 private slots:
 	void grayscaleSelectedEvent();

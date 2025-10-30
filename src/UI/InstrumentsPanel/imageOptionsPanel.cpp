@@ -39,13 +39,7 @@ void ImageOptionsPanel::createHistogram()
     plot->axisRect()->setRangeZoomAxes(plot->xAxis, NULL);
     plot->setSelectionRectMode(QCP::srmZoom);
 	
-	resetScaleButton = new QPushButton("Сбросить масштаб");
-	resetScaleButton->setToolTip("Сбросить масштаб");
-	
-	connect(resetScaleButton, &QPushButton::clicked, this, &ImageOptionsPanel::resetScale);
-	
 	this->addWidget(plot);
-	this->addWidget(resetScaleButton);
 }
 
 void ImageOptionsPanel::createOptionsTable()
@@ -54,29 +48,40 @@ void ImageOptionsPanel::createOptionsTable()
 
     optionsButtonsTable = new QGridLayout();
 
-    grayscaleButton = new QPushButton("Режим Grayscale");
-    rgbButton = new QPushButton("Режим RGB");
-	standartContrastingButton = new QPushButton("Ручное контрастирование");
-	histogramContrastingButton = new QPushButton("Контрастирование по гистограмме");
-	resetContrastingButton = new QPushButton("Сбросить контрастирование");
+    grayscaleButton = new QPushButton();
+    rgbButton = new QPushButton();
+	standartContrastingButton = new QPushButton();
+	histogramContrastingButton = new QPushButton();
+	resetContrastingButton = new QPushButton();
+	resetHistogramScaleButton = new QPushButton();
+	
+	grayscaleButton->setIcon(QIcon(":Icons/grayscaleButton"));
+	rgbButton->setIcon(QIcon(":Icons/rgbButton"));
+	standartContrastingButton->setIcon(QIcon(":Icons/standartContrastingButton"));
+	histogramContrastingButton->setIcon(QIcon(":Icons/histogramContrastingButton"));
+	resetContrastingButton->setIcon(QIcon(":Icons/resetContrastingButton"));
+	resetHistogramScaleButton->setIcon(QIcon(":/Icons/resetHistogramScaleButton"));
 	
 	grayscaleButton->setToolTip("Режим Grayscale");
 	rgbButton->setToolTip("Режим RGB");
 	standartContrastingButton->setToolTip("Ручное контрастирование");
 	histogramContrastingButton->setToolTip("Контрастирование по гистограмме");
 	resetContrastingButton->setToolTip("Сбросить контрастирование");
+	resetHistogramScaleButton->setToolTip("Сбросить масштаб гистограммы");
 	
     connect(grayscaleButton, &QPushButton::clicked, this, &ImageOptionsPanel::grayscaleSelectedEvent);
     connect(rgbButton, &QPushButton::clicked, this, &ImageOptionsPanel::rgbSelectedEvent);
     connect(standartContrastingButton, &QPushButton::clicked, this, &ImageOptionsPanel::standartContrastingEvent);
     connect(histogramContrastingButton, &QPushButton::clicked, this, &ImageOptionsPanel::histogramContrastingEvent);
     connect(resetContrastingButton, &QPushButton::clicked, this, &ImageOptionsPanel::resetContrastingEvent);
+	connect(resetHistogramScaleButton, &QPushButton::clicked, this, &ImageOptionsPanel::resetHistogramScale);
 	
 	optionsButtonsTable->addWidget(grayscaleButton, 0, 0);
 	optionsButtonsTable->addWidget(rgbButton, 0, 1);
-	optionsButtonsTable->addWidget(standartContrastingButton, 1, 0);
-	optionsButtonsTable->addWidget(histogramContrastingButton, 1, 1);
-	optionsButtonsTable->addWidget(resetContrastingButton, 2, 0);
+	optionsButtonsTable->addWidget(standartContrastingButton, 0, 2);
+	optionsButtonsTable->addWidget(histogramContrastingButton, 0, 3);
+	optionsButtonsTable->addWidget(resetContrastingButton, 0, 4);
+	optionsButtonsTable->addWidget(resetHistogramScaleButton, 0, 5);
 
     optionsBox->addWidget(optionsText);
     optionsBox->addLayout(optionsButtonsTable);
@@ -127,7 +132,7 @@ void ImageOptionsPanel::setEnabled(bool isEnabled)
     histogramContrastingButton->setEnabled(isEnabled);
     resetContrastingButton->setEnabled(isEnabled);
     
-    resetScaleButton->setEnabled(isEnabled);
+    resetHistogramScaleButton->setEnabled(isEnabled);
 }
 
 void ImageOptionsPanel::setVisible(bool isVisible)
@@ -143,7 +148,7 @@ void ImageOptionsPanel::setVisible(bool isVisible)
     histogramText->setVisible(isVisible);
     optionsText->setVisible(isVisible);
     
-    resetScaleButton->setVisible(isVisible);
+    resetHistogramScaleButton->setVisible(isVisible);
     
     plot->setVisible(isVisible);
 }
@@ -244,7 +249,7 @@ void ImageOptionsPanel::histogramContrastingEvent()
     histogramContrastingEventHandler();
 }
 
-void ImageOptionsPanel::resetScale()
+void ImageOptionsPanel::resetHistogramScale()
 {
     plot->rescaleAxes();
     plot->replot();

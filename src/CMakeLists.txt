@@ -1,4 +1,8 @@
-add_executable(TiffAnalyzer 
+set(CMAKE_AUTORCC ON)
+
+add_executable(TiffAnalyzer
+    resources.qrc
+ 
     main.cpp 
 
     Libs/qcustomplot.cpp
