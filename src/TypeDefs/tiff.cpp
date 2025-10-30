@@ -100,9 +100,6 @@ void TIFF::readEntry(std::ifstream & tiff)
 
 void TIFF::loadGrayscale(std::string loadFilePath, int channel)
 {   
-    minPixelValue = 0;
-    maxPixelValue = 0;
-  
     loadRgb(loadFilePath, RgbChannels {channel, channel, channel});
     
     isGrayscale = true;
@@ -110,6 +107,9 @@ void TIFF::loadGrayscale(std::string loadFilePath, int channel)
 
 void TIFF::loadRgb(std::string loadFilePath, RgbChannels channels)
 {
+    minPixelValue = 0;
+    maxPixelValue = 0;
+
     std::ifstream tiff;
     tiff.open(loadFilePath, std::ios::binary);
     

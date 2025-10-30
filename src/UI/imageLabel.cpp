@@ -204,7 +204,7 @@ void ImageLabel::resetContrastingParams()
         image16bit->maxPixelValue);
         
     instrumentsPanel->setHistogramCutting(
-        { image16bit->minPixelValue, image16bit->minPixelValue, image16bit->minPixelValue },
+        { image16bit->minPixelValue, image16bit->minPixelValue, image16bit->minPixelValue},
         { image16bit->maxPixelValue, image16bit->maxPixelValue, image16bit->maxPixelValue});
 }
 
