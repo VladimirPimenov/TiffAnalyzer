@@ -213,13 +213,16 @@ void ImageLabel::showChannelsInfo()
     sppTable->show();
 }
 
-void ImageLabel::updatePixelGraphics(int x, int y)
+void ImageLabel::updatePixelGraphic(int x, int y, bool addNew = false)
 {
     PixelReader * pixelReader = new PixelReader();
     uint16_t * pixelValues = pixelReader->readPixelBrightness(x, y, image16bit);
     double * waveLengthValues = sppTable->getWaveLengthValues();
     
-    instrumentsPanel->paintPixelGraphics(pixelValues, waveLengthValues, image16bit->channelsCount);
+    if(addNew)
+        instrumentsPanel->addPixelGraphic(pixelValues, waveLengthValues, image16bit->channelsCount, x, y);
+    else
+        instrumentsPanel->updateDynamicPixelGraphic(pixelValues, waveLengthValues, image16bit->channelsCount, x, y);
     
     delete[] pixelValues;
     delete[] waveLengthValues;
@@ -317,7 +320,7 @@ void ImageLabel::mouseMoveEvent(QMouseEvent * event)
 			statusBar->updateInfo(x, y, pixel, normalizedPixel);
 			
 			if(sppTable->isSppReaded())
-			    updatePixelGraphics(x, y);
+			    updatePixelGraphic(x, y);
 		}
 	}
 	else
@@ -335,5 +338,21 @@ void ImageLabel::mouseReleaseEvent(QMouseEvent * event)
 		contextMenu->move(mousePos.rx(), mousePos.ry());
         
         contextMenu->show();
+    }
+    else if(hasImage() 
+    && event->button() == Qt::LeftButton)
+    {
+        if(instrumentsPanel->isPixelSelecting())
+        {
+            QPoint mousePos = mapFromGlobal(QCursor::pos());
+            int x = mousePos.rx();
+            int y = mousePos.ry();
+        
+            if(x >= 0 && y >= 0 && x < image8bit->width() && y < image8bit->height())
+            {
+                updatePixelGraphic(x,y, true);
+            } 
+        }
+        
     }
 }

@@ -12,7 +12,9 @@ class InstrumentsPanel: public QVBoxLayout
 public:
     InstrumentsPanel();
     
-	void paintPixelGraphics(uint16_t * pixelValues, double * waveLengthValues, int channelsCount);
+	void updateDynamicPixelGraphic(uint16_t * pixelValues, double * waveLengthValues, int channelsCount, int pixelX, int pixelY);
+	void addPixelGraphic(uint16_t * pixelValues, double * waveLengthValues, int channelsCount, int pixelX, int pixelY);
+	
 	void paintHistogramGraphics(std::map<uint16_t, int> & colorFrequency);
     
     void setHistogramCutting(Pixel16bit leftCuttingValues, Pixel16bit rightCuttingValues);
@@ -25,10 +27,11 @@ public:
     void setColorChangedEvent(std::function<void()> eventHandler);
     
     void setVisible(bool isVisible);
-    void setEnabled(bool isEnable);
+    void setEnabled(bool isEnabled);
     
 	QColor getHistogramSelectedColor();
   
+    bool isPixelSelecting();
 private:
     ImageOptionsPanel * imagePanel;
     PixelStatisticsPanel * pixelPanel;      

@@ -6,5 +6,8 @@
         <file alias="histogramContrastingButton">../resources/Icons/histogramContrastingButton.png</file>
         <file alias="resetContrastingButton">../resources/Icons/resetContrastingButton.png</file>
         <file alias="resetHistogramScaleButton">../resources/Icons/resetHistogramScaleButton.png</file>
+        <file alias="addGraphicButton">../resources/Icons/addGraphicButton.png</file>
+        <file alias="legendButton">../resources/Icons/legendButton.png</file>
+        <file alias="markersButton">../resources/Icons/markersButton.png</file>
     </qresource>
 </RCC>

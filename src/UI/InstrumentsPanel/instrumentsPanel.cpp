@@ -9,9 +9,14 @@ InstrumentsPanel::InstrumentsPanel()
     this->addLayout(pixelPanel);
 }
 
-void InstrumentsPanel::paintPixelGraphics(uint16_t * pixelValues, double * waveLengthValues, int channelsCount)
+void InstrumentsPanel::updateDynamicPixelGraphic(uint16_t * pixelValues, double * waveLengthValues, int channelsCount, int pixelX, int pixelY)
 {
-    pixelPanel->paintPixelGraphics(pixelValues, waveLengthValues, channelsCount);
+    pixelPanel->paintDynamicPixelGraphic(pixelValues, waveLengthValues, channelsCount, pixelX, pixelY);
+}
+
+void InstrumentsPanel::addPixelGraphic(uint16_t * pixelValues, double * waveLengthValues, int channelsCount, int pixelX, int pixelY)
+{
+    pixelPanel->addPixelGraphic(pixelValues, waveLengthValues, channelsCount, pixelX, pixelY);
 }
 
 void InstrumentsPanel::paintHistogramGraphics(std::map<uint16_t, int> & colorFrequency)
@@ -57,13 +62,18 @@ void InstrumentsPanel::setVisible(bool isVisible)
     pixelPanel->setVisible(isVisible);
 }
 
-void InstrumentsPanel::setEnabled(bool isEnable)
+void InstrumentsPanel::setEnabled(bool isEnabled)
 {
-    imagePanel->setEnabled(isEnable);
-    pixelPanel->setEnabled(isEnable);
+    imagePanel->setEnabled(isEnabled);
+    pixelPanel->setEnabled(isEnabled);
 }
 
 QColor InstrumentsPanel::getHistogramSelectedColor()
 {
     return imagePanel->getChannelColor();
+}
+
+bool InstrumentsPanel::isPixelSelecting()
+{
+    return pixelPanel->isPixelSelecting;
 }

@@ -91,7 +91,7 @@ private:
 	
 	void showChannelsInfo();
 
-	void updatePixelGraphics(int x, int y);
+	void updatePixelGraphic(int x, int y, bool addNew);
 	
 	void mouseMoveEvent(QMouseEvent * event) override;
 	void mouseReleaseEvent(QMouseEvent * event) override;
