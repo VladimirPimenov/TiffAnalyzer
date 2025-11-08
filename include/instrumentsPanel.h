@@ -32,6 +32,7 @@ public:
 	QColor getHistogramSelectedColor();
   
     bool isPixelSelecting();
+    
 private:
     ImageOptionsPanel * imagePanel;
     PixelStatisticsPanel * pixelPanel;      

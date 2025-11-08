@@ -26,7 +26,7 @@ void ImageLabel::createContextMenu()
     connect(channelsInfoAction, &QAction::triggered, this, &ImageLabel::showChannelsInfo);
 }
 
-void ImageLabel::loadNewTIFF(std::string tiffPath)
+void ImageLabel::loadTIFF(std::string tiffPath)
 {
     image16bit = new TIFF();
     image16bit->loadTiffMetadata(tiffPath);

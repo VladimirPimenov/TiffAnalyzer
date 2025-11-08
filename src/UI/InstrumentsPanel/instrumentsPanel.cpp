@@ -75,5 +75,5 @@ QColor InstrumentsPanel::getHistogramSelectedColor()
 
 bool InstrumentsPanel::isPixelSelecting()
 {
-    return pixelPanel->isPixelSelecting;
+    return pixelPanel->isPixelSelecting();
 }

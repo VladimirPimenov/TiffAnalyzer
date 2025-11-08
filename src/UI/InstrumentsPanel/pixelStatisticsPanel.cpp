@@ -16,7 +16,7 @@ PixelStatisticsPanel::PixelStatisticsPanel()
     plot->xAxis->setLabel("Длина волны, нм");
     plot->yAxis->setLabel("Яркость 16 бит");
     
-    isPixelSelecting = false;
+    isPixelSelect = false;
     isMarkersVisible = true;
     
 	this->addWidget(text);
@@ -155,7 +155,7 @@ void PixelStatisticsPanel::setEnabled(bool isEnabled)
 
 void PixelStatisticsPanel::selectPixelGraphicEvent()
 {
-    isPixelSelecting = !isPixelSelecting;
+    isPixelSelect = !isPixelSelect;
 }
 
 void PixelStatisticsPanel::switchLegendEvent()
@@ -183,3 +183,8 @@ void PixelStatisticsPanel::switchMarkersEvent()
     
     isMarkersVisible = !isMarkersVisible;
 }
+
+bool PixelStatisticsPanel::isPixelSelecting()
+{
+    return isPixelSelect;
+} 

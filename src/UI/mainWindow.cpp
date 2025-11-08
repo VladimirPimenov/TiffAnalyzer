@@ -80,7 +80,7 @@ void MainWindow::openImage()
 
 	if(!openImagePath.empty())
 	{
-	    imageViewer->loadNewTIFF(openImagePath);
+	    imageViewer->loadTIFF(openImagePath);
 	
 		saveImageAction->setEnabled(true);
 		closeImageAction->setEnabled(true);

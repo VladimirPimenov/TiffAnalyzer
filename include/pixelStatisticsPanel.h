@@ -23,7 +23,8 @@ public:
     void setVisible(bool isVisible);
     void setEnabled(bool isEnabled);
     
-    bool isPixelSelecting;
+    bool isPixelSelecting();
+    
 private:
     QCustomPlot * plot;
     
@@ -34,6 +35,7 @@ private:
 	QPushButton * switchMarkersButton;
 	
 	bool isMarkersVisible;
+    bool isPixelSelect;
 	
 	void scaleVerticalAxis();
 	void replot();

@@ -39,8 +39,6 @@ public:
 private:
 	QComboBox * channelSelector;
     
-    QGridLayout * optionsButtonsTable;
-    
     QPushButton * grayscaleButton;
     QPushButton * rgbButton;
     QPushButton * standartContrastingButton;

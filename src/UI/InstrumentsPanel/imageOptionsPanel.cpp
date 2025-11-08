@@ -29,6 +29,8 @@ void ImageOptionsPanel::createHistogram()
 	plot->setFixedSize(355, 355);
 	plot->xAxis->setRange(0, 10);
     plot->yAxis->setRange(0, 10);
+    plot->xAxis->setLabel("Яркость 16 бит");
+    plot->yAxis->setLabel("Количество пикселей");
 	
 	histogram = new QCPBars(plot->xAxis, plot->yAxis);
 	
@@ -38,7 +40,6 @@ void ImageOptionsPanel::createHistogram()
     plot->setInteractions(QCP::iSelectPlottables);
     plot->axisRect()->setRangeZoomAxes(plot->xAxis, NULL);
     plot->setSelectionRectMode(QCP::srmZoom);
-	
 	this->addWidget(plot);
 }
 
@@ -46,7 +47,7 @@ void ImageOptionsPanel::createOptionsTable()
 {
     QVBoxLayout * optionsBox = new QVBoxLayout();
 
-    optionsButtonsTable = new QGridLayout();
+    QGridLayout * optionsButtonsTable = new QGridLayout();
 
     grayscaleButton = new QPushButton();
     rgbButton = new QPushButton();

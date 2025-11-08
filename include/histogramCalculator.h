@@ -16,6 +16,7 @@ public:
     
     Pixel16bit findMinContrasingValue(float leftCuttingPercent, int width, int height);
 	Pixel16bit findMaxContrasingValue(float rightCuttingPersent, int width, int height);
+	
 private:
     std::map<uint16_t, int> redFrequency;
     std::map<uint16_t, int> greenFrequency;

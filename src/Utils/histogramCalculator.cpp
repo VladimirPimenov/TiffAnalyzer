@@ -92,6 +92,7 @@ Pixel16bit HistogramCalculator::findMinContrasingValue(float leftCuttingPercent,
             isCalculatedBlue = true;
         }
     }
+    return Pixel16bit {0, 0, 0};
 }
 
 Pixel16bit HistogramCalculator::findMaxContrasingValue(float rightCuttingPercent, int width, int height)
@@ -138,4 +139,5 @@ Pixel16bit HistogramCalculator::findMaxContrasingValue(float rightCuttingPercent
             isCalculatedBlue = true;
         }
     }
+    return Pixel16bit {MAX_PIXEL_16BIT_VALUE, MAX_PIXEL_16BIT_VALUE, MAX_PIXEL_16BIT_VALUE};
 }

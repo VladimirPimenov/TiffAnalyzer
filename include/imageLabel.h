@@ -37,9 +37,7 @@ class ImageLabel: public QLabel
 public:
 	ImageLabel();
 	
-	void loadNewTIFF(std::string loadPath);
-	void loadGrayscaleTIFF();
-	void loadRgbTIFF();
+	void loadTIFF(std::string loadPath);
 	
 	void linkInstrumentsPanel(InstrumentsPanel * instrumentsPanel);
 	void linkPixelStatusBar(PixelStatusBar * statusBar);
@@ -71,6 +69,9 @@ private:
 	QMenu * contextMenu;
 	
 	SppTable * sppTable;
+	
+	void loadGrayscaleTIFF();
+	void loadRgbTIFF();
 	
 	void createContextMenu();
 	
