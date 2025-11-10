@@ -23,6 +23,8 @@ PixelStatisticsPanel::PixelStatisticsPanel()
     this->addWidget(plot);
     
     createOptionsTable();
+
+    connect(plot, &QCustomPlot::legendClick, this, [this](QCPLegend *legend, QCPAbstractLegendItem *item, QMouseEvent *event) { legendClickedEvent(legend, item, event); } );  
     
     this->addStretch(1);
 }
@@ -115,6 +117,8 @@ void PixelStatisticsPanel::createOptionsTable()
     switchMarkersButton = new QPushButton();
     
     addPixelGraphicButton->setCheckable(true);
+    switchLegendButton->setCheckable(true);
+    switchMarkersButton->setCheckable(true);
     
     addPixelGraphicButton->setToolTip("Добавить график пикселя");
     switchLegendButton->setToolTip("Переключить легенду");
@@ -188,3 +192,24 @@ bool PixelStatisticsPanel::isPixelSelecting()
 {
     return isPixelSelect;
 } 
+
+int getGraphIndex(QCustomPlot * plot, QCPGraph * graph)
+{
+    for(int graphIndex = 0; graphIndex < plot->graphCount(); graphIndex++)
+    {
+        if(graph == plot->graph(graphIndex))
+            return graphIndex;
+    }
+}
+
+void PixelStatisticsPanel::legendClickedEvent(QCPLegend *legend, QCPAbstractLegendItem *item, QMouseEvent *event)
+{
+    QCPPlottableLegendItem * plottableItem = (QCPPlottableLegendItem*)(item);
+    QCPGraph * graphic = (QCPGraph*)(plottableItem->plottable());
+    
+    if(getGraphIndex(plot, graphic) != 0)
+    {
+        plot->removeGraph(graphic);
+        replot();
+    }
+}

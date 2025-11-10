@@ -45,4 +45,7 @@ private:
 	void selectPixelGraphicEvent();
 	void switchLegendEvent();
 	void switchMarkersEvent();
+	
+	void legendClickedEvent(QCPLegend *legend, QCPAbstractLegendItem *item, QMouseEvent *event);
+	
 };
