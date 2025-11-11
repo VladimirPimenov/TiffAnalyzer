@@ -1,9 +1,12 @@
 #include "../../../include/pixelStatisticsPanel.h"
 
 #include "../../../include/rgb.h"
+#include <ctime>
 
 PixelStatisticsPanel::PixelStatisticsPanel()
 {
+    srand(time(0));
+
 	text = new QLabel("Спектральная характеристика пикселя");
 
     plot = new QCustomPlot();
@@ -13,6 +16,7 @@ PixelStatisticsPanel::PixelStatisticsPanel()
 	
 	plot->xAxis->setRange(0, 10);
     plot->yAxis->setRange(0, 10);
+	
     plot->xAxis->setLabel("Длина волны, нм");
     plot->yAxis->setLabel("Яркость 16 бит");
     
@@ -27,6 +31,15 @@ PixelStatisticsPanel::PixelStatisticsPanel()
     connect(plot, &QCustomPlot::legendClick, this, [this](QCPLegend *legend, QCPAbstractLegendItem *item, QMouseEvent *event) { legendClickedEvent(legend, item, event); } );  
     
     this->addStretch(1);
+}
+
+QPen chooseGraphicPen()
+{
+    int red = rand() % (255 - 0 + 1) + 0;
+    int green = rand() % (255 - 0 + 1) + 0;
+    int blue = rand() % (255 - 0 + 1) + 0;
+        
+    return QPen(QColor(red, green, blue));
 }
 
 void PixelStatisticsPanel::paintDynamicPixelGraphic(uint16_t * pixelValues, double * waveLengthValues, int channelsCount, int pixelX, int pixelY)
@@ -56,7 +69,7 @@ void PixelStatisticsPanel::paintDynamicPixelGraphic(uint16_t * pixelValues, doub
 
 void PixelStatisticsPanel::addPixelGraphic(uint16_t * pixelValues, double * waveLengthValues, int channelsCount, int pixelX, int pixelY)
 {
-    if(plot->graphCount() > 5)
+    if(plot->graphCount() == 5)
         return;
         
     QVector<double> x(channelsCount), y(channelsCount);
@@ -72,7 +85,7 @@ void PixelStatisticsPanel::addPixelGraphic(uint16_t * pixelValues, double * wave
     std::string graphTitle = std::to_string(pixelX) + ";" + std::to_string(pixelY);
     
     graphic->setName(QString::fromStdString(graphTitle));
-    graphic->setPen(QPen(Qt::red));
+    graphic->setPen(chooseGraphicPen());
     
     if(isMarkersVisible)
         graphic->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 5));
@@ -205,6 +218,10 @@ int getGraphIndex(QCustomPlot * plot, QCPGraph * graph)
 void PixelStatisticsPanel::legendClickedEvent(QCPLegend *legend, QCPAbstractLegendItem *item, QMouseEvent *event)
 {
     QCPPlottableLegendItem * plottableItem = (QCPPlottableLegendItem*)(item);
+    
+    if(!plottableItem)
+        return;
+        
     QCPGraph * graphic = (QCPGraph*)(plottableItem->plottable());
     
     if(getGraphIndex(plot, graphic) != 0)
