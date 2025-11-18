@@ -67,7 +67,12 @@ void ImageLabel::loadSppTable()
     sppTable->loadSppFromFile(sppPath);
     
     if(!sppTable->isSppReaded())
+    {
+        qWarning().noquote() << "Не найден файл паспорта изображения";
         requestSppFilePath();
+    }
+    else
+        qInfo().noquote() << QString::fromStdString("Загружен файл паспорта изображения " + sppPath); 
 }
 
 void ImageLabel::requestSppFilePath()
@@ -80,6 +85,8 @@ void ImageLabel::requestSppFilePath()
         std::string sppPath = QFileDialog::getOpenFileName(this, "Открыть файл", "./", "SPP (*.spp)").toStdString();
         
         sppTable->loadSppFromFile(sppPath);
+        
+        qInfo().noquote() << QString::fromStdString("Загружен файл паспорта изображения " + sppPath); 
     }
 }
 
@@ -206,6 +213,14 @@ void ImageLabel::resetContrastingParams()
     instrumentsPanel->setHistogramCutting(
         { image16bit->minPixelValue, image16bit->minPixelValue, image16bit->minPixelValue},
         { image16bit->maxPixelValue, image16bit->maxPixelValue, image16bit->maxPixelValue});
+        
+    qInfo().noquote().nospace() << "Применено контрастирование в диапазоне " 
+                                << image16bit->minPixelValue << ';' 
+                                << image16bit->minPixelValue << ';' 
+                                << image16bit->minPixelValue << ' '
+                                << image16bit->maxPixelValue << ';' 
+                                << image16bit->maxPixelValue << ';' 
+                                << image16bit->maxPixelValue;
 }
 
 void ImageLabel::showChannelsInfo()
@@ -245,6 +260,8 @@ void ImageLabel::grayScaleSelectedEvent()
     
     histogramCalculator->calculateColorsFrequency(image16bit);
 	
+	qInfo().noquote() << "Изображение открыто в режиме Grayscale по каналу: " << channel;
+	
     updateImage();
 }
 
@@ -260,6 +277,9 @@ void ImageLabel::rgbSelectedEvent()
     
     histogramCalculator->calculateColorsFrequency(image16bit);
     
+	qInfo().noquote().nospace() << "Изображение открыто в режиме RGB по каналам: " <<
+	                    channels.red << ';' << channels.green << ';' << channels.blue;
+    
     updateImage();
 }
 
@@ -272,6 +292,14 @@ void ImageLabel::standartContrastingEvent()
     
     painter->setNormalization(minCuttingPixel, maxCuttingPixel);
     instrumentsPanel->setHistogramCutting(minCuttingPixel, maxCuttingPixel);
+    
+    qInfo().noquote().nospace() << "Применено контрастирование в диапазоне " 
+                                << minCuttingPixel.red << ';' 
+                                << minCuttingPixel.green << ';' 
+                                << minCuttingPixel.blue << ' '
+                                << maxCuttingPixel.red << ';' 
+                                << maxCuttingPixel.green << ';' 
+                                << maxCuttingPixel.blue;
     
     updateImage();
 }
@@ -294,6 +322,14 @@ void ImageLabel::histogramContrastingEvent()
     
     painter->setNormalization(minCuttingPixel, maxCuttingPixel);
     instrumentsPanel->setHistogramCutting(minCuttingPixel, maxCuttingPixel);
+    
+    qInfo().noquote().nospace() << "Применено контрастирование в диапазоне " 
+                                << minCuttingPixel.red << ';' 
+                                << minCuttingPixel.green << ';' 
+                                << minCuttingPixel.blue << ' '
+                                << maxCuttingPixel.red << ';' 
+                                << maxCuttingPixel.green << ';' 
+                                << maxCuttingPixel.blue;
     
     updateImage();
 }

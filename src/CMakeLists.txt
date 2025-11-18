@@ -23,6 +23,7 @@ add_executable(TiffAnalyzer
     Utils/histogramCalculator.cpp
     Utils/pixelReader.cpp
     Utils/normalizer.cpp
+    Utils/logger.cpp
     
     TypeDefs/tiff.cpp
     TypeDefs/bmp.cpp

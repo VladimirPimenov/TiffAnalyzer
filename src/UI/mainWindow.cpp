@@ -86,6 +86,8 @@ void MainWindow::openImage()
 		closeImageAction->setEnabled(true);
 	
 		instrumentsPanel->setEnabled(true);
+		
+		qInfo().noquote() << QString::fromStdString("Открыто изображение " + openImagePath);
 	}
 }
 
@@ -96,7 +98,10 @@ void MainWindow::saveImage()
 	if(!saveFilePath.empty())
 	{
 	    imageViewer->saveImageAsBmp(saveFilePath);
+	    
+		qInfo().noquote() << QString::fromStdString("Сохранено изображение " + saveFilePath);
 	}
+	
 }
 
 void MainWindow::switchSpectralPanelVisible()
@@ -117,5 +122,7 @@ void MainWindow::closeImage()
 	    imageViewer->clearImageLabel();
     
     	instrumentsPanel->setEnabled(false);
+    	
+    	qInfo().noquote() << "Изображение закрыто";
 	}
 }
