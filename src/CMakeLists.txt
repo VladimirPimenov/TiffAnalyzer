@@ -16,6 +16,7 @@ add_executable(TiffAnalyzer
     UI/InstrumentsPanel/instrumentsPanel.cpp
     UI/InstrumentsPanel/pixelStatisticsPanel.cpp
     UI/InstrumentsPanel/imageOptionsPanel.cpp
+    UI/calibrationWindow.cpp
 
     Utils/imagePainter.cpp
     Utils/imageConverter.cpp

@@ -17,6 +17,7 @@ Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
 #include <string>
 
 #include "imageLabel.h"
+#include "calibrationWindow.h"
 #include "instrumentsPanel.h"
 
 #include "pixelStatusBar.h"
@@ -38,12 +39,16 @@ public:
 	QMenu * showMenu;
 	QAction * showSpectralAction;
 	
+	QMenu * imageProcessingMenu;
+	QAction * calibrationAction;
+	
 	QWidget * centralWidget;
 	QHBoxLayout * centralBox;
 	
 	QScrollArea * scrollArea;
 	
 	ImageLabel * imageViewer;	
+	CalibrationWindow * calibrationWindow;
 	InstrumentsPanel * instrumentsPanel;
 	
 	PixelStatusBar * statusBar;
@@ -51,6 +56,8 @@ public:
 	void openImage();
 	void saveImage();
 	void closeImage();
+	
+	void openCalibrationWindow();
 	
 	void createCentralPanel();
 	void createMenuBar();

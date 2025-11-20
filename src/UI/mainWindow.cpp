@@ -4,6 +4,8 @@ MainWindow::MainWindow():QMainWindow()
 {
 	createMenuBar();
 	
+	calibrationWindow = new CalibrationWindow(this);
+	
 	statusBar = new PixelStatusBar();
 	this->setStatusBar(statusBar);
 	
@@ -11,7 +13,6 @@ MainWindow::MainWindow():QMainWindow()
 	
 	createInstrumentsPanel();
 	createImagePanel();
-	
 }
 
 void MainWindow::createMenuBar()
@@ -25,19 +26,25 @@ void MainWindow::createMenuBar()
 	saveImageAction->setEnabled(false);
 	closeImageAction->setEnabled(false);
 	
+	connect(openImageAction, &QAction::triggered, this, &MainWindow::openImage);
+	connect(saveImageAction, &QAction::triggered, this, &MainWindow::saveImage);
+	connect(closeImageAction, &QAction::triggered, this, &MainWindow::closeImage);
+	
 	showMenu = new QMenu("Вид");
 	showSpectralAction = showMenu->addAction("Панель инструментов");
 	showSpectralAction->setCheckable(true);
 	showSpectralAction->setChecked(true);
 	
-	connect(openImageAction, &QAction::triggered, this, &MainWindow::openImage);
-	connect(saveImageAction, &QAction::triggered, this, &MainWindow::saveImage);
-	connect(closeImageAction, &QAction::triggered, this, &MainWindow::closeImage);
-	
 	connect(showSpectralAction, &QAction::triggered, this, &MainWindow::switchSpectralPanelVisible);
+	
+	imageProcessingMenu = new QMenu("Обработка");
+	calibrationAction = imageProcessingMenu->addAction("Калибровка");
+	
+	connect(calibrationAction, &QAction::triggered, this, &MainWindow::openCalibrationWindow);
 	
 	menuBar()->addMenu(fileMenu);
 	menuBar()->addMenu(showMenu);
+	menuBar()->addMenu(imageProcessingMenu);
 }
 
 void MainWindow::createCentralPanel()
@@ -80,6 +87,8 @@ void MainWindow::openImage()
 
 	if(!openImagePath.empty())
 	{
+		qInfo().noquote() << QString::fromStdString("Открыто изображение " + openImagePath);
+		
 	    imageViewer->loadTIFF(openImagePath);
 	
 		saveImageAction->setEnabled(true);
@@ -87,7 +96,6 @@ void MainWindow::openImage()
 	
 		instrumentsPanel->setEnabled(true);
 		
-		qInfo().noquote() << QString::fromStdString("Открыто изображение " + openImagePath);
 	}
 }
 
@@ -104,6 +112,12 @@ void MainWindow::saveImage()
 	
 }
 
+void MainWindow::openCalibrationWindow()
+{
+
+    calibrationWindow->show();
+}
+
 void MainWindow::switchSpectralPanelVisible()
 {
     if(showSpectralAction->isChecked())
@@ -116,6 +130,8 @@ void MainWindow::closeImage()
 {
 	if(imageViewer->hasImage())
 	{
+    	qInfo().noquote() << "Изображение закрыто";
+    	
 		saveImageAction->setEnabled(false);
 		closeImageAction->setEnabled(false);
 	
@@ -123,6 +139,5 @@ void MainWindow::closeImage()
     
     	instrumentsPanel->setEnabled(false);
     	
-    	qInfo().noquote() << "Изображение закрыто";
 	}
 }
