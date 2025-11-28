@@ -19,7 +19,7 @@ int correctTo8bitRange(int pixelValue)
     return corrected;
 }
 
-void ImagePainter::paintImage(TIFF * image16bit, QImage * image8bit)
+void ImagePainter::paintImage(Tiff * image16bit, QImage * image8bit)
 {   
     uint16_t minRedPixelValue = minNormalizationPixel.red;
     uint16_t maxRedPixelValue = maxNormalizationPixel.red;

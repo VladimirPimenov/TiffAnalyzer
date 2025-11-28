@@ -1,6 +1,6 @@
-#include "../../include/sppReader.h"
+#include "../../include/sppTableReader.h"
 
-void SppReader::readSppData(std::string filePath, std::map<int, std::map<std::string, float>> & sppData)
+void SppTableReader::readSppData(std::string filePath, std::map<int, std::map<std::string, float>> & sppData)
 {
     std::ifstream spp;
     spp.open(filePath, std::ios::binary);
@@ -19,7 +19,7 @@ void SppReader::readSppData(std::string filePath, std::map<int, std::map<std::st
     }
 }
 
-void SppReader::readWaveLenBlock(std::ifstream & sppFile, std::map<int, std::map<std::string, float>> & sppData)
+void SppTableReader::readWaveLenBlock(std::ifstream & sppFile, std::map<int, std::map<std::string, float>> & sppData)
 {
     std::string line;
     
@@ -48,7 +48,7 @@ void SppReader::readWaveLenBlock(std::ifstream & sppFile, std::map<int, std::map
     block.clear();
 }
 
-std::string SppReader::readTag(std::string line)
+std::string SppTableReader::readTag(std::string line)
 {
     std::string tag = "";
     
@@ -69,7 +69,7 @@ std::string SppReader::readTag(std::string line)
     return tag;
 }
 
-float SppReader::readTagValue(std::string line)
+float SppTableReader::readTagValue(std::string line)
 {
     float tagValue = 0.0f;
     

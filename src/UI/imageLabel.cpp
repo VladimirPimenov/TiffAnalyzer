@@ -1,8 +1,3 @@
-#include <QMessageBox>
-#include <QFileDialog>
-
-#include <cmath>
-
 #include "../../include/imageLabel.h"
 
 ImageLabel::ImageLabel(): QLabel()
@@ -28,7 +23,7 @@ void ImageLabel::createContextMenu()
 
 void ImageLabel::loadTIFF(std::string tiffPath)
 {
-    image16bit = new TIFF();
+    image16bit = new Tiff();
     image16bit->loadTiffMetadata(tiffPath);
     
     this->setFixedSize(image16bit->width, image16bit->height);
@@ -39,7 +34,7 @@ void ImageLabel::loadTIFF(std::string tiffPath)
     
     image16bit->loadRgb(tiffPath, defaultChannels);
     
-    loadSppTable();
+    loadWavescaleTable();
     
     resetContrastingParams();
     
@@ -60,13 +55,13 @@ void ImageLabel::loadTIFF(std::string tiffPath)
     updateImage();
 }
 
-void ImageLabel::loadSppTable()
+void ImageLabel::loadWavescaleTable()
 {
-    sppTable = new SppTable(image16bit->channelsCount, 3);
+    wavescaleTable = new WavescaleTable(image16bit->channelsCount, 3);
     std::string sppPath = image16bit->getFilePath().substr(0, image16bit->getFilePath().length() - 3) + "spp";
-    sppTable->loadSppFromFile(sppPath);
+    wavescaleTable->loadFromSppFile(sppPath);
     
-    if(!sppTable->isSppReaded())
+    if(!wavescaleTable->hasData())
     {
         qWarning().noquote() << "Не найден файл паспорта изображения";
         requestSppFilePath();
@@ -84,7 +79,7 @@ void ImageLabel::requestSppFilePath()
     {
         std::string sppPath = QFileDialog::getOpenFileName(this, "Открыть файл", "./", "SPP (*.spp)").toStdString();
         
-        sppTable->loadSppFromFile(sppPath);
+        wavescaleTable->loadFromSppFile(sppPath);
         
         qInfo().noquote() << QString::fromStdString("Загружен файл паспорта изображения " + sppPath); 
     }
@@ -119,7 +114,7 @@ void ImageLabel::linkPixelStatusBar(PixelStatusBar * statusBar)
 
 void ImageLabel::saveImageAsBmp(std::string savePath)
 {
-    BMP * bmp = new BMP();
+    Bmp * bmp = new Bmp();
     
     ImageConverter::convertQImageToBmp(image8bit, bmp);
     
@@ -201,7 +196,7 @@ void ImageLabel::clearImageLabel()
 	this->clear();
     image8bit = new QImage();
     
-    image16bit->~TIFF();
+    image16bit->~Tiff();
 }
 
 void ImageLabel::resetContrastingParams()
@@ -225,14 +220,14 @@ void ImageLabel::resetContrastingParams()
 
 void ImageLabel::showChannelsInfo()
 {
-    sppTable->show();
+    wavescaleTable->show();
 }
 
 void ImageLabel::updatePixelGraphic(int x, int y, bool addNew = false)
 {
     PixelReader * pixelReader = new PixelReader();
     uint16_t * pixelValues = pixelReader->readPixelBrightness(x, y, image16bit);
-    double * waveLengthValues = sppTable->getWaveLengthValues();
+    double * waveLengthValues = wavescaleTable->getWaveLengthValues();
     
     if(addNew)
         instrumentsPanel->addPixelGraphic(pixelValues, waveLengthValues, image16bit->channelsCount, x, y);
@@ -355,7 +350,7 @@ void ImageLabel::mouseMoveEvent(QMouseEvent * event)
 			
 			statusBar->updateInfo(x, y, pixel, normalizedPixel);
 			
-			if(sppTable->isSppReaded())
+			if(wavescaleTable->hasData())
 			    updatePixelGraphic(x, y);
 		}
 	}

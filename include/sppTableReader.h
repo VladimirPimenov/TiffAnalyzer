@@ -4,7 +4,7 @@
 #include <map>
 #include <fstream>
 
-class SppReader
+class SppTableReader
 {
 public:
     static void readSppData(std::string filePath, std::map<int, std::map<std::string, float>> & sppData);

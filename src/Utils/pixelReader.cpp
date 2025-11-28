@@ -2,7 +2,7 @@
 
 #include "../../include/pixelReader.h"
 
-uint16_t * PixelReader::readPixelBrightness(int x, int y, TIFF * sourceTiff)
+uint16_t * PixelReader::readPixelBrightness(int x, int y, Tiff * sourceTiff)
 {
     uint32_t * stripOffsets = sourceTiff->getStripOffsets();
     

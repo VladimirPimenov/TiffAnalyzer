@@ -7,5 +7,5 @@
 class ImageConverter
 {
 public:
-    static void convertQImageToBmp(QImage * image, BMP * bmp);
+    static void convertQImageToBmp(QImage * image, Bmp * bmp);
 };

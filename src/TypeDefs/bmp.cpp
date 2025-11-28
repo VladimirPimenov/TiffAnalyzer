@@ -1,13 +1,13 @@
 #include "../../include/bmp.h"
 
-void BMP::save(std::string saveFilePath)
+void Bmp::save(std::string saveFilePath)
 {
 	std::ofstream saveFile(saveFilePath, std::ios::binary);
 	
 	if(saveFile.is_open())
 	{
-		saveFile.write((char *)(&bmpHeader), sizeof(BMPFILEHEADER));
-		saveFile.write((char *)(&bmpInfo), sizeof(BMPINFOHEADER));
+		saveFile.write((char *)(&bmpHeader), sizeof(BmpFileHeader));
+		saveFile.write((char *)(&bmpInfo), sizeof(BmpInfoHeader));
 		saveFile.seekp(bmpHeader.offset, std::ios::beg);
 		
 		Pixel8bit pixel;
@@ -33,7 +33,7 @@ void BMP::save(std::string saveFilePath)
 	}
 }
 
-BMP::~BMP()
+Bmp::~Bmp()
 {
 	for(uint32_t i = 0; i < bmpInfo.height; i++)
 	{

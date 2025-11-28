@@ -7,14 +7,14 @@
 
 #pragma pack(push, 2)
 
-struct BMPFILEHEADER
+struct BmpFileHeader
 {
 	uint16_t type;
 	uint32_t fileSize;
 	uint32_t reserved;
 	uint32_t offset;
 };
-struct BMPINFOHEADER
+struct BmpInfoHeader
 {
 	uint32_t headerSize;
 	uint32_t width;
@@ -24,11 +24,11 @@ struct BMPINFOHEADER
 };
 #pragma pack(pop)
 
-class BMP
+class Bmp
 {
 public:
-	BMPFILEHEADER bmpHeader;
-	BMPINFOHEADER bmpInfo;
+	BmpFileHeader bmpHeader;
+	BmpInfoHeader bmpInfo;
 	
 	int nullBytesCount;
 	uint8_t nullByte = 0;
@@ -37,6 +37,6 @@ public:
 
 	void save(std::string saveFilePath);
 	
-	~BMP();
+	~Bmp();
 };
 

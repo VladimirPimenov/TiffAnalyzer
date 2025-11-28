@@ -7,7 +7,7 @@
 
 #include "rgb.h"
 
-struct TIFFFILEHEADER
+struct TiffFileHeader
 {
     uint16_t byteOrder;
     uint16_t idetificator;
@@ -22,13 +22,13 @@ struct Entry
     uint32_t value;
 };
 
-struct IFD
+struct Ifd
 {
     uint16_t entriesCount;
     std::vector<Entry> entries;
 };
 
-class TIFF
+class Tiff
 {   
 public:   
     int width;
@@ -51,11 +51,11 @@ public:
     uint32_t * getStripOffsets();
     std::string getFilePath();
     
-    ~TIFF();
+    ~Tiff();
     
 private:
-    TIFFFILEHEADER tiffHeader;
-    IFD * ifd;
+    TiffFileHeader tiffHeader;
+    Ifd * ifd;
     
     uint32_t * stripOffsets;
     uint32_t rowsPerStrip;

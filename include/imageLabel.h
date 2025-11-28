@@ -10,6 +10,10 @@
 #include <QMouseEvent>
 #include <QMenu>
 #include <QPoint>
+#include <QMessageBox>
+#include <QFileDialog>
+
+#include <cmath>
 
 #include <string>
 #include <fstream>
@@ -27,7 +31,7 @@
 #include "channelSelectionWindow.h"
 #include "contrastingWindow.h"
 
-#include "sppTable.h"
+#include "wavescaleTable.h"
 
 #include "pixelReader.h"
 #include "histogramCalculator.h"
@@ -55,7 +59,7 @@ public:
 	bool hasImage();
 	
 private:
-	TIFF * image16bit;	
+	Tiff * image16bit;	
 	QImage * image8bit;
 	
 	ImagePainter * painter;
@@ -68,14 +72,14 @@ private:
 	
 	QMenu * contextMenu;
 	
-	SppTable * sppTable;
+	WavescaleTable * wavescaleTable;
 	
 	void loadGrayscaleTIFF();
 	void loadRgbTIFF();
 	
 	void createContextMenu();
 	
-	void loadSppTable();
+	void loadWavescaleTable();
 	void requestSppFilePath();
 	
 	void updateHistogram();

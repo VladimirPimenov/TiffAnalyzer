@@ -1,9 +1,11 @@
 #pragma once
 
 #include <QDialog>
+
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QPushButton>
+
 #include <QRadioButton>
 #include <QButtonGroup>
 #include <QLabel>
@@ -13,6 +15,10 @@
 #include <QLineEdit>
 #include <QScrollArea>
 #include <QScrollBar>
+
+#include <QFileDialog>
+
+#include "directoryReader.h"
 
 class CalibrationWindow: public QDialog
 {
@@ -43,7 +49,6 @@ private:
     QLabel * xFieldText;
     QLabel * yFieldText;
     
-    
     QGridLayout * fourCoordsPanel;
     QLineEdit * x1Field;
     QLineEdit * x2Field;
@@ -53,6 +58,8 @@ private:
     QLabel * x2FieldText;
     QLabel * y1FieldText;
     QLabel * y2FieldText;
+    
+    QPushButton * searchButton;
     
     QLabel * outputLabel;
     QScrollArea * scrollArea;
@@ -64,6 +71,8 @@ private:
     void createOutputPanel();
     
     void switchCoordinatesSelection(int id);
+    
+    void openDirectoryEvent();
     
     void setTwoCoordsPanelVisible(bool isVisible);
     void setFourCoordsPanelVisible(bool isVisible);

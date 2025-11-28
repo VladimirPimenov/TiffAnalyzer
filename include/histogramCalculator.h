@@ -10,7 +10,7 @@
 class HistogramCalculator
 {
 public:
-	void calculateColorsFrequency(TIFF * image);
+	void calculateColorsFrequency(Tiff * image);
     
     std::map<uint16_t, int> & getColorFrequency(QColor color);
     

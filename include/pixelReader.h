@@ -4,5 +4,5 @@
 class PixelReader
 {
 public:
-    static uint16_t * readPixelBrightness(int x, int y, TIFF * sourceTiff);
+    static uint16_t * readPixelBrightness(int x, int y, Tiff * sourceTiff);
 };

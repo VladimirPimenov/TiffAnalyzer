@@ -24,14 +24,14 @@ uint16_t getMaxPixelValue(uint16_t currentMax, Pixel16bit pixel)
     return currentMax;
 }
 
-void TIFF::loadTiffMetadata(std::string loadFilePath)
+void Tiff::loadTiffMetadata(std::string loadFilePath)
 {
     std::ifstream tiff;
     tiff.open(loadFilePath, std::ios::binary);
     
     if(tiff.is_open())
     {
-        tiff.read((char *)(&tiffHeader), sizeof(TIFFFILEHEADER));
+        tiff.read((char *)(&tiffHeader), sizeof(TiffFileHeader));
         tiff.seekg(tiffHeader.offset, std::ios::beg);
         
         readIFD(tiff);
@@ -40,9 +40,9 @@ void TIFF::loadTiffMetadata(std::string loadFilePath)
     }
 }
 
-void TIFF::readIFD(std::ifstream & tiff)
+void Tiff::readIFD(std::ifstream & tiff)
 {
-    IFD * ifd = new IFD();
+    Ifd * ifd = new Ifd();
     this->ifd = ifd;
     
     tiff.read((char *)(&ifd->entriesCount), sizeof(ifd->entriesCount));
@@ -54,7 +54,7 @@ void TIFF::readIFD(std::ifstream & tiff)
     
 }
 
-void TIFF::readEntry(std::ifstream & tiff)
+void Tiff::readEntry(std::ifstream & tiff)
 {
     Entry entry;
 
@@ -98,14 +98,14 @@ void TIFF::readEntry(std::ifstream & tiff)
     ifd->entries.push_back(entry);
 }
 
-void TIFF::loadGrayscale(std::string loadFilePath, int channel)
+void Tiff::loadGrayscale(std::string loadFilePath, int channel)
 {   
     loadRgb(loadFilePath, RgbChannels {channel, channel, channel});
     
     isGrayscale = true;
 }
 
-void TIFF::loadRgb(std::string loadFilePath, RgbChannels channels)
+void Tiff::loadRgb(std::string loadFilePath, RgbChannels channels)
 {
     minPixelValue = 0;
     maxPixelValue = 0;
@@ -146,22 +146,22 @@ void TIFF::loadRgb(std::string loadFilePath, RgbChannels channels)
     isGrayscale = false;
 }
 
-Pixel16bit TIFF::getPixel(int x, int y)
+Pixel16bit Tiff::getPixel(int x, int y)
 {
     return pixels[y][x];
 }
 
-uint32_t * TIFF::getStripOffsets()
+uint32_t * Tiff::getStripOffsets()
 {
     return stripOffsets;
 }
 
-std::string TIFF::getFilePath()
+std::string Tiff::getFilePath()
 {
     return filePath;
 }
 
-TIFF::~TIFF()
+Tiff::~Tiff()
 {
     for(int y = 0; y < height; y++)
     {

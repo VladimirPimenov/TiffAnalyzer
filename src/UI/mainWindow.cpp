@@ -83,33 +83,31 @@ void MainWindow::createInstrumentsPanel()
 
 void MainWindow::openImage()
 {
-	std::string openImagePath = QFileDialog::getOpenFileName(this, "Открыть файл", "./", "TIFF (*.tif *.tiff)").toStdString();
+	QString openImagePath = QFileDialog::getOpenFileName(this, "Открыть файл", "./", "TIFF (*.tif *.tiff)");
 
-	if(!openImagePath.empty())
-	{
-		qInfo().noquote() << QString::fromStdString("Открыто изображение " + openImagePath);
-		
-	    imageViewer->loadTIFF(openImagePath);
+	if(openImagePath.isEmpty())
+		return;
+
+	qInfo().noquote() << "Открыто изображение " + openImagePath;
 	
-		saveImageAction->setEnabled(true);
-		closeImageAction->setEnabled(true);
-	
-		instrumentsPanel->setEnabled(true);
-		
-	}
+	imageViewer->loadTIFF(openImagePath.toStdString());
+
+	saveImageAction->setEnabled(true);
+	closeImageAction->setEnabled(true);
+
+	instrumentsPanel->setEnabled(true);
 }
 
 void MainWindow::saveImage()
 {
-    std::string saveFilePath = QFileDialog::getSaveFileName(this, "Сохранить файл", "./", "BMP (*.bmp)").toStdString();
+    QString saveImagePath = QFileDialog::getSaveFileName(this, "Сохранить файл", "./", "Bmp (*.bmp)");
 
-	if(!saveFilePath.empty())
-	{
-	    imageViewer->saveImageAsBmp(saveFilePath);
-	    
-		qInfo().noquote() << QString::fromStdString("Сохранено изображение " + saveFilePath);
-	}
+	if(saveImagePath.isEmpty())
+		return;
+
+	imageViewer->saveImageAsBmp(saveImagePath.toStdString());
 	
+	qInfo().noquote() << "Сохранено изображение " + saveImagePath;
 }
 
 void MainWindow::openCalibrationWindow()

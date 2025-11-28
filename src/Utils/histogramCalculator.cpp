@@ -1,6 +1,6 @@
 #include "../../include/histogramCalculator.h"
 
-void HistogramCalculator::calculateColorsFrequency(TIFF * image)
+void HistogramCalculator::calculateColorsFrequency(Tiff * image)
 {
 	redFrequency.clear();
 	greenFrequency.clear();

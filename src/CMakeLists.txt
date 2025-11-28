@@ -12,7 +12,7 @@ add_executable(TiffAnalyzer
     UI/channelSelectionWindow.cpp
     UI/contrastingWindow.cpp
     UI/pixelStatusBar.cpp
-    UI/sppTable.cpp
+    UI/wavescaleTable.cpp
     UI/InstrumentsPanel/instrumentsPanel.cpp
     UI/InstrumentsPanel/pixelStatisticsPanel.cpp
     UI/InstrumentsPanel/imageOptionsPanel.cpp
@@ -20,7 +20,7 @@ add_executable(TiffAnalyzer
 
     Utils/imagePainter.cpp
     Utils/imageConverter.cpp
-    Utils/sppReader.cpp
+    Utils/sppTableReader.cpp
     Utils/histogramCalculator.cpp
     Utils/pixelReader.cpp
     Utils/normalizer.cpp

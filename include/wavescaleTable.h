@@ -7,17 +7,16 @@
 #include <string>
 #include <map>
 
-#include "sppReader.h"
+#include "sppTableReader.h"
 
-class SppTable
+class WavescaleTable
 {
 public:
-
-    SppTable(int rowsCount, int colsCount);
+    WavescaleTable(int rowsCount, int colsCount);
     
-    void loadSppFromFile(std::string sppPath);
+    void loadFromSppFile(std::string sppPath);
     
-    bool isSppReaded();
+    bool hasData();
     
     double * getWaveLengthValues();
     
@@ -27,7 +26,7 @@ private:
     QWidget * window;
     QHBoxLayout * box;
     QTableView * table;
-    QStandardItemModel * sppModel;
+    QStandardItemModel * model;
     
-    void fillSppModel(std::map<int, std::map<std::string, float>> & sppData);
+    void fillModel(std::map<int, std::map<std::string, float>> & data);
 };

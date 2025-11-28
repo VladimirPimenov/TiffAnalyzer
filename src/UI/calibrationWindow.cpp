@@ -1,5 +1,7 @@
 #include "../../include/calibrationWindow.h"
-#include <iostream>
+
+void fillLabelByStringsList(QLabel * label, QList<QString> & strings);
+
 CalibrationWindow::CalibrationWindow(QWidget * parent = nullptr): QDialog(parent)
 {
 	this->setWindowModality(Qt::WindowModality::WindowModal);
@@ -23,6 +25,8 @@ void CalibrationWindow::createDirectorySelectionWidgets()
 	
 	selectDirectoryButton = new QPushButton("...");
 	selectDirectoryButton->setFixedWidth(50);
+	
+    connect(selectDirectoryButton, &QPushButton::clicked, this, &CalibrationWindow::openDirectoryEvent);
 
     QLabel * text = new QLabel("Путь к директории для поиска");
     text->setAlignment(Qt::AlignCenter);
@@ -168,8 +172,10 @@ void CalibrationWindow::createOutputPanel()
 {
     scrollArea = new QScrollArea();
     outputLabel = new QLabel();
+    outputLabel->setAlignment(Qt::AlignTop);
     
     scrollArea->setWidget(outputLabel);
+    scrollArea->setWidgetResizable(true);
     scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     
@@ -211,4 +217,34 @@ void CalibrationWindow::setFourCoordsPanelVisible(bool isVisible)
     x2FieldText->setVisible(isVisible);
     y1FieldText->setVisible(isVisible);
     y2FieldText->setVisible(isVisible);
+}
+
+void CalibrationWindow::openDirectoryEvent()
+{
+	QString directoryPath = QFileDialog::getExistingDirectory(this, "Открыть папку", "./");
+    
+    if(directoryPath.isEmpty())
+        return;
+        
+    directoryLabel->setText(directoryPath);
+    
+    QList<QString> files = DirectoryReader::readDirectory(directoryPath, {"*.spp"});
+    
+    fillLabelByStringsList(outputLabel, files);
+    
+}
+
+void fillLabelByStringsList(QLabel * label, QList<QString> & strings)
+{
+    label->clear();
+    if(strings.isEmpty())
+    {
+        label->setText("Ничего не найдено");
+        return;
+    }
+
+    for(QString str : strings)
+    {
+        label->setText(label->text() + str + '\n');
+    }
 }
