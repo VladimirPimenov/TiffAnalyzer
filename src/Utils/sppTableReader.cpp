@@ -33,8 +33,8 @@ void SppTableReader::readWaveLenBlock(std::ifstream & sppFile, std::map<int, std
     
     while(line.find("</WaveLength>") == -1)
     {
-        tag = readTag(line);
-        tagValue = readTagValue(line);
+        tag = XmlTagReader::readTag(line);
+        tagValue = std::stof(XmlTagReader::readTagValue(line));
         
         if(tag == "ChannelNumber")
             channelNum = (int)tagValue;
@@ -46,51 +46,4 @@ void SppTableReader::readWaveLenBlock(std::ifstream & sppFile, std::map<int, std
     
     sppData[channelNum] = block;
     block.clear();
-}
-
-std::string SppTableReader::readTag(std::string line)
-{
-    std::string tag = "";
-    
-    bool isTagReading = false;
-
-    for(char symb : line)
-    { 
-        if(symb == '>')
-            break;
-            
-        if(isTagReading)
-            tag += symb;
-          
-        if(symb == '<')
-            isTagReading = true;
-        
-    }
-    return tag;
-}
-
-float SppTableReader::readTagValue(std::string line)
-{
-    float tagValue = 0.0f;
-    
-    std::string tagValueString = "";
-    bool isValueReading = false;
-    
-    for(char symb : line)
-    {
-        if(symb == '/')
-            break;
-        
-        if(isValueReading)
-            tagValueString += symb;
-        
-        if(symb == '>')
-            isValueReading = true;
-    }
-    
-    tagValueString = tagValueString.substr(0, tagValueString.length() - 1);
-    
-    tagValue = std::stof(tagValueString);
-    
-    return tagValue;
 }

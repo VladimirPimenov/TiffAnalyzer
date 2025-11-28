@@ -4,6 +4,8 @@
 #include <map>
 #include <fstream>
 
+#include "xmlTagReader.h"
+
 class SppTableReader
 {
 public:
@@ -11,7 +13,4 @@ public:
     
 private:
     static void readWaveLenBlock(std::ifstream & sppFile, std::map<int, std::map<std::string, float>> & sppData);
-    
-    static std::string readTag(std::string line);
-    static float readTagValue(std::string line);
 };
