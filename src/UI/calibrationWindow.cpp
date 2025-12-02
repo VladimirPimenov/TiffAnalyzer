@@ -1,6 +1,6 @@
 #include "../../include/calibrationWindow.h"
 
-void fillLabelByStringsList(QLabel * label, QList<QString> & strings);
+void fillLabelByStringsList(QLabel * label, QStringList * strings);
 
 CalibrationWindow::CalibrationWindow(QWidget * parent = nullptr): QDialog(parent)
 {
@@ -228,22 +228,21 @@ void CalibrationWindow::openDirectoryEvent()
         
     directoryLabel->setText(directoryPath);
     
-    QList<QString> files = DirectoryReader::readDirectory(directoryPath, {"*.spp"});
+    QStringList * files = DirectoryReader::findFilesInDirectory(directoryPath, "*.spp");
     
     fillLabelByStringsList(outputLabel, files);
-    
 }
 
-void fillLabelByStringsList(QLabel * label, QList<QString> & strings)
+void fillLabelByStringsList(QLabel * label, QStringList * strings)
 {
     label->clear();
-    if(strings.isEmpty())
+    if(strings->isEmpty())
     {
         label->setText("Ничего не найдено");
         return;
     }
 
-    for(QString str : strings)
+    for(QString str : *strings)
     {
         label->setText(label->text() + str + '\n');
     }

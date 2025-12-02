@@ -25,6 +25,8 @@ add_executable(TiffAnalyzer
     Utils/pixelReader.cpp
     Utils/normalizer.cpp
     Utils/logger.cpp
+    Utils/directoryReader.cpp
+    Utils/xmlTagReader.cpp
     
     TypeDefs/tiff.cpp
     TypeDefs/bmp.cpp
