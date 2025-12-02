@@ -1,49 +1,37 @@
 #include "../../include/sppTableReader.h"
 
-void SppTableReader::readSppData(std::string filePath, std::map<int, std::map<std::string, float>> & sppData)
+void SppTableReader::readSppData(QString filePath, std::map<unsigned, std::map<QString, double>> & sppData)
 {
-    std::ifstream spp;
-    spp.open(filePath, std::ios::binary);
+    QFile * spp = new QFile(filePath);
+    spp->open(QFile::ReadOnly);
     
-    if(spp.is_open())
+    if(spp->isOpen())
     {
-        std::string line;
+        QXmlStreamReader * xmlReader = new QXmlStreamReader(spp);
+        xmlReader->readNext();
         
-        while(std::getline(spp, line))
+        std::map<QString, double> block;
+        unsigned channelNum = 0;
+        
+        while(!xmlReader->atEnd())
         {
-            if(line.find("<WaveLength>") != -1)
-                readWaveLenBlock(spp, sppData);
-        }        
-    
-        spp.close();
+            QString tagName = xmlReader->name().toString();
+            
+            if(tagName == "WaveLength")
+            {
+                block.clear();
+                
+                while(xmlReader->readNextStartElement())
+                {
+                    if(xmlReader->name() == "ChannelNumber")
+                        channelNum = xmlReader->readElementText().toUInt();
+                    else
+                        block[xmlReader->name().toString()] = xmlReader->readElementText().toDouble();
+                }
+                sppData[channelNum] = block;
+            }
+            xmlReader->readNext();
+        }
+        spp->close();
     }
-}
-
-void SppTableReader::readWaveLenBlock(std::ifstream & sppFile, std::map<int, std::map<std::string, float>> & sppData)
-{
-    std::string line;
-    
-    int channelNum = 0;
-    std::map<std::string, float> block;
-    
-    std::string tag;
-    float tagValue;
-    
-    std::getline(sppFile, line);
-    
-    while(line.find("</WaveLength>") == -1)
-    {
-        tag = XmlTagReader::readTag(line);
-        tagValue = std::stof(XmlTagReader::readTagValue(line));
-        
-        if(tag == "ChannelNumber")
-            channelNum = (int)tagValue;
-        else
-            block[tag] = tagValue;
-        
-        std::getline(sppFile, line);
-    }
-    
-    sppData[channelNum] = block;
-    block.clear();
 }

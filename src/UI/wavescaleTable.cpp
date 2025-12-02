@@ -2,7 +2,7 @@
 
 #include <QHeaderView>
 
-WavescaleTable::WavescaleTable(int rowsCount, int colsCount)
+WavescaleTable::WavescaleTable(unsigned rowsCount, unsigned colsCount)
 {
     window = new QWidget();
     window->setWindowFlag(Qt::MSWindowsFixedSizeDialogHint);
@@ -19,9 +19,9 @@ WavescaleTable::WavescaleTable(int rowsCount, int colsCount)
     model = new QStandardItemModel(rowsCount, colsCount);
 }
 
-void WavescaleTable::loadFromSppFile(std::string sppPath)
+void WavescaleTable::loadFromSppFile(QString sppPath)
 {
-    std::map<int, std::map<std::string, float>> sppData;
+    std::map<unsigned, std::map<QString, double>> sppData;
     
     SppTableReader::readSppData(sppPath, sppData);
     fillModel(sppData);
@@ -31,7 +31,7 @@ void WavescaleTable::loadFromSppFile(std::string sppPath)
     sppData.clear();    
 }
 
-void WavescaleTable::fillModel(std::map<int, std::map<std::string, float>> & data)
+void WavescaleTable::fillModel(std::map<unsigned, std::map<QString, double>> & data)
 {
     model->setHeaderData(0, Qt::Horizontal, "Канал");
     model->setHeaderData(1, Qt::Horizontal, "Длина волны");

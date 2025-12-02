@@ -1,16 +1,13 @@
 #pragma once
 
-#include <string>
 #include <map>
-#include <fstream>
 
-#include "xmlTagReader.h"
+#include <QString>
+#include <QFile>
+#include <QXmlStreamReader>
 
 class SppTableReader
 {
 public:
-    static void readSppData(std::string filePath, std::map<int, std::map<std::string, float>> & sppData);
-    
-private:
-    static void readWaveLenBlock(std::ifstream & sppFile, std::map<int, std::map<std::string, float>> & sppData);
+    static void readSppData(QString filePath, std::map<unsigned, std::map<QString, double>> & sppData);
 };

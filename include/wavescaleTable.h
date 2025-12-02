@@ -4,7 +4,8 @@
 #include <QStandardItemModel>
 #include <QHBoxLayout>
 
-#include <string>
+#include <QString>
+
 #include <map>
 
 #include "sppTableReader.h"
@@ -12,9 +13,9 @@
 class WavescaleTable
 {
 public:
-    WavescaleTable(int rowsCount, int colsCount);
+    WavescaleTable(unsigned rowsCount, unsigned colsCount);
     
-    void loadFromSppFile(std::string sppPath);
+    void loadFromSppFile(QString sppPath);
     
     bool hasData();
     
@@ -28,5 +29,5 @@ private:
     QTableView * table;
     QStandardItemModel * model;
     
-    void fillModel(std::map<int, std::map<std::string, float>> & data);
+    void fillModel(std::map<unsigned, std::map<QString, double>> & data);
 };

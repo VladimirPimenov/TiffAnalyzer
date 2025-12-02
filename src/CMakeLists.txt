@@ -26,10 +26,11 @@ add_executable(TiffAnalyzer
     Utils/normalizer.cpp
     Utils/logger.cpp
     Utils/directoryReader.cpp
-    Utils/xmlTagReader.cpp
+    Utils/routeFinder.cpp
     
     TypeDefs/tiff.cpp
     TypeDefs/bmp.cpp
+    TypeDefs/spp.cpp
     )
 
 set_target_properties(TiffAnalyzer PROPERTIES AUTOMOC ON)

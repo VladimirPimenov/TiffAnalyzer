@@ -58,7 +58,8 @@ void ImageLabel::loadTIFF(std::string tiffPath)
 void ImageLabel::loadWavescaleTable()
 {
     wavescaleTable = new WavescaleTable(image16bit->channelsCount, 3);
-    std::string sppPath = image16bit->getFilePath().substr(0, image16bit->getFilePath().length() - 3) + "spp";
+    QString sppPath = QString::fromStdString(image16bit->getFilePath().substr(0, image16bit->getFilePath().length() - 3) + "spp");
+    
     wavescaleTable->loadFromSppFile(sppPath);
     
     if(!wavescaleTable->hasData())
@@ -67,7 +68,7 @@ void ImageLabel::loadWavescaleTable()
         requestSppFilePath();
     }
     else
-        qInfo().noquote() << QString::fromStdString("Загружен файл паспорта изображения " + sppPath); 
+        qInfo().noquote() << "Загружен файл паспорта изображения " + sppPath; 
 }
 
 void ImageLabel::requestSppFilePath()
@@ -77,11 +78,11 @@ void ImageLabel::requestSppFilePath()
 
     if(userAnswer == QMessageBox::Yes)
     {
-        std::string sppPath = QFileDialog::getOpenFileName(this, "Открыть файл", "./", "SPP (*.spp)").toStdString();
+        QString sppPath = QFileDialog::getOpenFileName(this, "Открыть файл", "./", "SPP (*.spp)");
         
         wavescaleTable->loadFromSppFile(sppPath);
         
-        qInfo().noquote() << QString::fromStdString("Загружен файл паспорта изображения " + sppPath); 
+        qInfo().noquote() << "Загружен файл паспорта изображения " + sppPath; 
     }
 }
 
