@@ -12,6 +12,7 @@ bool isPointInPolygon(double x, double y, std::array<double, 4> & polygonX, std:
             (polygonY[j] - polygonY[i]) + polygonX[i])
         ) 
             isInside = !isInside;
+            
         j = i;
     }
     
@@ -38,17 +39,38 @@ QStringList * RouteFinder::findRoutesByCoordsAndData(double x, double y, QDateTi
  QStringList * RouteFinder::findRoutesByCoordsAndData(double x1, double y1, double x2, double y2, QDateTime startDate, QDateTime endDate, QStringList * sppList)
 {
     QStringList * filteredSppList = new QStringList();
+
+    std::array<double, 4> rectX = {x1, x1, x2, x2};
+    std::array<double, 4> rectY = {y1, y2, y2, y1};
     
     for(QString sppPath : *sppList)
     {
         Spp spp = Spp(sppPath);
         
-        bool isRectangleInside = isPointInPolygon(x1, y1, spp.longitudes, spp.latitudes)
-            && isPointInPolygon(x1, y2, spp.longitudes, spp.latitudes)
-            && isPointInPolygon(x2, y2, spp.longitudes, spp.latitudes)
-            && isPointInPolygon(x2, y1, spp.longitudes, spp.latitudes);
+        bool hasIntersect = false;
+
+        for (int i = 0; i < 4; ++i) 
+        {
+            if (isPointInPolygon(spp.longitudes[i], spp.latitudes[i], rectX, rectY)) 
+            {
+                hasIntersect = true;
+                break;
+            }
+        }
+
+        if (!hasIntersect) 
+        {
+            for (int i = 0; i < 4; ++i) 
+            {
+                if (isPointInPolygon(rectX[i], rectY[i], spp.longitudes, spp.latitudes)) 
+                {
+                    hasIntersect = true;
+                    break;
+                }
+            }
+        }
             
-        if(isRectangleInside && spp.dateAcquired >= startDate && spp.dateAcquired <= endDate)
+        if(hasIntersect && spp.dateAcquired >= startDate && spp.dateAcquired <= endDate)
             filteredSppList->append(sppPath);
     }
 
