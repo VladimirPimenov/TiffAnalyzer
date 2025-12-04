@@ -27,6 +27,7 @@ add_executable(TiffAnalyzer
     Utils/logger.cpp
     Utils/directoryReader.cpp
     Utils/routeFinder.cpp
+    Utils/coordsConvertor.cpp
     
     TypeDefs/tiff.cpp
     TypeDefs/bmp.cpp

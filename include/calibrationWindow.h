@@ -19,6 +19,8 @@
 #include <QFileDialog>
 
 #include "directoryReader.h"
+#include "routeFinder.h"
+#include "coordsConvertor.h"
 
 class CalibrationWindow: public QDialog
 {
@@ -64,6 +66,8 @@ private:
     QLabel * outputLabel;
     QScrollArea * scrollArea;
     
+    bool isOnePointChecking;
+    
     void createDirectorySelectionWidgets();
     void createDateSelectionWidgets();
     void createCoordinatesFormatWidgets();
@@ -72,8 +76,11 @@ private:
     
     void switchCoordinatesSelection(int id);
     
-    void openDirectoryEvent();
-    
     void setTwoCoordsPanelVisible(bool isVisible);
     void setFourCoordsPanelVisible(bool isVisible);
+    
+    QStringList * filterSppList(QStringList * sppList);
+    
+    void openDirectoryEvent();
+    void routeInputChangedEvent();
 };

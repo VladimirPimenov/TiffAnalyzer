@@ -1,6 +1,19 @@
 #include "../../include/calibrationWindow.h"
 
-void fillLabelByStringsList(QLabel * label, QStringList * strings);
+void fillLabelByStringsList(QLabel * label, QStringList * strings)
+{
+    label->clear();
+    if(strings->isEmpty())
+    {
+        label->setText("Ничего не найдено");
+        return;
+    }
+
+    for(QString str : *strings)
+    {
+        label->setText(label->text() + str + '\n');
+    }
+}
 
 CalibrationWindow::CalibrationWindow(QWidget * parent = nullptr): QDialog(parent)
 {
@@ -16,6 +29,7 @@ CalibrationWindow::CalibrationWindow(QWidget * parent = nullptr): QDialog(parent
 	createCoordinatesSelectionWidgets();
     createOutputPanel();
     
+    switchCoordinatesSelection(0);
 } 
 
 void CalibrationWindow::createDirectorySelectionWidgets()
@@ -42,10 +56,15 @@ void CalibrationWindow::createDirectorySelectionWidgets()
 
 void CalibrationWindow::createDateSelectionWidgets()
 {
-	startDateField = new QDateEdit();
-    startTimeField = new QTimeEdit();
-    endDateField = new QDateEdit();
-    endTimeField = new QTimeEdit();
+	startDateField = new QDateEdit(QDate::currentDate());
+    startTimeField = new QTimeEdit(QTime::currentTime());
+    endDateField = new QDateEdit(QDate::currentDate().addMonths(1));
+    endTimeField = new QTimeEdit(QTime::currentTime());
+    
+    connect(startDateField, &QDateEdit::dateChanged, this, &CalibrationWindow::routeInputChangedEvent);
+    connect(startTimeField, &QTimeEdit::timeChanged, this, &CalibrationWindow::routeInputChangedEvent);
+    connect(endDateField, &QDateEdit::dateChanged, this, &CalibrationWindow::routeInputChangedEvent);
+    connect(endTimeField, &QTimeEdit::timeChanged, this, &CalibrationWindow::routeInputChangedEvent);
     
     startTimeField->setDisplayFormat("hh:mm:ss");
     endTimeField->setDisplayFormat("hh:mm:ss");
@@ -74,12 +93,14 @@ void CalibrationWindow::createCoordinatesFormatWidgets()
 	ddFormFlag = new QRadioButton("DD.DDDD");
 	ddmmssFormFlag = new QRadioButton("DDMMSS");
 	kmlFormFlag = new QRadioButton("KML");
-	ddFormFlag->setChecked(true);
+	kmlFormFlag->setChecked(true);
 	
 	QButtonGroup * formatButtons = new QButtonGroup();
 	formatButtons->addButton(ddFormFlag);
 	formatButtons->addButton(ddmmssFormFlag);
 	formatButtons->addButton(kmlFormFlag);
+	
+    connect(formatButtons, &QButtonGroup::idClicked, this, &CalibrationWindow::routeInputChangedEvent);
 
 	QLabel * formatText = new QLabel("Формат координат:");
 
@@ -93,7 +114,7 @@ void CalibrationWindow::createCoordinatesFormatWidgets()
     
     twoCoordsFlag = new QRadioButton("2 координаты");
     fourCoordsFlag = new QRadioButton("4 координаты");
-    fourCoordsFlag->setChecked(true);
+    twoCoordsFlag->setChecked(true);
     
     QButtonGroup * countButtons = new QButtonGroup();
     countButtons->addButton(twoCoordsFlag, 0);
@@ -122,6 +143,9 @@ void CalibrationWindow::createCoordinatesSelectionWidgets()
     xField = new QLineEdit();
     yField = new QLineEdit();
     
+    connect(xField, &QLineEdit::textChanged, this, &CalibrationWindow::routeInputChangedEvent);
+    connect(yField, &QLineEdit::textChanged, this, &CalibrationWindow::routeInputChangedEvent);
+    
     xFieldText = new QLabel("x");
     yFieldText = new QLabel("y");
     xFieldText->setAlignment(Qt::AlignCenter);
@@ -143,6 +167,11 @@ void CalibrationWindow::createCoordinatesSelectionWidgets()
     x2Field->setFixedWidth(100);
     y1Field->setFixedWidth(100);
     y2Field->setFixedWidth(100);
+    
+    connect(x1Field, &QLineEdit::textChanged, this, &CalibrationWindow::routeInputChangedEvent);
+    connect(y1Field, &QLineEdit::textChanged, this, &CalibrationWindow::routeInputChangedEvent);
+    connect(x2Field, &QLineEdit::textChanged, this, &CalibrationWindow::routeInputChangedEvent);
+    connect(y2Field, &QLineEdit::textChanged, this, &CalibrationWindow::routeInputChangedEvent);
             
     x1FieldText = new QLabel("x1");
     y1FieldText = new QLabel("y1");
@@ -189,12 +218,15 @@ void CalibrationWindow::switchCoordinatesSelection(int id)
         case 0:
             setTwoCoordsPanelVisible(true);
             setFourCoordsPanelVisible(false);
+            isOnePointChecking = true;
             break;
         case 1:
             setTwoCoordsPanelVisible(false);
             setFourCoordsPanelVisible(true);
+            isOnePointChecking = false;
             break;
     }
+    routeInputChangedEvent();
 }
 
 void CalibrationWindow::setTwoCoordsPanelVisible(bool isVisible)
@@ -228,22 +260,74 @@ void CalibrationWindow::openDirectoryEvent()
         
     directoryLabel->setText(directoryPath);
     
-    QStringList * files = DirectoryReader::findFilesInDirectory(directoryPath, "*.spp");
+    QStringList * sppList = DirectoryReader::findFilesInDirectory(directoryPath, "*.spp");
     
-    fillLabelByStringsList(outputLabel, files);
+    sppList = filterSppList(sppList);
+    
+    fillLabelByStringsList(outputLabel, sppList);
 }
 
-void fillLabelByStringsList(QLabel * label, QStringList * strings)
+QStringList * CalibrationWindow::filterSppList(QStringList * sppList)
 {
-    label->clear();
-    if(strings->isEmpty())
-    {
-        label->setText("Ничего не найдено");
-        return;
-    }
+    QDateTime startDate = QDateTime(startDateField->date(), startTimeField->time());
+    QDateTime endDate = QDateTime(endDateField->date(), endTimeField->time());
 
-    for(QString str : *strings)
+    if(isOnePointChecking)
     {
-        label->setText(label->text() + str + '\n');
+        QString xString = xField->text().isEmpty() ? "0.0" : xField->text().replace(',', '.');
+        QString yString = yField->text().isEmpty() ? "0.0" : yField->text().replace(',', '.');
+    
+        if(ddFormFlag->isChecked())
+        {
+            xString = CoordsConvertor::convertDdToKml(xString);
+            yString = CoordsConvertor::convertDdToKml(yString);
+        }
+        else if(ddmmssFormFlag->isChecked())
+        {
+            xString = CoordsConvertor::convertDdmmssToKml(xString);
+            yString = CoordsConvertor::convertDdmmssToKml(yString);
+        }
+        
+        sppList = RouteFinder::findRoutesByCoordsAndData(xString.toDouble(), yString.toDouble(), startDate, endDate, sppList);
     }
+    else
+    {
+        QString x1String = x1Field->text().isEmpty() ? "0.0" : x1Field->text().replace(',', '.');
+        QString y1String = y1Field->text().isEmpty() ? "0.0" : y1Field->text().replace(',', '.');
+        QString x2String = x2Field->text().isEmpty() ? "0.0" : x2Field->text().replace(',', '.');
+        QString y2String = y2Field->text().isEmpty() ? "0.0" : y2Field->text().replace(',', '.');
+        
+        if(ddFormFlag->isChecked())
+        {
+            x1String = CoordsConvertor::convertDdToKml(x1String);
+            x2String = CoordsConvertor::convertDdToKml(x2String);
+            y1String = CoordsConvertor::convertDdToKml(y1String);
+            y2String = CoordsConvertor::convertDdToKml(y2String);
+        }
+        else if(ddmmssFormFlag->isChecked())
+        {
+            x1String = CoordsConvertor::convertDdmmssToKml(x1String);
+            x2String = CoordsConvertor::convertDdmmssToKml(x2String);
+            y1String = CoordsConvertor::convertDdmmssToKml(y1String);
+            y2String = CoordsConvertor::convertDdmmssToKml(y2String);
+        }
+        
+        sppList = RouteFinder::findRoutesByCoordsAndData(x1String.toDouble(), y1String.toDouble(), 
+                                                        x2String.toDouble(), y2String.toDouble(), 
+                                                        startDate, endDate, sppList);
+    }
+    
+    return sppList;
+}
+
+void CalibrationWindow::routeInputChangedEvent()
+{
+    if(directoryLabel->text().isEmpty())
+        return;
+    
+    QStringList * sppList = DirectoryReader::findFilesInDirectory(directoryLabel->text(), "*.spp");
+    
+    sppList = filterSppList(sppList);
+    
+    fillLabelByStringsList(outputLabel, sppList);
 }
