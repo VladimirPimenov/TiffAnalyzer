@@ -30,8 +30,15 @@ QStringList * RouteFinder::findRoutesByCoordsAndData(double x, double y, QDateTi
         bool isPointInside = isPointInPolygon(x, y, spp.longitudes, spp.latitudes);
 
         if(isPointInside && spp.dateAcquired >= startDate && spp.dateAcquired <= endDate)
+        {
             filteredSppList->append(sppPath);
+            
+            qInfo().noquote() << "Найден маршрут" << sppPath;
+        }
     }
+
+    if(filteredSppList->empty())
+        qInfo().noquote() << "Маршруты не найдены";
 
     return filteredSppList;
 }
@@ -71,8 +78,15 @@ QStringList * RouteFinder::findRoutesByCoordsAndData(double x, double y, QDateTi
         }
             
         if(hasIntersect && spp.dateAcquired >= startDate && spp.dateAcquired <= endDate)
+        {
             filteredSppList->append(sppPath);
+            
+            qInfo().noquote() << "Найден маршрут" << sppPath;
+        }
     }
+    
+    if(filteredSppList->empty())
+        qInfo().noquote() << "Маршруты не найдены";
 
     return filteredSppList;
 }

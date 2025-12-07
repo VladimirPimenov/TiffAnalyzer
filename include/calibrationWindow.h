@@ -18,6 +18,8 @@
 
 #include <QFileDialog>
 
+#include <QDebug>
+
 #include "directoryReader.h"
 #include "routeFinder.h"
 #include "coordsConvertor.h"
@@ -82,5 +84,5 @@ private:
     QStringList * filterSppList(QStringList * sppList);
     
     void openDirectoryEvent();
-    void routeInputChangedEvent();
+    void routeSearchEvent();
 };

@@ -61,10 +61,10 @@ void CalibrationWindow::createDateSelectionWidgets()
     endDateField = new QDateEdit(QDate::currentDate().addMonths(1));
     endTimeField = new QTimeEdit(QTime::currentTime());
     
-    connect(startDateField, &QDateEdit::dateChanged, this, &CalibrationWindow::routeInputChangedEvent);
-    connect(startTimeField, &QTimeEdit::timeChanged, this, &CalibrationWindow::routeInputChangedEvent);
-    connect(endDateField, &QDateEdit::dateChanged, this, &CalibrationWindow::routeInputChangedEvent);
-    connect(endTimeField, &QTimeEdit::timeChanged, this, &CalibrationWindow::routeInputChangedEvent);
+    connect(startDateField, &QDateEdit::dateChanged, this, &CalibrationWindow::routeSearchEvent);
+    connect(startTimeField, &QTimeEdit::timeChanged, this, &CalibrationWindow::routeSearchEvent);
+    connect(endDateField, &QDateEdit::dateChanged, this, &CalibrationWindow::routeSearchEvent);
+    connect(endTimeField, &QTimeEdit::timeChanged, this, &CalibrationWindow::routeSearchEvent);
     
     startTimeField->setDisplayFormat("hh:mm:ss");
     endTimeField->setDisplayFormat("hh:mm:ss");
@@ -100,7 +100,7 @@ void CalibrationWindow::createCoordinatesFormatWidgets()
 	formatButtons->addButton(ddmmssFormFlag);
 	formatButtons->addButton(kmlFormFlag);
 	
-    connect(formatButtons, &QButtonGroup::idClicked, this, &CalibrationWindow::routeInputChangedEvent);
+    connect(formatButtons, &QButtonGroup::idClicked, this, &CalibrationWindow::routeSearchEvent);
 
 	QLabel * formatText = new QLabel("Формат координат:");
 
@@ -143,8 +143,8 @@ void CalibrationWindow::createCoordinatesSelectionWidgets()
     xField = new QLineEdit();
     yField = new QLineEdit();
     
-    connect(xField, &QLineEdit::textChanged, this, &CalibrationWindow::routeInputChangedEvent);
-    connect(yField, &QLineEdit::textChanged, this, &CalibrationWindow::routeInputChangedEvent);
+    connect(xField, &QLineEdit::textChanged, this, &CalibrationWindow::routeSearchEvent);
+    connect(yField, &QLineEdit::textChanged, this, &CalibrationWindow::routeSearchEvent);
     
     xFieldText = new QLabel("x");
     yFieldText = new QLabel("y");
@@ -168,10 +168,10 @@ void CalibrationWindow::createCoordinatesSelectionWidgets()
     y1Field->setFixedWidth(100);
     y2Field->setFixedWidth(100);
     
-    connect(x1Field, &QLineEdit::textChanged, this, &CalibrationWindow::routeInputChangedEvent);
-    connect(y1Field, &QLineEdit::textChanged, this, &CalibrationWindow::routeInputChangedEvent);
-    connect(x2Field, &QLineEdit::textChanged, this, &CalibrationWindow::routeInputChangedEvent);
-    connect(y2Field, &QLineEdit::textChanged, this, &CalibrationWindow::routeInputChangedEvent);
+    connect(x1Field, &QLineEdit::textChanged, this, &CalibrationWindow::routeSearchEvent);
+    connect(y1Field, &QLineEdit::textChanged, this, &CalibrationWindow::routeSearchEvent);
+    connect(x2Field, &QLineEdit::textChanged, this, &CalibrationWindow::routeSearchEvent);
+    connect(y2Field, &QLineEdit::textChanged, this, &CalibrationWindow::routeSearchEvent);
             
     x1FieldText = new QLabel("x1");
     y1FieldText = new QLabel("y1");
@@ -226,7 +226,7 @@ void CalibrationWindow::switchCoordinatesSelection(int id)
             isOnePointChecking = false;
             break;
     }
-    routeInputChangedEvent();
+    routeSearchEvent();
 }
 
 void CalibrationWindow::setTwoCoordsPanelVisible(bool isVisible)
@@ -259,8 +259,20 @@ void CalibrationWindow::openDirectoryEvent()
         return;
         
     directoryLabel->setText(directoryPath);
+        
+    routeSearchEvent();
+}
+
+void CalibrationWindow::routeSearchEvent()
+{
+    QString directoryPath = directoryLabel->text();
+
+    if(directoryPath.isEmpty())
+        return;
     
     QStringList * sppList = DirectoryReader::findFilesInDirectory(directoryPath, "*.spp");
+    
+    qInfo().noquote() << "Выполняется поиск маршрутов в папке" << directoryPath;
     
     sppList = filterSppList(sppList);
     
@@ -318,16 +330,4 @@ QStringList * CalibrationWindow::filterSppList(QStringList * sppList)
     }
     
     return sppList;
-}
-
-void CalibrationWindow::routeInputChangedEvent()
-{
-    if(directoryLabel->text().isEmpty())
-        return;
-    
-    QStringList * sppList = DirectoryReader::findFilesInDirectory(directoryLabel->text(), "*.spp");
-    
-    sppList = filterSppList(sppList);
-    
-    fillLabelByStringsList(outputLabel, sppList);
 }

@@ -4,6 +4,8 @@
 #include <QStringList>
 #include <QDateTime>
 
+#include <QDebug>
+
 #include "spp.h"
 
 class RouteFinder
