@@ -17,8 +17,6 @@ Spp::Spp(QString loadPath)
 
 void Spp::loadSpp(QString loadPath)
 {
-    filePath = loadPath;
-    
     QFile * spp = new QFile(loadPath);
     spp->open(QFile::ReadOnly);
     

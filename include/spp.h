@@ -19,7 +19,4 @@ public:
     Spp(QString loadPath);
 
     void loadSpp(QString loadPath);
-    
-private:
-    QString filePath;
 };

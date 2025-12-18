@@ -32,6 +32,7 @@ add_executable(TiffAnalyzer
     TypeDefs/tiff.cpp
     TypeDefs/bmp.cpp
     TypeDefs/spp.cpp
+    TypeDefs/kml.cpp
     )
 
 set_target_properties(TiffAnalyzer PROPERTIES AUTOMOC ON)

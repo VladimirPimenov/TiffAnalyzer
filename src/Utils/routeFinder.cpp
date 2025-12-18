@@ -1,6 +1,6 @@
 #include "../../include/routeFinder.h"
 
-bool isPointInPolygon(double x, double y, std::array<double, 4> & polygonX, std::array<double, 4> & polygonY)
+bool isPointInPolygon(double x, double y, std::array<double, 4> polygonX, std::array<double, 4> polygonY)
 {
     bool isInside = false;
     int j = 3;
@@ -87,12 +87,9 @@ QStringList * RouteFinder::findRoutesByCoordsAndData(double x, double y, QDateTi
     return filteredSppList;
 }
 
- QStringList * RouteFinder::findRoutesByCoordsAndData(double x1, double y1, double x2, double y2, QDateTime startDate, QDateTime endDate, QStringList * sppList)
+QStringList * RouteFinder::findRoutesByCoordsAndData(std::array<double, 4> x, std::array<double, 4> y, QDateTime startDate, QDateTime endDate, QStringList * sppList)
 {
     QStringList * filteredSppList = new QStringList();
-
-    std::array<double, 4> rectX = {x1, x1, x2, x2};
-    std::array<double, 4> rectY = {y1, y2, y2, y1};
     
     for(QString sppPath : *sppList)
     {
@@ -102,7 +99,7 @@ QStringList * RouteFinder::findRoutesByCoordsAndData(double x, double y, QDateTi
 
         for (int i = 0; i < 4; ++i) 
         {
-            if (isPointInPolygon(spp.longitudes[i], spp.latitudes[i], rectX, rectY)) 
+            if (isPointInPolygon(spp.longitudes[i], spp.latitudes[i], x, y)) 
             {
                 hasIntersect = true;
                 break;
@@ -113,7 +110,7 @@ QStringList * RouteFinder::findRoutesByCoordsAndData(double x, double y, QDateTi
         {
             for (int i = 0; i < 4; ++i) 
             {
-                if (isPointInPolygon(rectX[i], rectY[i], spp.longitudes, spp.latitudes)) 
+                if (isPointInPolygon(x[i], y[i], spp.longitudes, spp.latitudes)) 
                 {
                     hasIntersect = true;
                     break;
@@ -132,13 +129,13 @@ QStringList * RouteFinder::findRoutesByCoordsAndData(double x, double y, QDateTi
 
                 for (int j = 0; j < 4; ++j) 
                 {
-                    double rect1x = rectX[j];
-                    double rect1y = rectY[j];
-                    double rect2x = rectX[(j + 1) % 4];
-                    double rect2y = rectY[(j + 1) % 4];
+                    double x1 = x[j];
+                    double y1 = y[j];
+                    double x2 = x[(j + 1) % 4];
+                    double y2 = y[(j + 1) % 4];
 
                     if (isLinesIntersect(polygon1x, polygon1y, polygon2x, polygon2y,
-                                        rect1x, rect1y, rect2x, rect2y)) 
+                                        x1, y1, x2, y2)) 
                     {
                         hasIntersect = true;
                         break;
@@ -161,4 +158,85 @@ QStringList * RouteFinder::findRoutesByCoordsAndData(double x, double y, QDateTi
         qInfo().noquote() << "Маршруты не найдены";
 
     return filteredSppList;
+}
+
+ QStringList * RouteFinder::findRoutesByCoordsAndData(double x1, double y1, double x2, double y2, QDateTime startDate, QDateTime endDate, QStringList * sppList)
+{
+    std::array<double, 4> rectX = {x1, x1, x2, x2};
+    std::array<double, 4> rectY = {y1, y2, y2, y1};
+    
+    return findRoutesByCoordsAndData(rectX, rectY, startDate, endDate, sppList);
+    
+    // QStringList * filteredSppList = new QStringList();
+
+    // std::array<double, 4> rectX = {x1, x1, x2, x2};
+    // std::array<double, 4> rectY = {y1, y2, y2, y1};
+    
+    // for(QString sppPath : *sppList)
+    // {
+    //     Spp spp = Spp(sppPath);
+        
+    //     bool hasIntersect = false;
+
+    //     for (int i = 0; i < 4; ++i) 
+    //     {
+    //         if (isPointInPolygon(spp.longitudes[i], spp.latitudes[i], rectX, rectY)) 
+    //         {
+    //             hasIntersect = true;
+    //             break;
+    //         }
+    //     }
+
+    //     if (!hasIntersect) 
+    //     {
+    //         for (int i = 0; i < 4; ++i) 
+    //         {
+    //             if (isPointInPolygon(rectX[i], rectY[i], spp.longitudes, spp.latitudes)) 
+    //             {
+    //                 hasIntersect = true;
+    //                 break;
+    //             }
+    //         }
+    //     }
+
+    //     if (!hasIntersect) 
+    //     {
+    //         for (int i = 0; i < 4; ++i) 
+    //         {
+    //             double polygon1x = spp.longitudes[i];
+    //             double polygon1y = spp.latitudes[i];
+    //             double polygon2x = spp.longitudes[(i + 1) % 4];
+    //             double polygon2y = spp.latitudes[(i + 1) % 4];
+
+    //             for (int j = 0; j < 4; ++j) 
+    //             {
+    //                 double rect1x = rectX[j];
+    //                 double rect1y = rectY[j];
+    //                 double rect2x = rectX[(j + 1) % 4];
+    //                 double rect2y = rectY[(j + 1) % 4];
+
+    //                 if (isLinesIntersect(polygon1x, polygon1y, polygon2x, polygon2y,
+    //                                     rect1x, rect1y, rect2x, rect2y)) 
+    //                 {
+    //                     hasIntersect = true;
+    //                     break;
+    //                 }
+    //             }
+    //             if (hasIntersect) 
+    //                 break;
+    //         }
+    //     }
+            
+    //     if(hasIntersect && spp.dateAcquired >= startDate && spp.dateAcquired <= endDate)
+    //     {
+    //         filteredSppList->append(sppPath);
+            
+    //         qInfo().noquote() << "Найден маршрут" << sppPath;
+    //     }
+    // }
+    
+    // if(filteredSppList->empty())
+    //     qInfo().noquote() << "Маршруты не найдены";
+
+    // return filteredSppList;
 }
