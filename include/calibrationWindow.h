@@ -22,6 +22,10 @@
 
 #include <array>
 
+#include "onePointCoordsPanel.h"
+#include "rectangleCoordsPanel.h"
+#include "kmlCoordsPanel.h"
+
 #include "directoryReader.h"
 #include "routeFinder.h"
 #include "coordsConvertor.h"
@@ -59,45 +63,9 @@ private:
     QLabel * coordsFormatText;
     QLabel * coordsCountText;
     
-    QLineEdit * xField;
-    QLineEdit * yField;
-    QLabel * xFieldText;
-    QLabel * yFieldText;
-    
-    QLineEdit * x1Field;
-    QLineEdit * x2Field;
-    QLineEdit * y1Field;
-    QLineEdit * y2Field;
-    QLabel * x1FieldText;
-    QLabel * x2FieldText;
-    QLabel * y1FieldText;
-    QLabel * y2FieldText;
-    
-    QLabel * kmlPathLabel;
-    QPushButton * selectKmlButton;
-    
-    QLabel * leftUpperCornerX;
-    QLabel * leftUpperCornerY;
-    QLabel * rightUpperCornerX;
-    QLabel * rightUpperCornerY;
-    QLabel * leftLowerCornerX;
-    QLabel * leftLowerCornerY;
-    QLabel * rightLowerCornerX;
-    QLabel * rightLowerCornerY;
-    
-    QLabel * corner1Text;
-    QLabel * corner2Text;
-    QLabel * corner3Text;
-    QLabel * corner4Text;
-    
-    QLabel * kmlXText1;
-    QLabel * kmlYText1;
-    QLabel * kmlXText2;
-    QLabel * kmlYText2;
-    QLabel * kmlXText3;
-    QLabel * kmlYText3;
-    QLabel * kmlXText4;
-    QLabel * kmlYText4;
+    OnePointCoordsPanel * onePointCoordsPanel;
+    RectangleCoordsPanel * rectangleCoordsPanel;
+    KmlCoordsPanel * kmlCoordsPanel;
     
     QLabel * outputLabel;
     QScrollArea * scrollArea;
@@ -120,16 +88,11 @@ private:
     void switchCoordinatesSelection(int id);
     
     void setCoordinatesFormatPanelVisile(bool isVisible);
-    void setTwoCoordsPanelVisible(bool isVisible);
-    void setFourCoordsPanelVisible(bool isVisible);
-    void setKmlCoordsPanelVisible(bool isVisible);
     
     QStringList * filterSppList(QStringList * sppList);
-    void fillKmlCornerLabels(Kml * kml);
     
     void openRouteDirectoryEvent();
     void routeSearchEvent();
-    void openKmlEvent();
     
     QStringList * findRoutesByPoint(QStringList * sppList);
     QStringList * findRoutesByRectangle(QStringList * sppList);
