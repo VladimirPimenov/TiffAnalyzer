@@ -8,6 +8,7 @@
 
 #include <array>
 
+#include "polygonChecker.h"
 #include "spp.h"
 
 class RouteFinder
