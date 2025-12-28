@@ -11,7 +11,13 @@
 #include "polygonChecker.h"
 #include "spp.h"
 
-class RouteFinder
+#ifdef ROUTEFINDER_EXPORTS
+    #define ROUTEFINDER_EXPORT __declspec(dllexport)
+#else
+    #define ROUTEFINDER_EXPORT __declspec(dllimport)
+#endif
+
+class ROUTEFINDER_EXPORT RouteFinder
 {
 public:
     static QStringList * findRoutesByCoordsAndData(double x, double y, QDateTime startDate, QDateTime endDate, QStringList * sppList);

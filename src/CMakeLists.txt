@@ -1,5 +1,10 @@
 set(CMAKE_AUTORCC ON)
 
+add_library(PolygonChecker SHARED Utils/polygonChecker.cpp)
+
+add_library(RouteFinder SHARED Utils/routeFinder.cpp TypeDefs/spp.cpp)
+target_link_libraries(RouteFinder Qt5::Core PolygonChecker)
+
 add_executable(TiffAnalyzer
     resources.qrc
  
@@ -29,14 +34,13 @@ add_executable(TiffAnalyzer
     Utils/normalizer.cpp
     Utils/logger.cpp
     Utils/directoryReader.cpp
-    Utils/routeFinder.cpp
-    Utils/polygonChecker.cpp
     Utils/coordsConvertor.cpp
     
     TypeDefs/tiff.cpp
     TypeDefs/bmp.cpp
-    TypeDefs/spp.cpp
     TypeDefs/kml.cpp
     )
+
+target_link_libraries(TiffAnalyzer PolygonChecker RouteFinder)
 
 set_target_properties(TiffAnalyzer PROPERTIES AUTOMOC ON)
