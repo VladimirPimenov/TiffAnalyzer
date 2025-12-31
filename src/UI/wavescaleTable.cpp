@@ -2,7 +2,7 @@
 
 #include <QHeaderView>
 
-WavescaleTable::WavescaleTable(unsigned rowsCount, unsigned colsCount)
+WavescaleTable::WavescaleTable(unsigned rowsCount)
 {
     window = new QWidget();
     window->setWindowFlag(Qt::MSWindowsFixedSizeDialogHint);
@@ -16,14 +16,18 @@ WavescaleTable::WavescaleTable(unsigned rowsCount, unsigned colsCount)
     box = new QHBoxLayout(window);
     box->addWidget(table);
 
-    model = new QStandardItemModel(rowsCount, colsCount);
+    model = new QStandardItemModel(rowsCount, 3);
+        
+    model->setHeaderData(0, Qt::Horizontal, "Канал");
+    model->setHeaderData(1, Qt::Horizontal, "Длина волны");
+    model->setHeaderData(2, Qt::Horizontal, "Ширина канала");
 }
 
-void WavescaleTable::loadFromSppFile(QString sppPath)
+void WavescaleTable::loadFromSppFile(Spp spp)
 {
     std::map<unsigned, std::map<QString, double>> sppData;
     
-    SppTableReader::readSppData(sppPath, sppData);
+    SppTableReader::readSppData(spp.filePath, sppData);
     fillModel(sppData);
 
     table->setModel(model);
@@ -33,10 +37,6 @@ void WavescaleTable::loadFromSppFile(QString sppPath)
 
 void WavescaleTable::fillModel(std::map<unsigned, std::map<QString, double>> & data)
 {
-    model->setHeaderData(0, Qt::Horizontal, "Канал");
-    model->setHeaderData(1, Qt::Horizontal, "Длина волны");
-    model->setHeaderData(2, Qt::Horizontal, "Ширина канала");
-
     int currentRow = 0;
 
     for(auto it = data.begin(); it != data.end(); it++)

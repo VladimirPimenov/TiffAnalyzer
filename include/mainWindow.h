@@ -13,14 +13,19 @@ Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QPushButton>
+#include <QMessageBox>
 
 #include <string>
+#include <QString>
 
 #include "imageLabel.h"
 #include "calibrationWindow.h"
 #include "instrumentsPanel.h"
 
 #include "pixelStatusBar.h"
+
+#include "spp.h"
+#include "wavescaleTable.h"
 
 class MainWindow: public QMainWindow
 {
@@ -56,6 +61,8 @@ public:
 	void openImage();
 	void saveImage();
 	void closeImage();
+	void loadImagePassport(QString loadPath);
+	void requestPassportPath();
 	
 	void openCalibrationWindow();
 	

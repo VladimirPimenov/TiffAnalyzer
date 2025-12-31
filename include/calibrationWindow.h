@@ -36,6 +36,7 @@ class CalibrationWindow: public QDialog
 public:
     CalibrationWindow(QWidget * parent);
     
+    void setDateTime(QDateTime startDateTime);
 private:
     QVBoxLayout * vWidgetsBox;
     

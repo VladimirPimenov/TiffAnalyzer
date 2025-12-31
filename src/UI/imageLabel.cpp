@@ -1,6 +1,6 @@
 #include "../../include/imageLabel.h"
 
-ImageLabel::ImageLabel(): QLabel()
+ImageLabel::ImageLabel(PixelStatusBar * statusBar, InstrumentsPanel * instrumentsPanel): QLabel()
 {
     this->setMouseTracking(true);
     
@@ -10,6 +10,15 @@ ImageLabel::ImageLabel(): QLabel()
     histogramCalculator = new HistogramCalculator();
     
     createContextMenu();
+    
+    this->statusBar = statusBar;
+    this->instrumentsPanel = instrumentsPanel;
+    instrumentsPanel->setGrayscaleSelectedEvent([this](){ loadGrayscaleTIFF(); });
+    instrumentsPanel->setRgbSelectedEvent([this](){ loadRgbTIFF(); });
+    instrumentsPanel->setStandartContrastingEvent([this](){ standartContrasting(); });
+	instrumentsPanel->setHistogramContrastingEvent([this](){ histogramContrasting(); });
+	instrumentsPanel->setResetContrastingEvent([this](){ resetContrasting(); });
+	instrumentsPanel->setColorChangedEvent([this](){ updateHistogram(); });
 }
 
 void ImageLabel::createContextMenu()
@@ -21,10 +30,10 @@ void ImageLabel::createContextMenu()
     connect(channelsInfoAction, &QAction::triggered, this, &ImageLabel::showChannelsInfo);
 }
 
-void ImageLabel::loadTIFF(std::string tiffPath)
+void ImageLabel::loadTIFF(QString tiffPath)
 {
     image16bit = new Tiff();
-    image16bit->loadTiffMetadata(tiffPath);
+    image16bit->loadTiffMetadata(tiffPath.toStdString());
     
     this->setFixedSize(image16bit->width, image16bit->height);
     
@@ -32,9 +41,7 @@ void ImageLabel::loadTIFF(std::string tiffPath)
     float defaultLeftCuttingPercent = 2.0f;
     float defaultRightCuttingPercent = 2.0f;
     
-    image16bit->loadRgb(tiffPath, defaultChannels);
-    
-    loadWavescaleTable();
+    image16bit->loadRgb(tiffPath.toStdString(), defaultChannels);
     
     resetContrastingParams();
     
@@ -55,35 +62,9 @@ void ImageLabel::loadTIFF(std::string tiffPath)
     updateImage();
 }
 
-void ImageLabel::loadWavescaleTable()
+void ImageLabel::setWavescaleTable(WavescaleTable * table)
 {
-    wavescaleTable = new WavescaleTable(image16bit->channelsCount, 3);
-    QString sppPath = QString::fromStdString(image16bit->getFilePath().substr(0, image16bit->getFilePath().length() - 3) + "spp");
-    
-    wavescaleTable->loadFromSppFile(sppPath);
-    
-    if(!wavescaleTable->hasData())
-    {
-        qWarning().noquote() << "Не найден файл паспорта изображения";
-        requestSppFilePath();
-    }
-    else
-        qInfo().noquote() << "Загружен файл паспорта изображения " + sppPath; 
-}
-
-void ImageLabel::requestSppFilePath()
-{
-    auto userAnswer = QMessageBox::question(this, "Выберите файл spp", "Файл .spp не найден. Выбрать путь вручную?",
-                                            QMessageBox::Yes | QMessageBox::No);
-
-    if(userAnswer == QMessageBox::Yes)
-    {
-        QString sppPath = QFileDialog::getOpenFileName(this, "Открыть файл", "./", "SPP (*.spp)");
-        
-        wavescaleTable->loadFromSppFile(sppPath);
-        
-        qInfo().noquote() << "Загружен файл паспорта изображения " + sppPath; 
-    }
+    wavescaleTable = table; 
 }
 
 void ImageLabel::loadGrayscaleTIFF()
@@ -94,23 +75,6 @@ void ImageLabel::loadGrayscaleTIFF()
 void ImageLabel::loadRgbTIFF()
 {
     openRgbSelectionWindow(image16bit->channelsCount);
-}
-
-void ImageLabel::linkInstrumentsPanel(InstrumentsPanel * instrumentsPanel)
-{
-    this->instrumentsPanel = instrumentsPanel;
-    
-    instrumentsPanel->setGrayscaleSelectedEvent([this](){ loadGrayscaleTIFF(); });
-    instrumentsPanel->setRgbSelectedEvent([this](){ loadRgbTIFF(); });
-    instrumentsPanel->setStandartContrastingEvent([this](){ standartContrasting(); });
-	instrumentsPanel->setHistogramContrastingEvent([this](){ histogramContrasting(); });
-	instrumentsPanel->setResetContrastingEvent([this](){ resetContrasting(); });
-	instrumentsPanel->setColorChangedEvent([this](){ updateHistogram(); });
-}
-
-void ImageLabel::linkPixelStatusBar(PixelStatusBar * statusBar)
-{
-    this->statusBar = statusBar;
 }
 
 void ImageLabel::saveImageAsBmp(std::string savePath)

@@ -18,6 +18,7 @@ Spp::Spp(QString loadPath)
 void Spp::loadSpp(QString loadPath)
 {
     QFile * spp = new QFile(loadPath);
+    filePath = loadPath;
     spp->open(QFile::ReadOnly);
     
     if(spp->isOpen())
@@ -31,17 +32,26 @@ void Spp::loadSpp(QString loadPath)
             {
                 dateAcquired = QDateTime::fromString(xmlReader->readElementText(), "yyyy-MM-ddTHH:mm:sszzz");
             }
-            if(xmlReader->name() == "PointLatArr")
+            else if(xmlReader->name() == "nRasterBands")
+            {
+                channelsCount = xmlReader->readElementText().toInt();
+            }
+            else if(xmlReader->name() == "PointLatArr")
             {
                 parseStringToArray(xmlReader->readElementText(), latitudes);
             }
-            if(xmlReader->name() == "PointLonArr")
+            else if(xmlReader->name() == "PointLonArr")
             {
                 parseStringToArray(xmlReader->readElementText(), longitudes);
             }
+            else{}
             
             xmlReader->readNext();
         }
         spp->close();
+        
+        isReaded = true;
     }
+    else
+        isReaded = false;
 }

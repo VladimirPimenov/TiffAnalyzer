@@ -9,13 +9,14 @@
 #include <map>
 
 #include "sppTableReader.h"
+#include "spp.h"
 
 class WavescaleTable
 {
 public:
-    WavescaleTable(unsigned rowsCount, unsigned colsCount);
+    WavescaleTable(unsigned rowsCount);
     
-    void loadFromSppFile(QString sppPath);
+    void loadFromSppFile(Spp spp);
     
     bool hasData();
     

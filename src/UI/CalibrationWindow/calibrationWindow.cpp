@@ -42,6 +42,14 @@ CalibrationWindow::CalibrationWindow(QWidget * parent = nullptr): QDialog(parent
     switchCoordinatesSelection(0);
 } 
 
+void CalibrationWindow::setDateTime(QDateTime startDateTime)
+{
+    startDateField->setDate(startDateTime.date());
+    startTimeField->setTime(startDateTime.time());
+    endDateField->setDate(startDateTime.date().addMonths(1));
+    endTimeField->setTime(startDateTime.time());
+}
+
 void CalibrationWindow::createDirectorySelectionWidgets()
 {
 	routeDirectoryLabel = new QLabel();

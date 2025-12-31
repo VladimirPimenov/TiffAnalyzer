@@ -58,7 +58,7 @@ void MainWindow::createCentralPanel()
 
 void MainWindow::createImagePanel()
 {
-	imageViewer = new ImageLabel();
+	imageViewer = new ImageLabel(statusBar, instrumentsPanel);
 	scrollArea = new QScrollArea();
 	
 	imageViewer->setAlignment(Qt::AlignCenter);
@@ -66,9 +66,6 @@ void MainWindow::createImagePanel()
 	scrollArea->setWidgetResizable(true);
 	scrollArea->setWidget(imageViewer);
 	scrollArea->setAlignment(Qt::AlignCenter);
-	
-	imageViewer->linkPixelStatusBar(statusBar);
-	imageViewer->linkInstrumentsPanel(instrumentsPanel);
 	
 	centralBox->insertWidget(0, scrollArea);
 }
@@ -90,12 +87,56 @@ void MainWindow::openImage()
 
 	qInfo().noquote() << "Открыто изображение " + openImagePath;
 	
-	imageViewer->loadTIFF(openImagePath.toStdString());
+	imageViewer->loadTIFF(openImagePath);
+	
+	QString sppPath = openImagePath.mid(0, openImagePath.length() - 3) + "spp";
+	loadImagePassport(sppPath);
 
 	saveImageAction->setEnabled(true);
 	closeImageAction->setEnabled(true);
 
 	instrumentsPanel->setEnabled(true);
+}
+
+void MainWindow::loadImagePassport(QString sppPath)
+{
+    Spp spp = Spp(sppPath);
+    
+    if(!spp.isReaded)
+    {
+        qWarning().noquote() << "Не найден файл паспорта изображения";
+        
+        calibrationWindow->setDateTime(QDateTime::currentDateTime());
+        
+        imageViewer->setWavescaleTable(new WavescaleTable(0));
+        
+        requestPassportPath();
+    }
+    else
+    {
+        qInfo().noquote() << "Загружен файл паспорта изображения " + sppPath; 
+        
+		WavescaleTable * waveTable = new WavescaleTable(spp.channelsCount);
+		waveTable->loadFromSppFile(spp);
+		
+		imageViewer->setWavescaleTable(waveTable);
+		
+		calibrationWindow->setDateTime(spp.dateAcquired);
+    }
+    
+}
+
+void MainWindow::requestPassportPath()
+{
+    auto userAnswer = QMessageBox::question(this, "Выберите файл spp", "Файл .spp не найден. Выбрать путь вручную?",
+                                            QMessageBox::Yes | QMessageBox::No);
+
+    if(userAnswer == QMessageBox::Yes)
+    {
+        QString sppPath = QFileDialog::getOpenFileName(this, "Открыть файл", "./", "SPP (*.spp)");
+        
+        loadImagePassport(sppPath);
+    }
 }
 
 void MainWindow::saveImage()

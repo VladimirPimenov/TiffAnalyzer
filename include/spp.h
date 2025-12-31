@@ -15,6 +15,11 @@ public:
     QDateTime dateAcquired;
     std::array<double, 4> latitudes;
     std::array<double, 4> longitudes;
+    int channelsCount;
+    
+    bool isReaded;
+    
+    QString filePath;
 
     Spp(QString loadPath);
 

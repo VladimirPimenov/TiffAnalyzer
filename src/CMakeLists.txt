@@ -39,6 +39,7 @@ add_executable(TiffAnalyzer
     TypeDefs/tiff.cpp
     TypeDefs/bmp.cpp
     TypeDefs/kml.cpp
+    TypeDefs/spp.cpp
     )
 
 target_link_libraries(TiffAnalyzer PolygonChecker RouteFinder)

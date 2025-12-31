@@ -39,12 +39,10 @@
 class ImageLabel: public QLabel
 {
 public:
-	ImageLabel();
+	ImageLabel(PixelStatusBar * statusBar, InstrumentsPanel * instrumentsPanel);
 	
-	void loadTIFF(std::string loadPath);
-	
-	void linkInstrumentsPanel(InstrumentsPanel * instrumentsPanel);
-	void linkPixelStatusBar(PixelStatusBar * statusBar);
+	void loadTIFF(QString tiffPath);
+	void setWavescaleTable(WavescaleTable * table);
 	
 	void saveImageAsBmp(std::string savePath);
 	
@@ -78,9 +76,6 @@ private:
 	void loadRgbTIFF();
 	
 	void createContextMenu();
-	
-	void loadWavescaleTable();
-	void requestSppFilePath();
 	
 	void updateHistogram();
 	
