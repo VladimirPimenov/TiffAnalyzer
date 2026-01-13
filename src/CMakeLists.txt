@@ -25,6 +25,7 @@ add_executable(TiffAnalyzer
     UI/CalibrationWindow/onePointCoordsPanel.cpp
     UI/CalibrationWindow/rectangleCoordsPanel.cpp
     UI/CalibrationWindow/kmlCoordsPanel.cpp
+    UI/snapshotLoadWindow.cpp
 
     Utils/imagePainter.cpp
     Utils/imageConverter.cpp

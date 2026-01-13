@@ -21,6 +21,7 @@ Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
 #include "imageLabel.h"
 #include "calibrationWindow.h"
 #include "instrumentsPanel.h"
+#include "snapshotLoadWindow.h"
 
 #include "pixelStatusBar.h"
 
@@ -46,6 +47,7 @@ public:
 	
 	QMenu * imageProcessingMenu;
 	QAction * calibrationAction;
+	QAction * loadSnapshotAction;
 	
 	QWidget * centralWidget;
 	QHBoxLayout * centralBox;
@@ -55,6 +57,7 @@ public:
 	ImageLabel * imageViewer;	
 	CalibrationWindow * calibrationWindow;
 	InstrumentsPanel * instrumentsPanel;
+	SnapshotLoadWindow * snapshotLoadWindow;
 	
 	PixelStatusBar * statusBar;
 	
@@ -65,6 +68,7 @@ public:
 	void requestPassportPath();
 	
 	void openCalibrationWindow();
+	void openShapshotLoadWindow();
 	
 	void createCentralPanel();
 	void createMenuBar();

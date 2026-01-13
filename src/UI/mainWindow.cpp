@@ -5,6 +5,7 @@ MainWindow::MainWindow():QMainWindow()
 	createMenuBar();
 	
 	calibrationWindow = new CalibrationWindow(this);
+	snapshotLoadWindow = new SnapshotLoadWindow(this);
 	
 	statusBar = new PixelStatusBar();
 	this->setStatusBar(statusBar);
@@ -39,8 +40,10 @@ void MainWindow::createMenuBar()
 	
 	imageProcessingMenu = new QMenu("Обработка");
 	calibrationAction = imageProcessingMenu->addAction("Калибровка");
+	loadSnapshotAction = imageProcessingMenu->addAction("Загрузить данные снимка");
 	
 	connect(calibrationAction, &QAction::triggered, this, &MainWindow::openCalibrationWindow);
+	connect(loadSnapshotAction, &QAction::triggered, this, &MainWindow::openShapshotLoadWindow);
 	
 	menuBar()->addMenu(fileMenu);
 	menuBar()->addMenu(showMenu);
@@ -107,6 +110,7 @@ void MainWindow::loadImagePassport(QString sppPath)
         qWarning().noquote() << "Не найден файл паспорта изображения";
         
         calibrationWindow->setDateTime(QDateTime::currentDateTime());
+        snapshotLoadWindow->setLoadDateTime(QDateTime::currentDateTime());
         
         imageViewer->setWavescaleTable(new WavescaleTable(0));
         
@@ -122,6 +126,7 @@ void MainWindow::loadImagePassport(QString sppPath)
 		imageViewer->setWavescaleTable(waveTable);
 		
 		calibrationWindow->setDateTime(spp.dateAcquired);
+		snapshotLoadWindow->setLoadDateTime(spp.dateAcquired);
     }
     
 }
@@ -153,8 +158,12 @@ void MainWindow::saveImage()
 
 void MainWindow::openCalibrationWindow()
 {
-
     calibrationWindow->show();
+}
+
+void MainWindow::openShapshotLoadWindow()
+{
+    snapshotLoadWindow->show();
 }
 
 void MainWindow::switchSpectralPanelVisible()
