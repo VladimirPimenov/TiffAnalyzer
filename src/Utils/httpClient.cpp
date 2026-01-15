@@ -24,6 +24,7 @@ void HttpClient::onResult(QNetworkReply *reply)
 {
     response->httpStatus = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
     response->content = reply;
+    response->url = reply->url().toString();
     
     qInfo().noquote() << "Получен ответ на запрос. HTTP код: " + reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toString();
     

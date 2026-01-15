@@ -37,6 +37,9 @@ add_executable(TiffAnalyzer
     Utils/directoryReader.cpp
     Utils/coordsConvertor.cpp
     
+    Utils/httpClient.cpp
+    Utils/snapshotLoader.cpp
+
     TypeDefs/tiff.cpp
     TypeDefs/bmp.cpp
     TypeDefs/kml.cpp

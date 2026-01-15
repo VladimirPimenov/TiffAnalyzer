@@ -35,6 +35,8 @@ SnapshotLoadWindow::SnapshotLoadWindow(QWidget * parent = nullptr): QDialog(pare
     vWidgetBox->addWidget(loadButton);
     
     connect(loadButton, &QPushButton::clicked, this, &SnapshotLoadWindow::loadSnapshotEvent);
+    
+    loader = new SnapshotLoader();
 } 
 
 void SnapshotLoadWindow::setLoadDateTime(QDateTime dateTime)
@@ -44,4 +46,6 @@ void SnapshotLoadWindow::setLoadDateTime(QDateTime dateTime)
 
 void SnapshotLoadWindow::loadSnapshotEvent()
 {
+    loader->setAuthentification(loginField->text(), passwordField->text());
+    loader->loadSnapshotByDatetime(dateTimeField->dateTime());
 }

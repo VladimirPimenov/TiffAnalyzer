@@ -11,4 +11,5 @@ target_link_libraries(TiffAnalyzer
 Qt5::Widgets
 Qt5::Gui
 Qt5::QWindowsIntegrationPlugin
-Qt5::PrintSupport)
+Qt5::PrintSupport
+Qt5::Network)
