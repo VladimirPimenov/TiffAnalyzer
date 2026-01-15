@@ -29,14 +29,19 @@ SnapshotLoadWindow::SnapshotLoadWindow(QWidget * parent = nullptr): QDialog(pare
     
     loadButton = new QPushButton("Загрузить данные снимка");
     
+    messageText = new QLabel();
+    messageText->setAlignment(Qt::AlignCenter);
+    
     vWidgetBox->addWidget(text);
     vWidgetBox->addLayout(userDataTable);
     vWidgetBox->addWidget(dateTimeField);
     vWidgetBox->addWidget(loadButton);
+    vWidgetBox->addWidget(messageText);
     
     connect(loadButton, &QPushButton::clicked, this, &SnapshotLoadWindow::loadSnapshotEvent);
     
     loader = new SnapshotLoader();
+    loader->setCallMessageHandler([this](QString message){loaderMessageEvent(message);});
 } 
 
 void SnapshotLoadWindow::setLoadDateTime(QDateTime dateTime)
@@ -46,6 +51,13 @@ void SnapshotLoadWindow::setLoadDateTime(QDateTime dateTime)
 
 void SnapshotLoadWindow::loadSnapshotEvent()
 {
+    messageText->setText("Идёт загрузка...");
+
     loader->setAuthentification(loginField->text(), passwordField->text());
     loader->loadSnapshotByDatetime(dateTimeField->dateTime());
+}
+
+void SnapshotLoadWindow::loaderMessageEvent(QString message)
+{
+    messageText->setText(message);
 }

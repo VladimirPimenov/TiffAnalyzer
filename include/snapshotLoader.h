@@ -12,6 +12,8 @@
 #include <QJsonArray>
 #include <QJsonValue>
 
+#include <functional>
+
 #include "httpRequest.h"
 #include "httpResponse.h"
 #include "httpClient.h"
@@ -26,6 +28,8 @@ public:
     void loadSnapshotByDatetime(QDateTime dateTime);
     
     void setAuthentification(QString login, QString password);
+    
+    void setCallMessageHandler(std::function<void(QString)> eventHandler);
     
 private:
     const QString radCalNetUrl = "https://www.radcalnet.org/api/json/LCFR/data/";
@@ -42,4 +46,6 @@ private:
     void findNearDateShapshot();
     void loadAndSaveSnapshotData(QString snapshotName);
     void saveSnapshot();
+    
+    std::function<void(QString)> callMessageEventHandler;
 };

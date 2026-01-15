@@ -10,6 +10,8 @@
 #include <QDateTimeEdit>
 #include <QLabel>
 
+#include <QString>
+
 #include "snapshotLoader.h"
 
 class SnapshotLoadWindow: public QDialog
@@ -24,6 +26,8 @@ private:
     
     QLineEdit * loginField;
     QLineEdit * passwordField;
+    
+    QLabel * messageText;
 
     QDateTimeEdit * dateTimeField;
     
@@ -32,4 +36,6 @@ private:
     SnapshotLoader * loader;
     
     void loadSnapshotEvent();
+    
+    void loaderMessageEvent(QString message);
 };

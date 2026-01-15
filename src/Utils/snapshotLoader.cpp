@@ -31,7 +31,15 @@ void SnapshotLoader::setAuthentification(QString login, QString password)
 void SnapshotLoader::findNearDateShapshot()
 {
     if(httpResponse->httpStatus != 200)
+    {
+        if(httpResponse->httpStatus == 401)
+            callMessageEventHandler("Неверный логин или пароль!");
+        else
+            callMessageEventHandler("Произошла ошибка при загрузке!");
+            
+        qWarning().noquote() << "Произошла ошибка при загрузке файла";
 		return;
+    }
 	
     QString inputSite;
     QString outputSite;
@@ -67,6 +75,7 @@ void SnapshotLoader::findNearDateShapshot()
     }
     loadAndSaveSnapshotData(inputSite);
     loadAndSaveSnapshotData(outputSite);
+    callMessageEventHandler("Загрузка успешно завершена");
 }
 
 void SnapshotLoader::loadAndSaveSnapshotData(QString snapshotName)
@@ -99,4 +108,9 @@ void SnapshotLoader::saveSnapshot()
         
         qInfo().noquote() << "Загружен файл данных снимка " + fileName;
     }
+}
+
+void SnapshotLoader::setCallMessageHandler(std::function<void(QString)> eventHandler)
+{
+    callMessageEventHandler = eventHandler;
 }
