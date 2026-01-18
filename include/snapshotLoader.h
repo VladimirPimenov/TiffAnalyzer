@@ -23,7 +23,7 @@
 class SnapshotLoader
 {
 public:
-    SnapshotLoader();
+    SnapshotLoader(HttpClient * httpClient);
 
     void loadSnapshotByDatetime(QDateTime dateTime);
     

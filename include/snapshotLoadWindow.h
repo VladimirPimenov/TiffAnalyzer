@@ -17,7 +17,7 @@
 class SnapshotLoadWindow: public QDialog
 {
 public:
-    SnapshotLoadWindow(QWidget * parent);
+    SnapshotLoadWindow(QWidget * parent, HttpClient * httpClient);
     
     void setLoadDateTime(QDateTime dateTime);
     
@@ -34,6 +34,8 @@ private:
     QPushButton * loadButton;
     
     SnapshotLoader * loader;
+    
+    QNetworkAccessManager * networkManager;
     
     void loadSnapshotEvent();
     

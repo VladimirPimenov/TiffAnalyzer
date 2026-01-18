@@ -10,12 +10,16 @@
 
 #include <functional>
 
-#include "logger.h"
+#ifdef HTTPCLIENT_LIB
+#define HTTPCLIENT_EXPORT __declspec(dllexport)
+#else
+#define HTTPCLIENT_EXPORT __declspec(dllimport)
+#endif
 
-class HttpClient: public QObject
+class HTTPCLIENT_EXPORT HttpClient: public QObject
 {
 public:
-    HttpClient();
+    HttpClient(QNetworkAccessManager * httpManager);
     
     void get(HttpRequest * request, HttpResponse * response);
     

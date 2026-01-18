@@ -1,9 +1,17 @@
 set(CMAKE_AUTORCC ON)
 
 add_library(PolygonChecker SHARED Utils/polygonChecker.cpp)
-
 add_library(RouteFinder SHARED Utils/routeFinder.cpp TypeDefs/spp.cpp)
 target_link_libraries(RouteFinder Qt5::Core PolygonChecker)
+
+add_library(HttpClient SHARED
+    ../include/httpClient.h
+    ../include/httpRequest.h
+    ../include/httpResponse.h
+    Utils/httpClient.cpp
+)
+target_compile_definitions(HttpClient PRIVATE HTTPCLIENT_LIB)
+target_link_libraries(HttpClient Qt5::Network Qt5::Core Qt5::Widgets)
 
 add_executable(TiffAnalyzer
     resources.qrc
@@ -37,7 +45,6 @@ add_executable(TiffAnalyzer
     Utils/directoryReader.cpp
     Utils/coordsConvertor.cpp
     
-    Utils/httpClient.cpp
     Utils/snapshotLoader.cpp
 
     TypeDefs/tiff.cpp
@@ -46,6 +53,6 @@ add_executable(TiffAnalyzer
     TypeDefs/spp.cpp
     )
 
-target_link_libraries(TiffAnalyzer PolygonChecker RouteFinder)
+target_link_libraries(TiffAnalyzer PolygonChecker RouteFinder HttpClient)
 
 set_target_properties(TiffAnalyzer PROPERTIES AUTOMOC ON)

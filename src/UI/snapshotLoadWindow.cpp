@@ -1,8 +1,6 @@
 #include "../../include/snapshotLoadWindow.h"
 
-#include <iostream>
-
-SnapshotLoadWindow::SnapshotLoadWindow(QWidget * parent = nullptr): QDialog(parent)
+SnapshotLoadWindow::SnapshotLoadWindow(QWidget * parent, HttpClient * httpClient): QDialog(parent)
 {
     this->setWindowModality(Qt::WindowModality::WindowModal);
     this->setWindowTitle("Загрузка данных снимка");
@@ -40,7 +38,7 @@ SnapshotLoadWindow::SnapshotLoadWindow(QWidget * parent = nullptr): QDialog(pare
     
     connect(loadButton, &QPushButton::clicked, this, &SnapshotLoadWindow::loadSnapshotEvent);
     
-    loader = new SnapshotLoader();
+    loader = new SnapshotLoader(httpClient);
     loader->setCallMessageHandler([this](QString message){loaderMessageEvent(message);});
 } 
 

@@ -1,11 +1,11 @@
 #include "../../include/mainWindow.h"
 
-MainWindow::MainWindow():QMainWindow()
+MainWindow::MainWindow(HttpClient * httpClient):QMainWindow()
 {
 	createMenuBar();
 	
 	calibrationWindow = new CalibrationWindow(this);
-	snapshotLoadWindow = new SnapshotLoadWindow(this);
+	snapshotLoadWindow = new SnapshotLoadWindow(this, httpClient);
 	
 	statusBar = new PixelStatusBar();
 	this->setStatusBar(statusBar);

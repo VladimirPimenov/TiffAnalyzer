@@ -1,10 +1,8 @@
 #include "../../include/snapshotLoader.h"
 
-#include <iostream>
-
-SnapshotLoader::SnapshotLoader()
+SnapshotLoader::SnapshotLoader(HttpClient * httpClient)
 {
-    httpClient = new HttpClient();
+    this->httpClient = httpClient;
 }
 
 void SnapshotLoader::loadSnapshotByDatetime(QDateTime dateTime)
@@ -37,7 +35,7 @@ void SnapshotLoader::findNearDateShapshot()
         else
             callMessageEventHandler("Произошла ошибка при загрузке!");
             
-        qWarning().noquote() << "Произошла ошибка при загрузке файла";
+        qWarning().noquote() << "Произошла ошибка при загрузке файла. Код ошибки:" << httpResponse->httpStatus;
 		return;
     }
 	

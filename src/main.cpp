@@ -1,12 +1,18 @@
 #include <QApplication>
 
+#include <QNetworkAccessManager>
+
 #include "../include/mainWindow.h"
 #include "../include/logger.h"
 
 int main(int argc, char * argv[])
 {
 	QApplication app(argc, argv);
-	MainWindow * window = new MainWindow();
+	
+	QNetworkAccessManager * httpManager = new QNetworkAccessManager();
+	HttpClient * httpClient = new HttpClient(httpManager);
+	
+	QMainWindow * window = new MainWindow(httpClient);
 	
 	window->setWindowTitle("TiffAnalyzer");
 	window->resize(1920, 1080);

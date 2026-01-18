@@ -28,10 +28,12 @@ Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);
 #include "spp.h"
 #include "wavescaleTable.h"
 
+#include "httpClient.h"
+
 class MainWindow: public QMainWindow
 {
 public:
-	MainWindow();
+	MainWindow(HttpClient * httpClient);
 	
 	private:
 	QMenuBar * optionsMenu;
