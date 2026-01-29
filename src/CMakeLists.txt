@@ -37,15 +37,16 @@ add_executable(TiffAnalyzer
 
     Utils/imagePainter.cpp
     Utils/imageConverter.cpp
-    Utils/sppTableReader.cpp
     Utils/histogramCalculator.cpp
     Utils/pixelReader.cpp
     Utils/normalizer.cpp
     Utils/logger.cpp
     Utils/directoryReader.cpp
     Utils/coordsConvertor.cpp
+    Utils/sppTableReader.cpp
     
     Utils/snapshotLoader.cpp
+    Utils/snapshotReader.cpp
 
     TypeDefs/tiff.cpp
     TypeDefs/bmp.cpp
